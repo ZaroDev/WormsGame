@@ -24,8 +24,8 @@ ModuleUi::~ModuleUi()
 
 bool ModuleUi::Start() {
 
-	char lookupTable[] = { "! @,_./0123456789$;< ?abcdefghijklmnopqrstuvwxyz" };
-	testFont = App->fonts->Load("Assets/Fonts/rtype_font.png", lookupTable, 1);
+	char lookupTable[] = { "!^#$%&'()*+, ./0123456789:;<=>?€abcdefghijklmnopqrstuvwxyz[\]^-'abcdefghijklmnopqrstuvwxyz{|}_" };
+	testFont = App->fonts->Load("Assets/Fonts/ddrtiny.bmp", lookupTable, 1);
 
 	return true;
 }
@@ -54,9 +54,23 @@ bool ModuleUi::CleanUp()
 void ModuleUi::Draw()
 {
 	SString fps;
-	fps.Create("Current FPS: %f DeltaTime: %f  Expected FPS: %i, DeltaTime: %i", 1000 / App->dt, App->dt, 1000 / App->targetDT, App->targetDT);
+	fps.Create("current fps %f deltatime %f ms  expected fps %i deltatime %i ms", 1000 / App->dt, App->dt, 1000 / App->targetDT, App->targetDT);
+	SString integrator;
+	switch (App->physics->world.integrator)
+	{
+	case Integrator::VERLET:
+		integrator.Create("current integrator verlet");
+		
+	break;
+	}
+
+	SString wind;
+	wind.Create("atmosphere density %f wind x %f wind y %f", App->physics->world.atmosphere.density, App->physics->world.atmosphere.windx, App->physics->world.atmosphere.windy);
+
 
 	App->fonts->BlitText(0, 10, testFont, fps.GetString());
+	App->fonts->BlitText(0, 30, testFont, integrator.GetString());
+	App->fonts->BlitText(0, 50, testFont, wind.GetString());
 
 }
 

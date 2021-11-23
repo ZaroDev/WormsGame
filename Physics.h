@@ -87,7 +87,7 @@ public:
 	void IntegratorVelocityVerlet(PhysObject* ball, double dt);
 	p2List<PhysObject*> objects;
 	Atmosphere atmosphere;
+	Integrator integrator = Integrator::VERLET;
 private:
 	float gravityX, gravityY;
-	Integrator integrator = Integrator::VERLET;
 };

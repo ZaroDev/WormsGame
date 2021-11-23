@@ -9,17 +9,6 @@ PhysObject::~PhysObject()
 {
 }
 
-float PhysObject::Speed(float fx, float fy)
-{
-	float magnitude = sqrtf(fx * fx  + fy * fy);
-	float angle = 0;
-	if (fy != 0)
-		angle = tanf(fx / fy);
-	else
-		angle = 0;
-	return magnitude * tanf(angle);
-
-}
 
 Physics::Physics()
 {
@@ -59,10 +48,11 @@ bool Physics::Update(float dt)
 		o->data->fy += fgy;
 
 		// Compute Aerodynamic Lift & Drag forces
-		float speed = o->data->Speed(o->data->vx + atmosphere.windx, o->data->vy + atmosphere.windy);
-	
-		float fdrag = 0.5 * atmosphere.density * speed * o->data->surface * o->data->cd;
-		float flift = 0.5 * atmosphere.density * speed * o->data->surface * o->data->cl;
+		p2Point<float> speed;
+		speed.x = o->data->vx - atmosphere.windx;
+		speed.y = o->data->vy - atmosphere.windy;
+		float fdrag = 0.5 * atmosphere.density * speed.x * o->data->surface * o->data->cd;
+		float flift = 0.5 * atmosphere.density * speed.y * o->data->surface * o->data->cl;
 		float fdx = -fdrag; // Let's assume Drag is aligned with x-axis (in your game, generalize this)
 		float fdy = flift; // Let's assume Lift is perpendicular with x-axis (in your game, generalize this) 
 		// Add gravity force to the total accumulated force of the ball

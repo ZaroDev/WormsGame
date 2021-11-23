@@ -21,8 +21,8 @@ bool ModuleSceneIntro::Start()
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 	ball = new PhysObject();
-	ball->x = 300.0f;
-	ball->y = 0.0f;
+	ball->x = 350.0f;
+	ball->y = 300.0f;
 	ball->mass = 1.0f;
 
 

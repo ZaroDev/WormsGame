@@ -1,5 +1,5 @@
 #include "p2List.h"
-
+#include "p2Point.h"
 enum class Shape
 {
 	NONE = -1,
@@ -12,7 +12,7 @@ class PhysObject
 public:
 	PhysObject();
 	~PhysObject();
-	float Speed(float fx, float fy);
+
 	float w = 0.0f;
 	float h = 0.0f;
 	float r = 0.0f;

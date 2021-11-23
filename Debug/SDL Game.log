@@ -1,8 +1,1 @@
-﻿  Physics.cpp
-C:\Users\victorfz\Documents\GitHub\WormsGame\Physics.cpp(54,15): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
-C:\Users\victorfz\Documents\GitHub\WormsGame\Physics.cpp(55,15): warning C4244: 'inicializando': conversión de 'double' a 'float'; posible pérdida de datos
-C:\Users\victorfz\Documents\GitHub\WormsGame\Physics.cpp(101,50): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
-C:\Users\victorfz\Documents\GitHub\WormsGame\Physics.cpp(102,50): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
-C:\Users\victorfz\Documents\GitHub\WormsGame\Physics.cpp(103,25): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
-C:\Users\victorfz\Documents\GitHub\WormsGame\Physics.cpp(104,25): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
-  SDL Game.vcxproj -> C:\Users\victorfz\Documents\GitHub\WormsGame\Debug\Physics 2 Class 1 Handout.exe
+﻿  SDL Game.vcxproj -> D:\TTC\Q3\PhysicsII\WormsGame\Debug\Physics 2 Class 1 Handout.exe

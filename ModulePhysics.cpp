@@ -20,7 +20,9 @@ bool ModulePhysics::Start()
 {
 	LOG("Creating Physics 2D environment");
 
-	world.Start(Integrator::VERLET, 0.0f, 10.0f);
+	world.Start(Integrator::VERLET, 0.0f, 1.0f);
+	world.atmosphere.density = 0.01f;
+	world.atmosphere.windx = 100.0f;
 	return true;
 }
 
@@ -28,7 +30,7 @@ bool ModulePhysics::Start()
 update_status ModulePhysics::PreUpdate()
 {
 	// TODO 3: Update the simulation ("step" the world)
-	world.Update(App->dt);
+	world.Update(App->dt / 100);
 	return UPDATE_CONTINUE;
 }
 
@@ -45,9 +47,13 @@ update_status ModulePhysics::PostUpdate()
 		return UPDATE_CONTINUE;
 
 	p2List_item<PhysObject*>* o = world.objects.getFirst();
+
 	while (o != NULL)
 	{
 		App->renderer->DrawCircle(o->data->x, o->data->y, 10, 255, 0, 0, 255);
+		printf("\nx: %f, y: %f", o->data->x, o->data->y);
+		printf("\nfx: %f, fy: %f", o->data->fx, o->data->fy);
+		o = o->next;
 	}
 	
 

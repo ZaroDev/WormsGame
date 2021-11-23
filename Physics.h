@@ -1,38 +1,46 @@
 #include "p2List.h"
-
-
+#include "Collider.h"
+enum class Shape
+{
+	NONE = -1,
+	CIRCLE,
+	RECTANGLE
+};
 //Class: Ball
 class PhysObject
 {
 public:
 	PhysObject();
 	~PhysObject();
-	float Speed(float fx, float fy, float dt);
-
+	float Speed(float fx, float fy);
+	float w = 0.0f;
+	float h = 0.0f;
+	float r = 0.0f;
+	
 	// You could also use an array/vector
-	float x;
-	float y;
+	float x = 0.0f;
+	float y = 0.0f;
 
 	// Velocity
-	float vx;
-	float vy;
+	float vx = 0.0f;
+	float vy = 0.0f;
 
 	// Acceleration
-	float ax;
-	float ay;
+	float ax = 0.0f;
+	float ay = 0.0f;
 
 	// Force (total) applied to the ball
-	float fx;
-	float fy;
+	float fx = 0.0f;
+	float fy = 0.0f;
 
 	// Mass
-	float mass;
+	float mass = 1.0f;
 
 	// Aerodynamics stuff
-	float surface; // Effective wet surface
-	float cl; // Lift coefficient
-	float cd; // Drag coefficient
-
+	float surface = 0.2f; // Effective wet surface
+	float cl = 0.12f; // Lift coefficient
+	float cd = 0.04f; // Drag coefficient
+	Shape shape;
 	// Has physics enabled?
 	bool physics_enabled = true;
 };
@@ -63,8 +71,8 @@ public:
 	void CreateObject(PhysObject* obj);
 	void IntegratorVelocityVerlet(PhysObject* ball, double dt);
 	p2List<PhysObject*> objects;
+	Atmosphere atmosphere;
 private:
 	float gravityX, gravityY;
-	Atmosphere atmosphere;
 	Integrator integrator = Integrator::VERLET;
 };

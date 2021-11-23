@@ -9,11 +9,9 @@ PhysObject::~PhysObject()
 {
 }
 
-float PhysObject::Speed(float fx, float fy, float dt)
+float PhysObject::Speed(float fx, float fy)
 {
-	float distance = sqrt(fx * fx + fy * fy);
-
-	return distance / dt;
+	return sqrtf(powf(fx, 2) + powf(fy, 2));
 }
 
 Physics::Physics()
@@ -54,7 +52,7 @@ bool Physics::Update(float dt)
 		o->data->fy += fgy;
 
 		// Compute Aerodynamic Lift & Drag forces
-		float speed = o->data->Speed(o->data->vx - atmosphere.windx, o->data->vy - atmosphere.windy, dt);
+		float speed = o->data->Speed(o->data->vx - atmosphere.windx, o->data->vy - atmosphere.windy);
 		float fdrag = 0.5 * atmosphere.density * speed * speed * o->data->surface * o->data->cd;
 		float flift = 0.5 * atmosphere.density * speed * speed * o->data->surface * o->data->cl;
 		float fdx = -fdrag; // Let's assume Drag is aligned with x-axis (in your game, generalize this)

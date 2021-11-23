@@ -20,7 +20,10 @@ bool ModuleSceneIntro::Start()
 	bool ret = true;
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
-
+	ball = new PhysObject();
+	ball->x = 300.0f;
+	ball->y = 0.0f;
+	ball->mass = 1.0f;
 
 
 	App->physics->world.CreateObject(ball);

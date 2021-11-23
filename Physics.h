@@ -1,5 +1,5 @@
 #include "p2List.h"
-#include "Collider.h"
+
 enum class Shape
 {
 	NONE = -1,

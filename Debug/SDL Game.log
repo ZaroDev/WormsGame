@@ -1,41 +1,4 @@
-﻿  Collisions.cpp
-C:\Users\victorfz\Documents\GitHub\WormsGame\Module.h(54,24): error C3646: 'PreUpdate': especificador de invalidación desconocido
-C:\Users\victorfz\Documents\GitHub\WormsGame\Module.h(54,34): error C2059: error de sintaxis: ')'
-C:\Users\victorfz\Documents\GitHub\WormsGame\Module.h(55,2): error C2334: símbolos (token) inesperados delante de '{'; se pasará por alto el cuerpo de función aparente
-C:\Users\victorfz\Documents\GitHub\WormsGame\Module.h(59,24): error C3646: 'Update': especificador de invalidación desconocido
-C:\Users\victorfz\Documents\GitHub\WormsGame\Module.h(59,31): error C2059: error de sintaxis: ')'
-C:\Users\victorfz\Documents\GitHub\WormsGame\Module.h(60,2): error C2334: símbolos (token) inesperados delante de '{'; se pasará por alto el cuerpo de función aparente
-C:\Users\victorfz\Documents\GitHub\WormsGame\Module.h(64,24): error C3646: 'PostUpdate': especificador de invalidación desconocido
-C:\Users\victorfz\Documents\GitHub\WormsGame\Module.h(64,35): error C2059: error de sintaxis: ')'
-C:\Users\victorfz\Documents\GitHub\WormsGame\Module.h(65,2): error C2334: símbolos (token) inesperados delante de '{'; se pasará por alto el cuerpo de función aparente
-C:\Users\victorfz\Documents\GitHub\WormsGame\Collider.h(11,1): warning C4099: 'Collider': nombre de tipo visto anteriormente usando 'class' ahora se ve usando 'struct'
-C:\Users\victorfz\Documents\GitHub\WormsGame\Collider.h(10): message : vea la declaración de 'Collider'
-C:\Users\victorfz\Documents\GitHub\WormsGame\Collisions.h(23,16): error C3646: 'PreUpdate': especificador de invalidación desconocido
-C:\Users\victorfz\Documents\GitHub\WormsGame\Collisions.h(23,25): error C2059: error de sintaxis: '('
-C:\Users\victorfz\Documents\GitHub\WormsGame\Collisions.h(23,27): error C2238: símbolos (token) inesperados delante de ';'
-C:\Users\victorfz\Documents\GitHub\WormsGame\Collisions.h(24,16): error C3646: 'Update': especificador de invalidación desconocido
-C:\Users\victorfz\Documents\GitHub\WormsGame\Collisions.h(24,22): error C2059: error de sintaxis: '('
-C:\Users\victorfz\Documents\GitHub\WormsGame\Collisions.h(24,24): error C2238: símbolos (token) inesperados delante de ';'
-C:\Users\victorfz\Documents\GitHub\WormsGame\Collisions.h(25,16): error C3646: 'PostUpdate': especificador de invalidación desconocido
-C:\Users\victorfz\Documents\GitHub\WormsGame\Collisions.h(25,26): error C2059: error de sintaxis: '('
-C:\Users\victorfz\Documents\GitHub\WormsGame\Collisions.h(25,28): error C2238: símbolos (token) inesperados delante de ';'
-C:\Users\victorfz\Documents\GitHub\WormsGame\Collisions.cpp(120,27): error C2039: "PreUpdate": no es un miembro de "Collisions"
-C:\Users\victorfz\Documents\GitHub\WormsGame\Collisions.h(9): message : vea la declaración de 'Collisions'
-C:\Users\victorfz\Documents\GitHub\WormsGame\Collisions.cpp(125,7): error C2065: 'colliders': identificador no declarado
-C:\Users\victorfz\Documents\GitHub\WormsGame\Collisions.cpp(125,34): error C2065: 'colliders': identificador no declarado
-C:\Users\victorfz\Documents\GitHub\WormsGame\Collisions.cpp(127,11): error C2065: 'colliders': identificador no declarado
-C:\Users\victorfz\Documents\GitHub\WormsGame\Collisions.cpp(128,4): error C2065: 'colliders': identificador no declarado
-C:\Users\victorfz\Documents\GitHub\WormsGame\Collisions.cpp(138,7): error C2065: 'colliders': identificador no declarado
-C:\Users\victorfz\Documents\GitHub\WormsGame\Collisions.cpp(141,8): error C2065: 'colliders': identificador no declarado
-C:\Users\victorfz\Documents\GitHub\WormsGame\Collisions.cpp(147,8): error C2065: 'colliders': identificador no declarado
-C:\Users\victorfz\Documents\GitHub\WormsGame\Collisions.cpp(150,9): error C2065: 'colliders': identificador no declarado
-C:\Users\victorfz\Documents\GitHub\WormsGame\Collisions.cpp(152,8): error C2065: 'matrix': identificador no declarado
-C:\Users\victorfz\Documents\GitHub\WormsGame\Collisions.cpp(166,27): error C2039: "Update": no es un miembro de "Collisions"
-C:\Users\victorfz\Documents\GitHub\WormsGame\Collisions.h(9): message : vea la declaración de 'Collisions'
-C:\Users\victorfz\Documents\GitHub\WormsGame\Collisions.cpp(168,6): error C2065: 'App': identificador no declarado
-C:\Users\victorfz\Documents\GitHub\WormsGame\Collisions.cpp(169,3): error C2065: 'debug': identificador no declarado
-C:\Users\victorfz\Documents\GitHub\WormsGame\Collisions.cpp(169,12): error C2065: 'debug': identificador no declarado
-C:\Users\victorfz\Documents\GitHub\WormsGame\Collisions.cpp(174,27): error C2039: "PostUpdate": no es un miembro de "Collisions"
-C:\Users\victorfz\Documents\GitHub\WormsGame\Collisions.h(9): message : vea la declaración de 'Collisions'
-C:\Users\victorfz\Documents\GitHub\WormsGame\Collisions.cpp(176,6): error C2065: 'debug': identificador no declarado
-C:\Users\victorfz\Documents\GitHub\WormsGame\Collisions.cpp(177,3): error C3861: 'DebugDraw': no se encontró el identificador
+﻿  ModulePhysics.cpp
+C:\Users\victorfz\Documents\GitHub\WormsGame\ModulePhysics.cpp(54,48): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+C:\Users\victorfz\Documents\GitHub\WormsGame\ModulePhysics.cpp(54,36): warning C4244: 'argumento': conversión de 'float' a 'int'; posible pérdida de datos
+  SDL Game.vcxproj -> C:\Users\victorfz\Documents\GitHub\WormsGame\Debug\Physics 2 Class 1 Handout.exe

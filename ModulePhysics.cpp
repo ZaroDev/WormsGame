@@ -21,8 +21,9 @@ bool ModulePhysics::Start()
 	LOG("Creating Physics 2D environment");
 
 	world.Start(Integrator::VERLET, 0.0f, 1.0f);
-	world.atmosphere.density = 0.01f;
-	world.atmosphere.windx = 100.0f;
+	world.atmosphere.density = 1.0f;
+	world.atmosphere.windx = -10.0f;
+	world.atmosphere.windy = 0.0f;
 	return true;
 }
 

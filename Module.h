@@ -1,12 +1,13 @@
 #pragma once
 
+#include "Globals.h"
+#include "SDL/include/SDL.h"
 class Application;
-
-class Collider;
+class PhysObject;
 
 class Module
 {
-private :
+private:
 	bool enabled;
 
 public:
@@ -25,7 +26,7 @@ public:
 
 	void Enable()
 	{
-		if(enabled == false)
+		if (enabled == false)
 		{
 			enabled = true;
 			Start();
@@ -34,16 +35,16 @@ public:
 
 	void Disable()
 	{
-		if(enabled == true)
+		if (enabled == true)
 		{
 			enabled = false;
 			CleanUp();
 		}
 	}
 
-	virtual bool Init() 
+	virtual bool Init()
 	{
-		return true; 
+		return true;
 	}
 
 	virtual bool Start()
@@ -56,7 +57,7 @@ public:
 		return UPDATE_CONTINUE;
 	}
 
-	virtual update_status --Update()
+	virtual update_status Update()
 	{
 		return UPDATE_CONTINUE;
 	}
@@ -66,13 +67,12 @@ public:
 		return UPDATE_CONTINUE;
 	}
 
-	virtual bool CleanUp() 
-	{ 
-		return true; 
-	}
-	virtual void OnCollision(Collider* c1, Collider* c2)
+	virtual bool CleanUp()
 	{
-
+		return true;
 	}
-	
+
+	virtual void OnCollision(PhysObject* bodyA, PhysObject* bodyB)
+	{
+	}
 };

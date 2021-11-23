@@ -1,10 +1,9 @@
 #include "ModuleUi.h"
 #include "Application.h"
-#include "ModuleTextures.h"
-#include "ModuleRender.h"
+
 #include "ModuleFonts.h"
 #include "SString.h"
-#include "ModulePlayer.h"
+
 #include "p2Point.h"
 
 #include <stdio.h>
@@ -36,10 +35,7 @@ bool ModuleUi::Start() {
 	return true;
 }
 
-update_status ModuleUi::PreUpdate()
-{
-	return update_status::UPDATE_CONTINUE;
-}
+
 
 
 

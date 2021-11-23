@@ -1,5 +1,6 @@
 #include "p2List.h"
 #include "p2Point.h"
+
 enum class Shape
 {
 	NONE = -1,
@@ -7,16 +8,29 @@ enum class Shape
 	RECTANGLE
 };
 
+enum class Type
+{
+	NONE = -1,
+	DYNAMIC,
+	KYNEMATIC,
+	STATIC
+};
+
+//Class: Ball
 class PhysObject
 {
 public:
 	PhysObject();
+	PhysObject(Shape shape_, Type type_, int x_, int y_, float w_, float h_ = 0);
 	~PhysObject();
+
+	bool Intersects(PhysObject o);
+	void Reposition(float x, float y);
 
 	float w = 0.0f;
 	float h = 0.0f;
 	float r = 0.0f;
-	
+
 	// You could also use an array/vector
 	float x = 0.0f;
 	float y = 0.0f;
@@ -41,6 +55,7 @@ public:
 	float cl = 0.12f; // Lift coefficient
 	float cd = 0.04f; // Drag coefficient
 	Shape shape;
+	Type type;
 	// Has physics enabled?
 	bool physics_enabled = true;
 };
@@ -63,9 +78,9 @@ public:
 	~Physics();
 
 	bool Start(Integrator _integrator, float gx, float gy);
-	
+
 	bool Update(float dt);
-	
+
 	bool CleanUp();
 
 	void CreateObject(PhysObject* obj);

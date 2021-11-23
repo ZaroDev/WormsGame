@@ -11,7 +11,7 @@ public:
 	virtual ~ModuleUi();
 
 	bool Start();
-	update_status PreUpdate();
+
 
 	bool CleanUp();
 

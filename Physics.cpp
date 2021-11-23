@@ -1,19 +1,77 @@
 #include "Physics.h"
 #include <math.h>
 
+float Distance(int x1, int y1, int x2, int y2)
+{
+	return sqrtf(((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2)));
+}
+
 PhysObject::PhysObject()
 {
+}
+
+PhysObject::PhysObject(Shape shape_, Type type_, int x_, int y_, float w_, float h_)
+{
+	shape = shape_;
+	type = type_;
+	x = x_;
+	y = y_;
+	w = w_;
+	h = h_;
+	if (shape == Shape::CIRCLE)
+	{
+		r = w / 2;
+	}
+
 }
 
 PhysObject::~PhysObject()
 {
 }
 
+bool PhysObject::Intersects(PhysObject o)
+{
+	float normalx;
+	float normaly;
+	float dx, dy;
+
+	bool ret = false;
+	if (shape == Shape::RECTANGLE && o.shape == Shape::RECTANGLE)
+	{
+		ret = (x < o.x + o.w &&
+			x + w > o.x &&
+			y < o.y + o.h &&
+			h + y > o.y);
+
+
+
+	}
+
+	if (shape == Shape::CIRCLE && o.shape == Shape::CIRCLE)
+	{
+		if (Distance(x, y, o.x, o.y) < (r + o.r)) ret = true;
+	}
+
+	if (shape == Shape::CIRCLE && o.shape == Shape::RECTANGLE)
+	{
+
+	}
+
+
+
+	return ret;
+}
+
+void PhysObject::Reposition(float x, float y)
+{
+
+}
 
 Physics::Physics()
 {
-	 
+
 }
+
 
 Physics::~Physics()
 {
@@ -31,6 +89,7 @@ bool Physics::Start(Integrator _integrator, float gx, float gy)
 bool Physics::Update(float dt)
 {
 	p2List_item<PhysObject*>* o = objects.getFirst();
+
 	while (o != NULL)
 	{
 		// Step #0: Reset total acceleration and total accumulated force of the ball (clear old values)
@@ -79,6 +138,7 @@ bool Physics::Update(float dt)
 		default:
 			break;
 		}
+
 		// Step #4: solve collisions
 		//if (o->data->y < ground.y)
 		//{
@@ -88,7 +148,7 @@ bool Physics::Update(float dt)
 		//	o->data->fx = o->data->fy = 0.0;
 		//	o->data->physics_enabled = false;
 		//}
-		o = o->next;   
+		o = o->next;
 	}
 
 
@@ -114,5 +174,3 @@ void Physics::CreateObject(PhysObject* obj)
 {
 	objects.add(obj);
 }
-
-

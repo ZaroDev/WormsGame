@@ -61,7 +61,8 @@ update_status ModuleSceneIntro::Update()
 	{
 		App->targetDT = 1000 / 144;
 	}
-
+	if (App->input->GetKey(SDL_SCANCODE_F1))
+		App->physics->debug = !App->physics->debug;
 
 
 	

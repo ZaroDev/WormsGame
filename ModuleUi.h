@@ -12,23 +12,18 @@ public:
 
 	bool Start();
 
+	update_status Update();
 
 	bool CleanUp();
 
-	void AddScore(int value);
+
 	void Draw();
-	void DrawHighScore();
-	void UpdateScores();
 
-public:
-	int score;
-	int prevScore;
-	int highScore;
 
-	int comboCount;
-	int specialCount;
+	
 
 private:
+	int testFont;
 	
 };
 

@@ -23,6 +23,6 @@ public:
 	bool CleanUp();
 
 	Physics world;
-private:
 	bool debug;
+
 };

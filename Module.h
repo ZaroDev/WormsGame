@@ -56,7 +56,7 @@ public:
 		return UPDATE_CONTINUE;
 	}
 
-	virtual update_status Update()
+	virtual update_status --Update()
 	{
 		return UPDATE_CONTINUE;
 	}

@@ -12,6 +12,12 @@
 #include "ModulePlayer.h"
 #include "ModulePhysics.h"
 #include "ModuleSceneIntro.h"
+enum class FrameTimeControll
+{
+	FIXEDDTTM = 0,
+	VARIABLEDT
+};
+
 
 class Application
 {
@@ -38,7 +44,10 @@ public:
 	update_status Update();
 	bool CleanUp();
 
+	uint targetDT = 1000 / 60;
+
 	float dt;
+	FrameTimeControll controll = FrameTimeControll::FIXEDDTTM;
 
 private:
 

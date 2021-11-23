@@ -1,4 +1,9 @@
-﻿  ModulePhysics.cpp
+﻿  Application.cpp
+  Main.cpp
+D:\TTC\Q3\PhysicsII\WormsGame\Main.cpp(104,29): warning C4244: '=': conversion from 'Uint32' to 'float', possible loss of data
+  ModuleAudio.cpp
+  ModuleInput.cpp
+  ModulePhysics.cpp
 D:\TTC\Q3\PhysicsII\WormsGame\ModulePhysics.cpp(57,61): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
 D:\TTC\Q3\PhysicsII\WormsGame\ModulePhysics.cpp(57,49): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
 D:\TTC\Q3\PhysicsII\WormsGame\ModulePhysics.cpp(57,37): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
@@ -11,12 +16,9 @@ D:\TTC\Q3\PhysicsII\WormsGame\ModulePhysics.cpp(60,53): warning C4244: 'initiali
 D:\TTC\Q3\PhysicsII\WormsGame\ModulePhysics.cpp(60,64): warning C4838: conversion from 'float' to 'int' requires a narrowing conversion
 D:\TTC\Q3\PhysicsII\WormsGame\ModulePhysics.cpp(60,64): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
   ModulePlayer.cpp
-  Physics.cpp
-D:\TTC\Q3\PhysicsII\WormsGame\Physics.cpp(54,15): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\TTC\Q3\PhysicsII\WormsGame\Physics.cpp(55,15): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-D:\TTC\Q3\PhysicsII\WormsGame\Physics.cpp(101,50): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-D:\TTC\Q3\PhysicsII\WormsGame\Physics.cpp(102,50): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-D:\TTC\Q3\PhysicsII\WormsGame\Physics.cpp(103,25): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-D:\TTC\Q3\PhysicsII\WormsGame\Physics.cpp(104,25): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+  ModuleRender.cpp
+  ModuleSceneIntro.cpp
+  ModuleTextures.cpp
+  ModuleWindow.cpp
   Generating Code...
   SDL Game.vcxproj -> D:\TTC\Q3\PhysicsII\WormsGame\Debug\Physics 2 Class 1 Handout.exe

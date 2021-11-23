@@ -18,5 +18,7 @@ public:
 
 public:
 	PhysObject* ball;
+
+
 	
 };

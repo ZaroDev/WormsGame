@@ -22,8 +22,8 @@ int main(int argc, char** argv)
 	int main_return = EXIT_FAILURE;
 	main_states state = MAIN_CREATION;
 	Application* App = NULL;
-	int FPS = 60;
-	int startTime;
+	
+	uint startTime;
 	float RealFPS;
 	while (state != MAIN_EXIT)
 	{
@@ -83,9 +83,22 @@ int main(int argc, char** argv)
 			break;
 
 		}
-		if ((1000 / FPS) > SDL_GetTicks() - startTime)
+		switch (App->controll)
 		{
-			SDL_Delay((1000 / FPS) - (SDL_GetTicks() - startTime));
+		case FrameTimeControll::FIXEDDTTM :
+		{
+			if (App->targetDT > SDL_GetTicks() - startTime)
+			{
+				SDL_Delay(App->targetDT - (SDL_GetTicks() - startTime));
+			}
+			break;
+		}
+		case FrameTimeControll::VARIABLEDT :
+		{
+			break;
+		}
+		default:
+			break;
 		}
 
 		RealFPS = (SDL_GetTicks() - startTime);

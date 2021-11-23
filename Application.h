@@ -12,6 +12,9 @@
 #include "ModulePlayer.h"
 #include "ModulePhysics.h"
 #include "ModuleSceneIntro.h"
+#include "ModuleFonts.h"
+#include "ModuleUi.h"
+
 enum class FrameTimeControll
 {
 	FIXEDDTTM = 0,
@@ -30,6 +33,8 @@ public:
 	ModulePlayer* player;
 	ModuleSceneIntro* scene_intro;
 	ModulePhysics* physics;
+	ModuleFonts* fonts;
+	ModuleUi* UI;
 
 private:
 

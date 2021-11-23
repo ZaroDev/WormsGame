@@ -45,13 +45,17 @@ update_status ModuleSceneIntro::Update()
 {
 	SString string;
 	
+	if (App->input->GetKey(SDL_SCANCODE_4))
+	{
+		App->targetDT = 1000 / 15;
+	}
 	if (App->input->GetKey(SDL_SCANCODE_1))
 	{
-		App->targetDT = 1000 / 60;
+		App->targetDT = 1000 / 30;
 	}
 	if (App->input->GetKey(SDL_SCANCODE_2))
 	{
-		App->targetDT = 1000 / 30;
+		App->targetDT = 1000 / 60;
 	}
 	if (App->input->GetKey(SDL_SCANCODE_3))
 	{

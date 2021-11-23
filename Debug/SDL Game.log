@@ -2,6 +2,7 @@
   Main.cpp
 D:\TTC\Q3\PhysicsII\WormsGame\Main.cpp(104,29): warning C4244: '=': conversion from 'Uint32' to 'float', possible loss of data
   ModuleAudio.cpp
+  ModuleFonts.cpp
   ModuleInput.cpp
   ModulePhysics.cpp
 D:\TTC\Q3\PhysicsII\WormsGame\ModulePhysics.cpp(57,61): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
@@ -19,6 +20,15 @@ D:\TTC\Q3\PhysicsII\WormsGame\ModulePhysics.cpp(60,64): warning C4244: 'initiali
   ModuleRender.cpp
   ModuleSceneIntro.cpp
   ModuleTextures.cpp
+  ModuleUi.cpp
+D:\TTC\Q3\PhysicsII\WormsGame\Module.h(54,24): error C3646: 'PreUpdate': unknown override specifier
+D:\TTC\Q3\PhysicsII\WormsGame\Module.h(54,34): error C2059: syntax error: ')'
+D:\TTC\Q3\PhysicsII\WormsGame\Module.h(55,2): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+D:\TTC\Q3\PhysicsII\WormsGame\Module.h(59,24): error C3646: 'Update': unknown override specifier
+D:\TTC\Q3\PhysicsII\WormsGame\Module.h(59,31): error C2059: syntax error: ')'
+D:\TTC\Q3\PhysicsII\WormsGame\Module.h(60,2): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
+D:\TTC\Q3\PhysicsII\WormsGame\Module.h(64,24): error C3646: 'PostUpdate': unknown override specifier
+D:\TTC\Q3\PhysicsII\WormsGame\Module.h(64,35): error C2059: syntax error: ')'
+D:\TTC\Q3\PhysicsII\WormsGame\Module.h(65,2): error C2334: unexpected token(s) preceding '{'; skipping apparent function body
   ModuleWindow.cpp
   Generating Code...
-  SDL Game.vcxproj -> D:\TTC\Q3\PhysicsII\WormsGame\Debug\Physics 2 Class 1 Handout.exe

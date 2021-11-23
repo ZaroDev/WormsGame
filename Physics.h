@@ -6,7 +6,7 @@ enum class Shape
 	CIRCLE,
 	RECTANGLE
 };
-//Class: Ball
+
 class PhysObject
 {
 public:

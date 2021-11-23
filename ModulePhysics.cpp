@@ -51,7 +51,17 @@ update_status ModulePhysics::PostUpdate()
 
 	while (o != NULL)
 	{
-		App->renderer->DrawCircle(o->data->x, o->data->y, 10, 255, 0, 0, 255);
+		switch (o->data->shape)
+		{
+		case Shape::CIRCLE:
+			App->renderer->DrawCircle(o->data->x, o->data->y, o->data->r, 255, 0, 0, 255);
+			break;
+		case Shape::RECTANGLE:
+			SDL_Rect rect = { o->data->x, o->data->y, o->data->w,o->data->h };
+			App->renderer->DrawQuad(rect, 0, 255, 0, 255, false);
+			break;
+		}
+		
 		printf("\nx: %f, y: %f", o->data->x, o->data->y);
 		printf("\nfx: %f, fy: %f", o->data->fx, o->data->fy);
 		o = o->next;

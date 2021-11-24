@@ -22,12 +22,22 @@ bool ModuleSceneIntro::Start()
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 	ball = new PhysObject();
 	ball->x = 350.0f;
-	ball->y = 0.0f;
+	ball->y = 20.0f;
 	ball->mass = 1.0f;
 	ball->shape = Shape::CIRCLE;
 	ball->r = 10;
 
+	ball2 = new PhysObject();
+	ball2->x = 350.0f;
+	ball2->y = 0.0f;
+	ball2->mass = 3.0f;
+	ball2->shape = Shape::RECTANGLE;
+	ball2->w = 10;
+	ball2->h = 10;
+
+
 	App->physics->world.CreateObject(ball);
+	App->physics->world.CreateObject(ball2);
 
 	return ret;
 }
@@ -61,7 +71,10 @@ update_status ModuleSceneIntro::Update()
 	{
 		App->targetDT = 1000 / 144;
 	}
-	
+	if (App->input->GetKey(SDL_SCANCODE_F2))
+		App->controll = FrameTimeControll::VARIABLEDT;
+	if (App->input->GetKey(SDL_SCANCODE_F3))
+		App->controll = FrameTimeControll::FIXEDDTTM;
 
 
 	

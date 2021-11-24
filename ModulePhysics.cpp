@@ -23,7 +23,7 @@ bool ModulePhysics::Start()
 	world.Start(Integrator::VERLET, 0.0f, 2.0f);
 	world.atmosphere.density = 10.0f;
 	world.atmosphere.windx = 0.0f;
-	world.atmosphere.windy = 15.0f;
+	world.atmosphere.windy = 0.0f;
 	return true;
 }
 

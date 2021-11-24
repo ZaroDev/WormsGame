@@ -67,11 +67,22 @@ void ModuleUi::Draw()
 	SString wind;
 	wind.Create("atmosphere density %f wind x %f wind y %f", App->physics->world.atmosphere.density, App->physics->world.atmosphere.windx, App->physics->world.atmosphere.windy);
 
+	SString timeControll;
+	switch (App->controll)
+	{
+	case FrameTimeControll::FIXEDDTTM :
+		timeControll.Create("time controll: fixed delta time");
+		break;
+	case FrameTimeControll::VARIABLEDT:
+		timeControll.Create("time controll: variable delta time");
+		break;
+	
+	}
 
 	App->fonts->BlitText(0, 10, testFont, fps.GetString());
 	App->fonts->BlitText(0, 30, testFont, integrator.GetString());
 	App->fonts->BlitText(0, 50, testFont, wind.GetString());
-
+	App->fonts->BlitText(0, 70, testFont, timeControll.GetString());
 }
 
 

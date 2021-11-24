@@ -97,8 +97,6 @@ int main(int argc, char** argv)
 		{
 			break;
 		}
-		default:
-			break;
 		}
 
 		RealFPS = (SDL_GetTicks() - startTime);

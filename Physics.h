@@ -24,7 +24,7 @@ public:
 	PhysObject(Shape shape_, Type type_, int x_, int y_, float w_, float h_ = 0);
 	~PhysObject();
 
-	bool Intersects(PhysObject o);
+	bool Intersects(PhysObject* o);
 	void Reposition(float x, float y);
 
 	float w = 0.0f;

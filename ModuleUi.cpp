@@ -24,8 +24,8 @@ ModuleUi::~ModuleUi()
 
 bool ModuleUi::Start() {
 
-	char lookupTable[] = { "!^#$%&'()*+, ./0123456789:;<=>?€abcdefghijklmnopqrstuvwxyz[\]^-'abcdefghijklmnopqrstuvwxyz{|}_" };
-	testFont = App->fonts->Load("Assets/Fonts/ddrtiny.bmp", lookupTable, 1);
+	char lookupTable[] = { "! @,_./0123456789$;< ?abcdefghijklmnopqrstuvwxyz" };
+	testFont = App->fonts->Load("Assets/Fonts/rtype_font3.png", lookupTable, 2);
 
 	return true;
 }
@@ -54,13 +54,18 @@ bool ModuleUi::CleanUp()
 void ModuleUi::Draw()
 {
 	SString fps;
-	fps.Create("current fps %f deltatime %f ms  expected fps %i deltatime %i ms", 1000 / App->dt, App->dt, 1000 / App->targetDT, App->targetDT);
+	fps.Create("current fps %f deltatime %f ms expected fps %i deltatime %i ms", 1000 / App->dt, App->dt, 1000 / App->targetDT, App->targetDT);
 	SString integrator;
 	switch (App->physics->world.integrator)
 	{
 	case Integrator::VERLET:
 		integrator.Create("current integrator verlet");
-		
+	break;
+	case Integrator::IEULER:
+		integrator.Create("current integrator implicit euler");
+	break;
+	case Integrator::SEULER:
+		integrator.Create("current integrator symplectic euler");
 	break;
 	}
 
@@ -71,10 +76,10 @@ void ModuleUi::Draw()
 	switch (App->controll)
 	{
 	case FrameTimeControll::FIXEDDTTM :
-		timeControll.Create("time controll: fixed delta time");
+		timeControll.Create("time controll fixed delta time");
 		break;
 	case FrameTimeControll::VARIABLEDT:
-		timeControll.Create("time controll: variable delta time");
+		timeControll.Create("time controll variable delta time");
 		break;
 	
 	}

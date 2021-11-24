@@ -20,8 +20,8 @@ bool ModulePhysics::Start()
 {
 	LOG("Creating Physics 2D environment");
 
-	world.Start(Integrator::EULER, 0.0f, 1.0f);
-	world.atmosphere.density = 10.0f;
+	world.Start(Integrator::VERLET, 0.0f, 1.0f);
+	world.atmosphere.density = 1.0f;
 	world.atmosphere.windx = 0.0f;
 	world.atmosphere.windy = 0.0f;
 	return true;

@@ -52,9 +52,9 @@ public:
 	float mass = 1.0f;
 
 	// Aerodynamics stuff
-	float surface = 0.2f; // Effective wet surface
-	float cl = 0.12f; // Lift coefficient
-	float cd = 0.04f; // Drag coefficient
+	float surface = 2.0f; // Effective wet surface
+	float cl = 1.2f; // Lift coefficient
+	float cd = 0.4f; // Drag coefficient
 	Shape shape;
 	Type type;
 	SString name;
@@ -71,7 +71,8 @@ enum Integrator
 {
 	NONE = -1,
 	VERLET,
-	EULER
+	SEULER,
+	IEULER
 
 };
 class Physics
@@ -88,10 +89,11 @@ public:
 
 	void CreateObject(PhysObject* obj);
 	void IntegratorVelocityVerlet(PhysObject* obj, float dt);
-	void IntegratorVelocityEuler(PhysObject* obj, float dt);
+	void IntegratorVelocitySymplecticEuler(PhysObject* obj, float dt);
+	void IntegratorVelocityImplicitEuler(PhysObject* obj, float dt);
 	p2List<PhysObject*> objects;
 	Atmosphere atmosphere;
-	Integrator integrator = Integrator::EULER;
+	Integrator integrator = Integrator::IEULER;
 private:
 	float gravityX, gravityY;
 };

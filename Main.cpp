@@ -91,16 +91,28 @@ int main(int argc, char** argv)
 			{
 				SDL_Delay(App->targetDT - (SDL_GetTicks() - startTime));
 			}
+			RealFPS = (SDL_GetTicks() - startTime);
+			App->dt = RealFPS;
 			break;
 		}
 		case FrameTimeControll::VARIABLEDT :
 		{
+			RealFPS = (SDL_GetTicks() - startTime);
+			App->dt = RealFPS;
 			break;
+		}
+		case FrameTimeControll::CONTROLLDT :
+		{
+			if (App->targetDT > SDL_GetTicks() - startTime)
+			{
+				SDL_Delay(App->targetDT - (SDL_GetTicks() - startTime));
+			}
+			App->dt = App->bulletDT;
 		}
 		}
 
-		RealFPS = (SDL_GetTicks() - startTime);
-		App->dt = RealFPS;
+		
+		
 		
 
 	}

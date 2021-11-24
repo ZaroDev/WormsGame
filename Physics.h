@@ -1,5 +1,6 @@
 #include "p2List.h"
 #include "p2Point.h"
+#include "SString.h"
 
 enum class Shape
 {
@@ -56,6 +57,7 @@ public:
 	float cd = 0.04f; // Drag coefficient
 	Shape shape;
 	Type type;
+	SString name;
 	// Has physics enabled?
 	bool physics_enabled = true;
 };

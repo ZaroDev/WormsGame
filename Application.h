@@ -18,7 +18,8 @@
 enum class FrameTimeControll
 {
 	FIXEDDTTM = 0,
-	VARIABLEDT
+	VARIABLEDT,
+	CONTROLLDT
 };
 
 
@@ -50,6 +51,7 @@ public:
 	bool CleanUp();
 
 	uint targetDT = 1000 / 60;
+	uint bulletDT = 1000 / 30;
 
 	float dt;
 	FrameTimeControll controll = FrameTimeControll::FIXEDDTTM;

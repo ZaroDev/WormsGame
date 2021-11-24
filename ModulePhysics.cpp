@@ -61,9 +61,12 @@ update_status ModulePhysics::PostUpdate()
 			App->renderer->DrawQuad(rect, 0, 255, 0, 255, false);
 			break;
 		}
-		
+		printf("\nName: %s", o->data->name.GetString());
 		printf("\nx: %f, y: %f", o->data->x, o->data->y);
+		printf("\nvx: %f, vy: %f", o->data->vx, o->data->vy);		
 		printf("\nfx: %f, fy: %f", o->data->fx, o->data->fy);
+
+
 		o = o->next;
 	}
 	

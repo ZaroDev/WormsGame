@@ -122,7 +122,7 @@ bool Physics::Update(float dt)
 			o->data->fy += fgy;
 
 			// Compute Aerodynamic Lift & Drag forces
-			float speed = sqrtf(powf((o->data->vx - atmosphere.windx), 2) + powf(o->data->vy - atmosphere.windy,2));
+			/*float speed = sqrtf(powf((o->data->vx - atmosphere.windx), 2) + powf(o->data->vy - atmosphere.windy,2));*/
 			//float fdrag = 0.5 * atmosphere.density * speed * speed * o->data->surface * o->data->cd;
 			//float flift = 0.5 * atmosphere.density * speed * speed  * o->data->surface * o->data->cl;
 			//float fdx = -fdrag; // Let's assume Drag is aligned with x-axis (in your game, generalize this) Opuesta al vector speed = normalizar speed y multiplicar

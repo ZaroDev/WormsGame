@@ -21,22 +21,25 @@ bool ModuleSceneIntro::Start()
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 	ball = new PhysObject();
-	ball->x = 350.0f;
-	ball->y = 20.0f;
+	ball->x = 300.0f;
+	ball->y = 0.0f;
 	ball->mass = 1.0f;
 	ball->shape = Shape::RECTANGLE;
-	ball->w = 10;
-	ball->h = 10;
+	ball->w = 30;
+	ball->h = 30;
+	ball->r = 30;
 	ball->name.Create("Ball");
 	ball->type = Type::DYNAMIC;
 
+
 	ball2 = new PhysObject();
-	ball2->x = 0.0f;
-	ball2->y = 500.0f;
+	ball2->x = 300.0f;
+	ball2->y = 300.0f;
 	ball2->mass = 3.0f;
 	ball2->shape = Shape::RECTANGLE;
-	ball2->w = 1000;
-	ball2->h = 10;
+	ball2->w = 30;
+	ball2->h = 30;
+	ball2->r = 30;
 	ball2->name.Create( "ground");
 	ball2->type = Type::STATIC;
 

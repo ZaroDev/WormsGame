@@ -25,7 +25,7 @@ public:
 	PhysObject(Shape shape_, Type type_, int x_, int y_, float w_, float h_ = 0);
 	~PhysObject();
 
-	bool Intersects(PhysObject* o);
+	
 	void Reposition(float x, float y);
 
 	float w = 0.0f;
@@ -71,6 +71,7 @@ enum Integrator
 {
 	NONE = -1,
 	VERLET,
+	EULER
 
 };
 class Physics
@@ -86,10 +87,11 @@ public:
 	bool CleanUp();
 
 	void CreateObject(PhysObject* obj);
-	void IntegratorVelocityVerlet(PhysObject* ball, double dt);
+	void IntegratorVelocityVerlet(PhysObject* obj, float dt);
+	void IntegratorVelocityEuler(PhysObject* obj, float dt);
 	p2List<PhysObject*> objects;
 	Atmosphere atmosphere;
-	Integrator integrator = Integrator::VERLET;
+	Integrator integrator = Integrator::EULER;
 private:
 	float gravityX, gravityY;
 };

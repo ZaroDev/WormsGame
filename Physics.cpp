@@ -1,6 +1,53 @@
 #include "Physics.h"
 #include <math.h>
+void collision2Ds(float m1, float m2, float R,
+	float x1, float y1, float x2, float y2,
+	float& vx1, float& vy1, float& vx2, float& vy2) {
 
+	float  m21, dvx2, a, x21, y21, vx21, vy21, fy21, sign, vx_cm, vy_cm;
+
+
+	m21 = m2 / m1;
+	x21 = x2 - x1;
+	y21 = y2 - y1;
+	vx21 = vx2 - vx1;
+	vy21 = vy2 - vy1;
+
+	vx_cm = (m1 * vx1 + m2 * vx2) / (m1 + m2);
+	vy_cm = (m1 * vy1 + m2 * vy2) / (m1 + m2);
+
+
+	//     *** return old velocities if balls are not approaching ***
+	if ((vx21 * x21 + vy21 * y21) >= 0) return;
+
+
+	//     *** I have inserted the following statements to avoid a zero divide; 
+	//         (for single precision calculations, 
+	//          1.0E-12 should be replaced by a larger value). **************  
+
+	fy21 = 1.0E-12 * fabs(y21);
+	if (fabs(x21) < fy21) {
+		if (x21 < 0) { sign = -1; }
+		else { sign = 1; }
+		x21 = fy21 * sign;
+	}
+
+	//     ***  update velocities ***
+	a = y21 / x21;
+	dvx2 = -2 * (vx21 + a * vy21) / ((1 + a * a) * (1 + m21));
+	vx2 = vx2 + dvx2;
+	vy2 = vy2 + a * dvx2;
+	vx1 = vx1 - m21 * dvx2;
+	vy1 = vy1 - a * m21 * dvx2;
+
+	//     ***  velocity correction for inelastic collisions ***
+	vx1 = (vx1 - vx_cm) * R + vx_cm;
+	vy1 = (vy1 - vy_cm) * R + vy_cm;
+	vx2 = (vx2 - vx_cm) * R + vx_cm;
+	vy2 = (vy2 - vy_cm) * R + vy_cm;
+
+	return;
+}
 float Distance(int x1, int y1, int x2, int y2)
 {
 	return sqrtf(((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2)));
@@ -48,52 +95,52 @@ PhysObject::~PhysObject()
 {
 }
 
-bool PhysObject::Intersects(PhysObject* o)
+bool Intersects(PhysObject* o, PhysObject* c)
 {
 	float normalx;
 	float normaly;
 	float dx, dy;
 
 	bool ret = false;
-	if (shape == Shape::RECTANGLE && o->shape == Shape::RECTANGLE)
+	if (o->shape == Shape::RECTANGLE && c->shape == Shape::RECTANGLE)
 	{
-		ret = (x < o->x + o->w &&
-			x + w > o->x &&
-			y < o->y + o->h &&
-			h + y > o->y);
-
-
-
+		ret = (o->x < c->x + c->w &&
+			o->x + o->w > c->x &&
+			o->y < c->y + c->h &&
+			o->y + o->h > c->y);
 	}
 
-	if (shape == Shape::CIRCLE && o->shape == Shape::CIRCLE)
+	if (o->shape == Shape::CIRCLE && c->shape == Shape::CIRCLE)
 	{
-		if (Distance(x, y, o->x, o->y) < (r + o->r)) ret = true;
+		if (Distance(o->x, o->y, c->x, c->y) < (o->r + c->r)) ret = true;
 	}
 
-	if (shape == Shape::CIRCLE && o->shape == Shape::RECTANGLE)
+	if (o->shape == Shape::CIRCLE && c->shape == Shape::RECTANGLE)
 	{
 		p2Point<float> circleDistance;
-		circleDistance.x = fabsf(x - o->x);
-		circleDistance.y = fabsf(y - o->y);
+		circleDistance.x = fabsf(o->x - c->x);
+		circleDistance.y = fabsf(o->y - c->y);
 
-		if (circleDistance.x > (o->w / 2 + r)) { return false; }
-		if (circleDistance.y > (o->h / 2 + r)) { return false; }
+		if (circleDistance.x > (c->w / 2 + o->r)) { return false; }
+		if (circleDistance.y > (c->h / 2 + o->r)) { return false; }
 
-		if (circleDistance.x <= (o->w / 2)) { return true; }
-		if (circleDistance.y <= (o->h / 2)) { return true; }
+		if (circleDistance.x <= (c->w / 2)) { return true; }
+		if (circleDistance.y <= (c->h / 2)) { return true; }
 
-		float cornerDistance_sq = powf((circleDistance.x - o->w / 2), 2) +
-			powf((circleDistance.y - o->h / 2), 2);
+		float cornerDistance_sq = powf((circleDistance.x - c->w / 2), 2) +
+			powf((circleDistance.y - c->h / 2), 2);
 
-		return (cornerDistance_sq <= (powf(r, 2)));
+		return (cornerDistance_sq <= (powf(o->r, 2)));
 	}
 
 
 
 	return ret;
 }
-
+auto DoCirclesOverlap = [](float x1, float y1, float r1, float x2, float y2, float r2)
+{
+	return fabs((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)) <= (r1 + r2) * (r1 + r2);
+};
 void PhysObject::Reposition(float x, float y)
 {
 
@@ -124,7 +171,7 @@ bool Physics::Update(float dt)
 
 	while (o != NULL)
 	{
-		if (o->data->type == Type::DYNAMIC)
+		if (o->data->physics_enabled && o->data->type == Type::DYNAMIC)
 		{
 			// Step #0: Reset total acceleration and total accumulated force of the ball (clear old values)
 			o->data->fx = o->data->fy = 0.0;
@@ -164,12 +211,11 @@ bool Physics::Update(float dt)
 			// You can also move this code into a subroutine: integrator_velocity_verlet(ball, dt);
 			switch (integrator)
 			{
-			case NONE:
-				break;
 			case VERLET:
 				IntegratorVelocityVerlet(o->data, dt);
 				break;
-			default:
+			case EULER:
+				IntegratorVelocityEuler(o->data, dt);
 				break;
 			}
 		}
@@ -184,71 +230,45 @@ bool Physics::Update(float dt)
 		{
 			if (c->data != o->data)
 			{
-				if ( c->data->Intersects(o->data))
+				if (Intersects(o->data, c->data))
 				{
 
-					float v1[2] = { o->data->vx,  o->data->vy };
+					float fDistance = sqrtf((o->data->x - c->data->x) * (o->data->x - c->data->x) + (o->data->y - c->data->y) * (o->data->y - c->data->y));
+
+					// Normal
+					float nx = (c->data->x - o->data->x) / fDistance;
+					float ny = (c->data->y - o->data->y) / fDistance;
+
+					// Tangent
+					float tx = -ny;
+					float ty = nx;
+
+					// Dot Product Tangent
+					float dpTan1 = o->data->vx * tx + c->data->vy * ty;
+					float dpTan2 = c->data->vx * tx + c->data->vy * ty;
+
+					// Dot Product Normal
+					float dpNorm1 = o->data->vx * nx + o->data->vy * ny;
+					float dpNorm2 = c->data->vx * nx + c->data->vy * ny;
+
+					// Conservation of momentum in 1D
+					float m1 = (dpNorm1 * (o->data->mass - c->data->mass) + 2.0f * c->data->mass * dpNorm2) / (o->data->mass + c->data->mass);
+					float m2 = (dpNorm2 * (c->data->mass - o->data->mass) + 2.0f * o->data->mass * dpNorm1) / (o->data->mass + c->data->mass);
+
+					// Update ball velocities
+					o->data->vx = tx * dpTan1 + nx * m1;
+					o->data->vy = ty * dpTan1 + ny * m1;
+					c->data->vx = tx * dpTan2 + nx * m2;
+					c->data->vy = ty * dpTan2 + ny * m2;
+					////TODO COLLISION FORCES STUFF
 					
-
-					float v2[2] = { c->data->vx,  c->data->vy };
 					
-
-					float x1[2] = { o->data->x,  o->data->y };
+					printf("\ncollision 1: %s 2: %s\n", o->data->name.GetString(), c->data->name.GetString());
 					
-
-					float x2[2] = { c->data->x, c->data->y };
-					p2Point<float> pv1;
-					pv1.x = o->data->vx;
-					pv1.y = o->data->vy;
-					p2Point<float> pv2;
-					pv2.x = c->data->vx;
-					pv2.y = c->data->vy;
-					p2Point<float> p1;
-					p1.x = o->data->x;
-					p1.y = o->data->y;
-					p2Point<float> p2;
-					p2.x = c->data->x;
-					p2.y = c->data->y;
-
-					float mass1 = (2 * c->data->mass) / (o->data->mass + c->data->mass);
-					float rest1[2];
-					Rest(v1, v2, rest1);
-					float rest2[2];
-					Rest(x1, x2, rest2);
-					float dot = DotProduct(rest1, rest2);
-					float mod = powf(Modulus(rest2), 2);
-					float product1 = dot / mod;
-
-					
-					p2Point<float> mult1 = (p1 - p2) * (mass1 * product1);
-					p2Point<float> v1P = (pv1 - mult1);
-
-
-					float mass2 = (2 * o->data->mass) / (o->data->mass + c->data->mass);
-					float rest3[2];
-					Rest(v2, v1, rest3);
-					float rest4[2];
-					Rest(x2, x1, rest4);
-
-					float product2 = DotProduct(rest1, rest2) / powf(Modulus(rest2), 2);
-					p2Point<float> mult2 = (p2 - p1) * (mass2 * product2);
-					p2Point<float> v2P = ( pv2 - mult2);
-
-					o->data->vx = 0;
-					o->data->vy = -41;
-
-					c->data->vx = 0;
-					c->data->vy = 41;
-
-				
-
-					printf("\n%s Object Expected vx: %f, vy: %f %s object vx: %f, vy: %f",o->data->name.GetString(), v1P.x, v1P.y,c->data->name.GetString(), v2P.x, v2P.y);
-					printf("\n%s Object Actual vx: %f, vy: %f %s object vx: %f, vy: %f", o->data->name.GetString(), o->data->vx, o->data->vy, c->data->name.GetString(), c->data->vx, c->data->vy);
-					//TODO COLLISION FORCES STUFF
-
-					LOG("collision");
 				}
+				
 			}
+			break;
 			c = c->next;
 		}
 		
@@ -261,14 +281,36 @@ bool Physics::Update(float dt)
 }
 // Integration scheme: Velocity Verlet
 // You should modularise all your algorithms into subroutines. Including the ones to compute forces.
-void Physics::IntegratorVelocityVerlet(PhysObject* obj, double dt)
+void Physics::IntegratorVelocityVerlet(PhysObject* obj, float dt)
 {
 	obj->x += obj->vx * dt + 0.5 * obj->ax * dt * dt;
 	obj->y += obj->vy * dt + 0.5 * obj->ay * dt * dt;
-	printf("\n%s vx: %f, vy: %f, ax: %f ay: %f", obj->name.GetString(), obj->vx, obj->vy, obj->ax, obj->ay);
 	obj->vx += obj->ax * dt;
 	obj->vy += obj->ay * dt;
-	printf("\n%s updated vx: %f, vy: %f ax: %f ay: %f", obj->name.GetString(), obj->vx, obj->vy, obj->ax, obj->ay);
+	if (obj->vy >= 300 || obj->vy <= -300)
+	{
+		obj->vy = 0;
+	}
+	if (obj->vx >= 300 || obj->vx <= -300)
+	{
+		obj->vx = 0;
+	}
+}
+void Physics::IntegratorVelocityEuler(PhysObject* obj, float dt)
+{
+	       // Gravity will always act on the body
+	obj->x += obj->vx * dt;
+	obj->y += obj->vy * dt;
+	obj->vx += obj->ax * dt;
+	obj->vy += obj->ay * dt;
+	if (obj->vy >= 300 || obj->vy <= -300)
+	{
+		obj->vy = 0;
+	}
+	if (obj->vx >= 300 || obj->vx <= -300)
+	{
+		obj->vx = 0;
+	}
 }
 bool Physics::CleanUp()
 {

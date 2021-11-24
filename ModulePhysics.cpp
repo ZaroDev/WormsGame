@@ -20,7 +20,7 @@ bool ModulePhysics::Start()
 {
 	LOG("Creating Physics 2D environment");
 
-	world.Start(Integrator::VERLET, 0.0f, 2.0f);
+	world.Start(Integrator::EULER, 0.0f, 1.0f);
 	world.atmosphere.density = 10.0f;
 	world.atmosphere.windx = 0.0f;
 	world.atmosphere.windy = 0.0f;
@@ -57,7 +57,7 @@ update_status ModulePhysics::PostUpdate()
 			App->renderer->DrawCircle(o->data->x, o->data->y, o->data->r, 255, 0, 0, 255);
 			break;
 		case Shape::RECTANGLE:
-			SDL_Rect rect = { o->data->x, o->data->y, o->data->w,o->data->h };
+			SDL_Rect rect = { o->data->x - o->data->w / 2, o->data->y - o->data->h / 2, o->data->w,o->data->h };
 			App->renderer->DrawQuad(rect, 0, 255, 0, 255, false);
 			break;
 		}

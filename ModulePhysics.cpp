@@ -31,7 +31,7 @@ bool ModulePhysics::Start()
 update_status ModulePhysics::PreUpdate()
 {
 	// TODO 3: Update the simulation ("step" the world)
-	world.Update(App->dt / 100);
+	
 	return UPDATE_CONTINUE;
 }
 
@@ -40,7 +40,7 @@ update_status ModulePhysics::PostUpdate()
 {
 	// TODO 5: On space bar press, create a circle on mouse position
 	// - You need to transform the position / radius
-
+	world.Update(App->dt / 100);
 	if(App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
 		debug = !debug;
 
@@ -51,22 +51,45 @@ update_status ModulePhysics::PostUpdate()
 
 	while (o != NULL)
 	{
-		switch (o->data->shape)
+		if (o->data->shape == Shape::CIRCLE)
 		{
-		case Shape::CIRCLE:
-			App->renderer->DrawCircle(o->data->x, o->data->y, o->data->r, 255, 0, 0, 255);
-			break;
-		case Shape::RECTANGLE:
-			SDL_Rect rect = { o->data->x - o->data->w / 2, o->data->y - o->data->h / 2, o->data->w,o->data->h };
-			App->renderer->DrawQuad(rect, 0, 255, 0, 255, false);
-			break;
+			if (o->data->portal == PortalType::ORANGE)
+			{
+				App->renderer->DrawCircle(o->data->x, o->data->y, o->data->r, 255, 69, 0, 255);
+			}
+			else if (o->data->portal == PortalType::PURPLE)
+			{
+				App->renderer->DrawCircle(o->data->x, o->data->y, o->data->r, 127, 0, 255, 255);
+			}
+			else
+			{
+				App->renderer->DrawCircle(o->data->x, o->data->y, o->data->r, 0, 0, 255, 255);
+
+			}
+
 		}
-		printf("\nName: %s", o->data->name.GetString());
-		printf("\nx: %f, y: %f", o->data->x, o->data->y);
-		printf("\nvx: %f, vy: %f", o->data->vx, o->data->vy);		
-		printf("\nfx: %f, fy: %f", o->data->fx, o->data->fy);
+		if (o->data->shape == Shape::RECTANGLE)
+		{
+			SDL_Rect rect = { o->data->x - o->data->w / 2, o->data->y - o->data->h / 2, o->data->w,o->data->h };
+			if (o->data->portal == PortalType::ORANGE)
+			{
+				App->renderer->DrawQuad(rect, 255, 69, 0, 255, false);
+				
+			}
 
+			else if (o->data->portal == PortalType::PURPLE)
+			{
+				App->renderer->DrawQuad(rect, 127, 0, 255, 255, false);
+				
+			}
+			else
+			{
+				App->renderer->DrawQuad(rect, 0, 255, 0, 255, false);
+			}
+		}
 
+		printf("\nName: %s, x: %f, y: %f", o->data->name.GetString(), o->data->x, o->data->y);
+		
 		o = o->next;
 	}
 	

@@ -40,7 +40,7 @@ bool ModuleSceneIntro::Start()
 	ball2->w = 30;
 	ball2->h = 30;
 	ball2->r = 30;
-	ball2->name.Create( "ground");
+	ball2->name.Create( "Ground");
 	ball2->type = Type::STATIC;
 
 	App->physics->world.CreateObject(ball);
@@ -89,8 +89,54 @@ update_status ModuleSceneIntro::Update()
 	if (App->input->GetKey(SDL_SCANCODE_F4))
 		App->controll = FrameTimeControll::CONTROLLDT;
 
-	
-	
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
+	{
+		PhysObject* o = new PhysObject(Shape::RECTANGLE, Type::DYNAMIC, (float)App->input->GetMouseX(), (float)App->input->GetMouseY(), 20, 20);
+		o->name.Create("Box");
+		App->physics->world.CreateObject(o);
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
+	{
+		Portal* p;
+		if (portals.Pop(p))
+		{
+			p->SetPortal1((float)App->input->GetMouseX(), (float)App->input->GetMouseY(), 20, 20, Shape::CIRCLE, Type::STATIC, PortalType::ORANGE, "Orange");
+			App->physics->world.CreateObject(p->p1);
+		}
+		else
+		{
+			//Si no hay un portal con un miembro vacio lo creo y lo añado
+			p = new Portal;
+			p->SetPortal1((float)App->input->GetMouseX(), (float)App->input->GetMouseY(), 20, 20, Shape::CIRCLE, Type::STATIC, PortalType::ORANGE, "Orange");
+			App->physics->world.CreateObject(p->p1);
+			portals.Push(p);
+		}
+		App->physics->world.portal = p;
+		
+	}
+	if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN)
+	{
+		Portal* p;
+		if (portals.Pop(p))
+		{
+			p->SetPortal2((float)App->input->GetMouseX(), (float)App->input->GetMouseY(), 20, 20, Shape::CIRCLE, Type::STATIC, PortalType::PURPLE, "Purple");
+			App->physics->world.CreateObject(p->p2);
+		}
+		else
+		{
+			//Si no hay un portal con un miembro vacio lo creo y lo añado
+			p = new Portal;
+			p->SetPortal2((float)App->input->GetMouseX(), (float)App->input->GetMouseY(), 20, 20, Shape::CIRCLE, Type::STATIC, PortalType::PURPLE, "Purple");
+			App->physics->world.CreateObject(p->p2);
+			portals.Push(p);
+		}
+		
+	}
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_DOWN)
+	{
+		App->physics->world.DestroyObject(ball);
+	}
 	string.Create("Current FPS: %f DeltaTime: %f  Expected FPS: %i, DeltaTime: %i", 1000 / App->dt, App->dt, 1000 / App->targetDT, App->targetDT);
 
 

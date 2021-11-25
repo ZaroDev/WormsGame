@@ -1,34 +1,11 @@
 #include "Physics.h"
 #include <math.h>
-
-PhysObject::PhysObject()
-{
-}
 float Distance(int x1, int y1, int x2, int y2)
 {
 	// Calculating distance
 	return sqrtf(powf(x2 - x1, 2) +
 		powf(y2 - y1, 2) * 1.0);
 }
-PhysObject::PhysObject(Shape shape_, Type type_, int x_, int y_, float w_, float h_)
-{
-	shape = shape_;
-	type = type_;
-	x = x_;
-	y = y_;
-	w = w_;
-	h = h_;
-	if (shape == Shape::CIRCLE)
-	{
-		r = w / 2;
-	}
-
-}
-
-PhysObject::~PhysObject()
-{
-}
-
 bool Intersects(PhysObject* o, PhysObject* c)
 {
 	float normalx;
@@ -70,14 +47,6 @@ bool Intersects(PhysObject* o, PhysObject* c)
 
 
 	return ret;
-}
-auto DoCirclesOverlap = [](float x1, float y1, float r1, float x2, float y2, float r2)
-{
-	return fabs((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)) <= (r1 + r2) * (r1 + r2);
-};
-void PhysObject::Reposition(float x, float y)
-{
-
 }
 
 Physics::Physics()
@@ -122,14 +91,14 @@ bool Physics::Update(float dt)
 			o->data->fy += fgy;
 
 			// Compute Aerodynamic Lift & Drag forces
-			/*float speed = sqrtf(powf((o->data->vx - atmosphere.windx), 2) + powf(o->data->vy - atmosphere.windy,2));*/
-			//float fdrag = 0.5 * atmosphere.density * speed * speed * o->data->surface * o->data->cd;
-			//float flift = 0.5 * atmosphere.density * speed * speed  * o->data->surface * o->data->cl;
-			//float fdx = -fdrag; // Let's assume Drag is aligned with x-axis (in your game, generalize this) Opuesta al vector speed = normalizar speed y multiplicar
-			//float fdy = flift; // Let's assume Lift is perpendicular with x-axis (in your game, generalize this)  Perpendicular al drag si la shape tiene lift
+			float speed = sqrtf(powf((o->data->vx - atmosphere.windx), 2) + powf(o->data->vy - atmosphere.windy,2));
+			float fdrag = 0.5 * atmosphere.density * speed * speed * o->data->surface * o->data->cd;
+			float flift = 0.5 * atmosphere.density * speed * speed  * o->data->surface * o->data->cl;
+			float fdx = -fdrag; // Let's assume Drag is aligned with x-axis (in your game, generalize this) Opuesta al vector speed = normalizar speed y multiplicar
+			float fdy = flift; // Let's assume Lift is perpendicular with x-axis (in your game, generalize this)  Perpendicular al drag si la shape tiene lift
 			// Add gravity force to the total accumulated force of the ball
-			/*o->data->fx += fdx;
-			o->data->fy += fdy;*/
+			//o->data->fx += fdx;
+			//o->data->fy += fdy;
 
 			// Other forces
 			// ...
@@ -143,17 +112,18 @@ bool Physics::Update(float dt)
 			// You can also move this code into a subroutine: integrator_velocity_verlet(ball, dt);
 			switch (integrator)
 			{
-			case VERLET:
+			case Integrator::VERLET:
 				IntegratorVelocityVerlet(o->data, dt);
 				break;
-			case SEULER:
+			case  Integrator::SEULER:
 				IntegratorVelocitySymplecticEuler(o->data, dt);
 				break;
-			case IEULER:
+			case  Integrator::IEULER:
 				IntegratorVelocityImplicitEuler(o->data, dt);
 				break;
 			}
 		}
+		
 		if (o->data->type == Type::STATIC)
 		{
 			o->data->fx = o->data->fy = o->data->vx = o->data->vx = 0.0;
@@ -167,43 +137,52 @@ bool Physics::Update(float dt)
 			{
 				if (Intersects(o->data, c->data))
 				{
-
-					float fDistance = sqrtf((o->data->x - c->data->x) * (o->data->x - c->data->x) + (o->data->y - c->data->y) * (o->data->y - c->data->y));
-
-					// Normal
-					float nx = (c->data->x - o->data->x) / fDistance;
-					float ny = (c->data->y - o->data->y) / fDistance;
-
-					// Tangent
-					float tx = -ny;
-					float ty = nx;
-
-					// Dot Product Tangent
-					float dpTan1 = o->data->vx * tx + c->data->vy * ty;
-					float dpTan2 = c->data->vx * tx + c->data->vy * ty;
-
-					// Dot Product Normal
-					float dpNorm1 = o->data->vx * nx + o->data->vy * ny;
-					float dpNorm2 = c->data->vx * nx + c->data->vy * ny;
-
-					// Conservation of momentum in 1D
-					float m1 = (dpNorm1 * (o->data->mass - c->data->mass) + 2.0f * c->data->mass * dpNorm2) / (o->data->mass + c->data->mass);
-					float m2 = (dpNorm2 * (c->data->mass - o->data->mass) + 2.0f * o->data->mass * dpNorm1) / (o->data->mass + c->data->mass);
-
-					// Update ball velocities
-					o->data->vx = tx * dpTan1 + nx * m1;
-					o->data->vy = ty * dpTan1 + ny * m1;
-					c->data->vx = tx * dpTan2 + nx * m2;
-					c->data->vy = ty * dpTan2 + ny * m2;
-					////TODO COLLISION FORCES STUFF
-					
-					
 					printf("\ncollision 1: %s 2: %s\n", o->data->name.GetString(), c->data->name.GetString());
-					
+					if (o->data->object == ObjectType::PORTAL && c->data->object != ObjectType::PORTAL && c->data->hasEnteredAPortal == false)
+					{
+						portal->Teletransport(o->data, c->data);
+						printf("\nPortal %s, %s", o->data->name.GetString(), c->data->name.GetString());
+						c->data->hasEnteredAPortal = true;
+						break;
+					}
+					else
+					{
+						float fDistance = sqrtf((o->data->x - c->data->x) * (o->data->x - c->data->x) + (o->data->y - c->data->y) * (o->data->y - c->data->y));
+
+						// Normal
+						float nx = (c->data->x - o->data->x) / fDistance;
+						float ny = (c->data->y - o->data->y) / fDistance;
+
+						// Tangent
+						float tx = -ny;
+						float ty = nx;
+
+						// Dot Product Tangent
+						float dpTan1 = o->data->vx * tx + c->data->vy * ty;
+						float dpTan2 = c->data->vx * tx + c->data->vy * ty;
+
+						// Dot Product Normal
+						float dpNorm1 = o->data->vx * nx + o->data->vy * ny;
+						float dpNorm2 = c->data->vx * nx + c->data->vy * ny;
+
+						// Conservation of momentum in 1D
+						float m1 = (dpNorm1 * (o->data->mass - c->data->mass) + 2.0f * c->data->mass * dpNorm2) / (o->data->mass + c->data->mass);
+						float m2 = (dpNorm2 * (c->data->mass - o->data->mass) + 2.0f * o->data->mass * dpNorm1) / (o->data->mass + c->data->mass);
+
+						// Update ball velocities
+						o->data->vx = tx * dpTan1 + nx * m1;
+						o->data->vy = ty * dpTan1 + ny * m1;
+						c->data->vx = tx * dpTan2 + nx * m2;
+						c->data->vy = ty * dpTan2 + ny * m2;
+						////TODO COLLISION FORCES STUFF
+
+
+						
+					}
 				}
 				
 			}
-			break;
+			
 			c = c->next;
 		}
 		
@@ -272,5 +251,16 @@ bool Physics::CleanUp()
 void Physics::CreateObject(PhysObject* obj)
 {
 	objects.add(obj);
+}
+
+void Physics::DestroyObject(PhysObject* obj)
+{
+	
+	p2List_item<PhysObject*>* a = objects.findNode(obj);
+	p2List_item<PhysObject*>* b = objects.findNode(obj);
+
+	objects.del(a);
+	delete a;
+	delete obj;
 }
 

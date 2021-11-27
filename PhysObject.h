@@ -12,7 +12,8 @@ enum class ObjectType
 	STANDART = -1,
 	PORTAL,
 	PLANT,
-	SENSOR
+	SENSOR,
+	WATER
 };
 enum class PortalType
 {
@@ -62,9 +63,12 @@ public:
 	float mass = 1.0f;
 
 	// Aerodynamics stuff
-	float surface = 2.0f; // Effective wet surface
-	float cl = 1.2f; // Lift coefficient
-	float cd = 0.4f; // Drag coefficient
+	float surface = .02f; // Effective wet surface
+	float cl = 0.012f; // Lift coefficient
+	float cd = 0.004f; // Drag coefficient
+
+	float density = 1.0f;
+
 	Shape shape;
 	Type type;
 	SString name;
@@ -72,6 +76,9 @@ public:
 	PortalType portal = PortalType::NONE;
 	int portalFrames = 0;
 	bool hasEnteredAPortal = false;
+	bool setPendingToDelete = false;
+	bool hasLift = false;
+	bool isOnWater = false;
 	// Has physics enabled?
 	bool physics_enabled = true;
 	

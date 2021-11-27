@@ -5,8 +5,6 @@
 #include "Globals.h"
 #include "ModulePhysics.h"
 #include "Portal.h"
-#include "p2List.h"
-#include "Queue.h"
 
 class ModuleSceneIntro : public Module
 {
@@ -21,7 +19,6 @@ public:
 public:
 	PhysObject* ball;
 	PhysObject* ball2;
-	Queue<Portal*> portals;
-	Queue<PhysObject*> portalObjects;
+	Portal* portal;
 
 };

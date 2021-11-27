@@ -1,5 +1,10 @@
 #include "Physics.h"
 #include <math.h>
+
+
+
+
+
 float Distance(int x1, int y1, int x2, int y2)
 {
 	// Calculating distance
@@ -68,128 +73,174 @@ bool Physics::Start(Integrator _integrator, float gx, float gy)
 	return ret;
 }
 
+bool Physics::PreUpdate()
+{
+	bool ret = true;
+	p2List_item<PhysObject*>* o = objects.getFirst();
+	while (o != NULL)
+	{
+		if (o->data->setPendingToDelete)
+		{
+			objects.del(o);
+			break;
+		}
+		o = o->next;
+	}
+	return ret;
+}
+
 bool Physics::Update(float dt)
 {
 	p2List_item<PhysObject*>* o = objects.getFirst();
 
 	while (o != NULL)
 	{
-		if (o->data->physics_enabled && o->data->type == Type::DYNAMIC)
+		if (o->data->physics_enabled)
 		{
-			// Step #0: Reset total acceleration and total accumulated force of the ball (clear old values)
-			o->data->fx = o->data->fy = 0.0;
-			o->data->ax = o->data->ay = 0.0;
-
-			// Step #1: Compute forces
-
-				// Compute Gravity force
-			float fgx = o->data->mass * gravityX;
-			float fgy = o->data->mass * gravityY; // Let's assume gravity is constant and downwards
-
-			// Add gravity force to the total accumulated force of the ball
-			o->data->fx += fgx;
-			o->data->fy += fgy;
-
-			// Compute Aerodynamic Lift & Drag forces
-			float speed = sqrtf(powf((o->data->vx - atmosphere.windx), 2) + powf(o->data->vy - atmosphere.windy,2));
-			float fdrag = 0.5 * atmosphere.density * speed * speed * o->data->surface * o->data->cd;
-			float flift = 0.5 * atmosphere.density * speed * speed  * o->data->surface * o->data->cl;
-			float fdx = -fdrag; // Let's assume Drag is aligned with x-axis (in your game, generalize this) Opuesta al vector speed = normalizar speed y multiplicar
-			float fdy = flift; // Let's assume Lift is perpendicular with x-axis (in your game, generalize this)  Perpendicular al drag si la shape tiene lift
-			// Add gravity force to the total accumulated force of the ball
-			//o->data->fx += fdx;
-			//o->data->fy += fdy;
-
-			// Other forces
-			// ...
-
-			// Step #2: 2nd Newton's Law: SUM_Forces = mass * accel --> accel = SUM_Forces / mass
-			o->data->ax = o->data->fx / o->data->mass;
-			o->data->ay = o->data->fy / o->data->mass;
-
-			// Step #3: Integrate --> from accel to new velocity & new position. 
-			// We will use the 2nd order "Velocity Verlet" method for integration.
-			// You can also move this code into a subroutine: integrator_velocity_verlet(ball, dt);
-			switch (integrator)
+			switch (o->data->type)
 			{
-			case Integrator::VERLET:
-				IntegratorVelocityVerlet(o->data, dt);
-				break;
-			case  Integrator::SEULER:
-				IntegratorVelocitySymplecticEuler(o->data, dt);
-				break;
-			case  Integrator::IEULER:
-				IntegratorVelocityImplicitEuler(o->data, dt);
-				break;
-			}
-		}
-		
-		if (o->data->type == Type::STATIC)
-		{
-			o->data->fx = o->data->fy = o->data->vx = o->data->vx = 0.0;
-			o->data->ax = o->data->ay = 0.0;
-		}
-		//Collision Solver
-		p2List_item<PhysObject*>* c = objects.getFirst();
-		while (c != NULL)
-		{
-			if (c->data != o->data)
+			case Type::DYNAMIC:
 			{
-				if (Intersects(o->data, c->data))
+				// Step #0: Reset total acceleration and total accumulated force of the ball (clear old values)
+				o->data->fx = o->data->fy = 0.0;
+				o->data->ax = o->data->ay = 0.0;
+
+				// Step #1: Compute forces
+
+					// Compute Gravity force
+				float fgx = o->data->mass * gravityX;
+				float fgy = o->data->mass * gravityY; // Let's assume gravity is constant and downwards
+
+				// Add gravity force to the total accumulated force of the ball
+				o->data->fx += fgx;
+				o->data->fy += fgy;
+
+				// Compute Aerodynamic Lift & Drag forces
+				float speed = sqrtf(powf((o->data->vx - atmosphere.windx), 2) + powf(o->data->vy - atmosphere.windy,2));
+				if (o->data->vx != 0 && !o->data->isOnWater )
 				{
-					printf("\ncollision 1: %s 2: %s\n", o->data->name.GetString(), c->data->name.GetString());
-					if (o->data->object == ObjectType::PORTAL && c->data->object != ObjectType::PORTAL && c->data->hasEnteredAPortal == false)
-					{
-						portal->Teletransport(o->data, c->data);
-						printf("\nPortal %s, %s", o->data->name.GetString(), c->data->name.GetString());
-						c->data->hasEnteredAPortal = true;
-						break;
-					}
-					else
-					{
-						float fDistance = sqrtf((o->data->x - c->data->x) * (o->data->x - c->data->x) + (o->data->y - c->data->y) * (o->data->y - c->data->y));
-
-						// Normal
-						float nx = (c->data->x - o->data->x) / fDistance;
-						float ny = (c->data->y - o->data->y) / fDistance;
-
-						// Tangent
-						float tx = -ny;
-						float ty = nx;
-
-						// Dot Product Tangent
-						float dpTan1 = o->data->vx * tx + c->data->vy * ty;
-						float dpTan2 = c->data->vx * tx + c->data->vy * ty;
-
-						// Dot Product Normal
-						float dpNorm1 = o->data->vx * nx + o->data->vy * ny;
-						float dpNorm2 = c->data->vx * nx + c->data->vy * ny;
-
-						// Conservation of momentum in 1D
-						float m1 = (dpNorm1 * (o->data->mass - c->data->mass) + 2.0f * c->data->mass * dpNorm2) / (o->data->mass + c->data->mass);
-						float m2 = (dpNorm2 * (c->data->mass - o->data->mass) + 2.0f * o->data->mass * dpNorm1) / (o->data->mass + c->data->mass);
-
-						// Update ball velocities
-						o->data->vx = tx * dpTan1 + nx * m1;
-						o->data->vy = ty * dpTan1 + ny * m1;
-						c->data->vx = tx * dpTan2 + nx * m2;
-						c->data->vy = ty * dpTan2 + ny * m2;
-						////TODO COLLISION FORCES STUFF
-
-
-						
-					}
+					float fdrag = 0.5 * atmosphere.density * speed * speed * o->data->surface * o->data->cd;
+					float fdx = -fdrag; // Let's assume Drag is aligned with x-axis (in your game, generalize this) Opuesta al vector speed = normalizar speed y multiplicar
+					o->data->fx += fdx;
+				}
+				// Let's assume Lift is perpendicular with x-axis (in your game, generalize this)  Perpendicular al drag si la shape tiene lift
+				
+				if (o->data->vy > 0 && !o->data->isOnWater)
+				{
+					float flift = 0.5 * atmosphere.density * speed * speed * o->data->surface * o->data->cl;
+					float fdy = -flift;
+					o->data->fy += fdy;
 				}
 				
+				
+
+				// Other forces
+				// ...
+				if (o->data->isOnWater)
+				{
+					float bfx = o->data->mass * gravityX * (water->density / o->data->density);
+					float bfy = o->data->mass * gravityY * (water->density / o->data->density);
+					o->data->fx -= bfx;
+					o->data->fy -= bfy;
+					o->data->isOnWater = false;
+				}
+				
+				// Step #2: 2nd Newton's Law: SUM_Forces = mass * accel --> accel = SUM_Forces / mass
+				o->data->ax = o->data->fx / o->data->mass;
+				o->data->ay = o->data->fy / o->data->mass;
+				printf("\nfx: %f, fy: %f", o->data->fx, o->data->fy);
+				// Step #3: Integrate --> from accel to new velocity & new position. 
+				// We will use the 2nd order "Velocity Verlet" method for integration.
+				// You can also move this code into a subroutine: integrator_velocity_verlet(ball, dt);
+				switch (integrator)
+				{
+				case Integrator::VERLET:
+					IntegratorVelocityVerlet(o->data, dt);
+					break;
+				case  Integrator::SEULER:
+					IntegratorVelocitySymplecticEuler(o->data, dt);
+					break;
+				case  Integrator::IEULER:
+					IntegratorVelocityImplicitEuler(o->data, dt);
+					break;
+				}
+
+				p2List_item<PhysObject*>* c = objects.getFirst();
+
+				while (c != NULL)
+				{
+					if (c->data != o->data)
+					{
+						
+						if (Intersects(o->data, c->data))
+						{
+							printf("\ncollision 1: %s 2: %s\n", o->data->name.GetString(), c->data->name.GetString());
+							if (o->data != water && c->data == water)
+							{
+								o->data->isOnWater = true;
+								break;
+							}
+							
+							
+							if (o->data->object == ObjectType::PORTAL && c->data->object != ObjectType::PORTAL)
+							{
+								portal->Teletransport(o->data, c->data);
+								printf("\nPortal %s, %s", o->data->name.GetString(), c->data->name.GetString());
+								break;
+							}
+
+							float fDistance = sqrtf((o->data->x - c->data->x) * (o->data->x - c->data->x) + (o->data->y - c->data->y) * (o->data->y - c->data->y));
+
+							// Normal
+							float nx = (c->data->x - o->data->x) / fDistance;
+							float ny = (c->data->y - o->data->y) / fDistance;
+
+							// Tangent
+							float tx = -ny;
+							float ty = nx;
+
+							// Dot Product Tangent
+							float dpTan1 = o->data->vx * tx + c->data->vy * ty;
+							float dpTan2 = c->data->vx * tx + c->data->vy * ty;
+
+							// Dot Product Normal
+							float dpNorm1 = o->data->vx * nx + o->data->vy * ny;
+							float dpNorm2 = c->data->vx * nx + c->data->vy * ny;
+
+							// Conservation of momentum in 1D
+							float m1 = (dpNorm1 * (o->data->mass - c->data->mass) + 2.0f * c->data->mass * dpNorm2) / (o->data->mass + c->data->mass);
+							float m2 = (dpNorm2 * (c->data->mass - o->data->mass) + 2.0f * o->data->mass * dpNorm1) / (o->data->mass + c->data->mass);
+
+							// Update ball velocities
+							o->data->vx = tx * dpTan1 + nx * m1;
+							o->data->vy = ty * dpTan1 + ny * m1;
+							c->data->vx = tx * dpTan2 + nx * m2;
+							c->data->vy = ty * dpTan2 + ny * m2;
+							////TODO COLLISION FORCES STUFF
+
+
+							printf("\nExpected Vel x: %f, y %f", o->data->vx, o->data->vy);
+
+
+						}
+
+					}
+					c = c->next;
+				}
+				break;
 			}
-			
-			c = c->next;
+			case Type::STATIC:
+			{
+				o->data->fx = o->data->fy = o->data->vx = o->data->vx = 0.0;
+				o->data->ax = o->data->ay = 0.0;
+			}
+			}
+			//Collision Solver
+
 		}
-		
-		
 		o = o->next;
 	}
-
+	printf("\n Delta Time : %f", dt);
 
 	return true;
 }
@@ -209,6 +260,7 @@ void Physics::IntegratorVelocityVerlet(PhysObject* obj, float dt)
 	{
 		obj->vx = 0;
 	}
+	printf("\nVel x: %f, y: %f", obj->vx, obj->vy);
 }
 void Physics::IntegratorVelocitySymplecticEuler(PhysObject* obj, float dt)
 {
@@ -255,12 +307,6 @@ void Physics::CreateObject(PhysObject* obj)
 
 void Physics::DestroyObject(PhysObject* obj)
 {
-	
-	p2List_item<PhysObject*>* a = objects.findNode(obj);
-	p2List_item<PhysObject*>* b = objects.findNode(obj);
-
-	objects.del(a);
-	delete a;
-	delete obj;
+	obj->setPendingToDelete = true;
 }
 

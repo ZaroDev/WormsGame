@@ -28,9 +28,9 @@ bool ModuleSceneIntro::Start()
 	ball->w = 30;
 	ball->h = 30;
 	ball->r = 30;
+	ball->density = 1.0f;
 	ball->name.Create("Ball");
 	ball->type = Type::DYNAMIC;
-
 
 	ball2 = new PhysObject();
 	ball2->x = 300.0f;
@@ -45,6 +45,24 @@ bool ModuleSceneIntro::Start()
 
 	App->physics->world.CreateObject(ball);
 	App->physics->world.CreateObject(ball2);
+
+
+	PhysObject* water = new PhysObject();
+	water->x = 0;
+	water->y = 500;
+	water->shape = Shape::RECTANGLE;
+	water->w = 2000;
+	water->h = 250;
+	water->density = 1.0f;
+	water->mass = water->w * water->h * water->density;
+	water->object = ObjectType::WATER;
+	water->type = Type::STATIC;
+	water->name.Create("Water");
+
+	App->physics->world.CreateObject(water);
+	App->physics->world.water = water;
+
+	portal = new Portal();
 
 	return ret;
 }
@@ -96,48 +114,28 @@ update_status ModuleSceneIntro::Update()
 		App->physics->world.CreateObject(o);
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_Z) == KEY_DOWN)
-	{
-		Portal* p;
-		if (portals.Pop(p))
-		{
-			p->SetPortal1((float)App->input->GetMouseX(), (float)App->input->GetMouseY(), 20, 20, Shape::CIRCLE, Type::STATIC, PortalType::ORANGE, "Orange");
-			App->physics->world.CreateObject(p->p1);
-		}
-		else
-		{
-			//Si no hay un portal con un miembro vacio lo creo y lo añado
-			p = new Portal;
-			p->SetPortal1((float)App->input->GetMouseX(), (float)App->input->GetMouseY(), 20, 20, Shape::CIRCLE, Type::STATIC, PortalType::ORANGE, "Orange");
-			App->physics->world.CreateObject(p->p1);
-			portals.Push(p);
-		}
-		App->physics->world.portal = p;
-		
-	}
+	string.Create("Current FPS: %f DeltaTime: %f  Expected FPS: %i, DeltaTime: %i", 1000 / App->dt, App->dt, 1000 / App->targetDT, App->targetDT);
+
 	if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN)
 	{
-		Portal* p;
-		if (portals.Pop(p))
-		{
-			p->SetPortal2((float)App->input->GetMouseX(), (float)App->input->GetMouseY(), 20, 20, Shape::CIRCLE, Type::STATIC, PortalType::PURPLE, "Purple");
-			App->physics->world.CreateObject(p->p2);
-		}
-		else
-		{
-			//Si no hay un portal con un miembro vacio lo creo y lo añado
-			p = new Portal;
-			p->SetPortal2((float)App->input->GetMouseX(), (float)App->input->GetMouseY(), 20, 20, Shape::CIRCLE, Type::STATIC, PortalType::PURPLE, "Purple");
-			App->physics->world.CreateObject(p->p2);
-			portals.Push(p);
-		}
-		
+		portal->SetPortal1((float)App->input->GetMouseX(), (float)App->input->GetMouseY(), 10, 10, Shape::RECTANGLE, Type::STATIC, PortalType::ORANGE, "Orange");
+		if(!portal->active1)
+			App->physics->world.CreateObject(portal->p1);
+
+		App->physics->world.portal = portal;
 	}
-	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN)
 	{
-		App->physics->world.DestroyObject(ball);
+		portal->SetPortal2((float)App->input->GetMouseX(), (float)App->input->GetMouseY(), 10, 10, Shape::RECTANGLE, Type::STATIC, PortalType::PURPLE, "Purple");
+		if (!portal->active2)
+			App->physics->world.CreateObject(portal->p2);
 	}
-	string.Create("Current FPS: %f DeltaTime: %f  Expected FPS: %i, DeltaTime: %i", 1000 / App->dt, App->dt, 1000 / App->targetDT, App->targetDT);
+
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
+	{
+		ball->cl = 2.0f;
+	}
+
 
 
 	App->window->SetTitle(string.GetString());

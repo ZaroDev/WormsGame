@@ -25,7 +25,7 @@ public:
 	~Physics();
 
 	bool Start(Integrator _integrator, float gx, float gy);
-
+	bool PreUpdate();
 	bool Update(float dt);
 
 	bool CleanUp();
@@ -36,6 +36,7 @@ public:
 	void IntegratorVelocitySymplecticEuler(PhysObject* obj, float dt);
 	void IntegratorVelocityImplicitEuler(PhysObject* obj, float dt);
 	Portal* portal;
+	PhysObject* water;
 	Atmosphere atmosphere;
 	Integrator integrator = Integrator::IEULER;
 	p2List<PhysObject*> objects;

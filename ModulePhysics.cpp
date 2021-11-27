@@ -31,7 +31,9 @@ bool ModulePhysics::Start()
 update_status ModulePhysics::PreUpdate()
 {
 	// TODO 3: Update the simulation ("step" the world)
-	
+	world.PreUpdate();
+
+
 	return UPDATE_CONTINUE;
 }
 
@@ -53,13 +55,20 @@ update_status ModulePhysics::PostUpdate()
 	{
 		if (o->data->shape == Shape::CIRCLE)
 		{
-			if (o->data->portal == PortalType::ORANGE)
+			if (o->data->object == ObjectType::PORTAL)
 			{
-				App->renderer->DrawCircle(o->data->x, o->data->y, o->data->r, 255, 69, 0, 255);
+				if (o->data->portal == PortalType::ORANGE)
+				{
+					App->renderer->DrawCircle(o->data->x, o->data->y, o->data->r, 255, 69, 0, 255);
+				}
+				else if (o->data->portal == PortalType::PURPLE)
+				{
+					App->renderer->DrawCircle(o->data->x, o->data->y, o->data->r, 127, 0, 255, 255);
+				}
 			}
-			else if (o->data->portal == PortalType::PURPLE)
+			if (o->data->object == ObjectType::WATER)
 			{
-				App->renderer->DrawCircle(o->data->x, o->data->y, o->data->r, 127, 0, 255, 255);
+				App->renderer->DrawCircle(o->data->x, o->data->y, o->data->r, 0, 123, 255, 255);
 			}
 			else
 			{
@@ -71,16 +80,23 @@ update_status ModulePhysics::PostUpdate()
 		if (o->data->shape == Shape::RECTANGLE)
 		{
 			SDL_Rect rect = { o->data->x - o->data->w / 2, o->data->y - o->data->h / 2, o->data->w,o->data->h };
-			if (o->data->portal == PortalType::ORANGE)
+			if (o->data->object == ObjectType::PORTAL)
 			{
-				App->renderer->DrawQuad(rect, 255, 69, 0, 255, false);
-				
-			}
+				if (o->data->portal == PortalType::ORANGE)
+				{
+					App->renderer->DrawQuad(rect, 255, 69, 0, 255, false);
 
-			else if (o->data->portal == PortalType::PURPLE)
+				}
+
+				else if (o->data->portal == PortalType::PURPLE)
+				{
+					App->renderer->DrawQuad(rect, 127, 0, 255, 255, false);
+
+				}
+			}
+			if (o->data->object == ObjectType::WATER)
 			{
-				App->renderer->DrawQuad(rect, 127, 0, 255, 255, false);
-				
+				App->renderer->DrawQuad(rect, 0, 123, 255, 255, false);
 			}
 			else
 			{
@@ -89,7 +105,12 @@ update_status ModulePhysics::PostUpdate()
 		}
 
 		printf("\nName: %s, x: %f, y: %f", o->data->name.GetString(), o->data->x, o->data->y);
-		
+		if (o->data->y >= 800)
+		{
+			App->physics->world.DestroyObject(o->data);
+		}
+
+
 		o = o->next;
 	}
 	

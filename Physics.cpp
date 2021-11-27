@@ -49,6 +49,24 @@ bool Intersects(PhysObject* o, PhysObject* c)
 		return (cornerDistance_sq <= (powf(o->r, 2)));
 	}
 
+	if (o->shape == Shape::RECTANGLE && c->shape == Shape::CIRCLE)
+	{
+		p2Point<float> circleDistance;
+		circleDistance.x = fabsf(c->x - o->x);
+		circleDistance.y = fabsf(c->y - o->y);
+
+		if (circleDistance.x > (o->w / 2 + c->r)) { return false; }
+		if (circleDistance.y > (o->h / 2 + c->r)) { return false; }
+
+		if (circleDistance.x <= (o->w / 2)) { return true; }
+		if (circleDistance.y <= (o->h / 2)) { return true; }
+
+		float cornerDistance_sq = powf((circleDistance.x - o->w / 2), 2) +
+			powf((circleDistance.y - o->h / 2), 2);
+
+		return (cornerDistance_sq <= (powf(c->r, 2)));
+	}
+
 
 
 	return ret;

@@ -23,7 +23,7 @@ bool ModuleSceneIntro::Start()
 	ball = new PhysObject();
 	ball->x = 300.0f;
 	ball->y = 0.0f;
-	ball->mass = 20.0f;
+	ball->mass = 50.0f;
 	ball->shape = Shape::RECTANGLE;
 	ball->w = 30;
 	ball->h = 30;
@@ -34,12 +34,13 @@ bool ModuleSceneIntro::Start()
 
 	ball2 = new PhysObject();
 	ball2->x = 300.0f;
-	ball2->y = 750.0f;
-	ball2->mass = 3.0f;
+	ball2->y = 300.0f;
+	ball2->mass = 1.0f;
 	ball2->shape = Shape::RECTANGLE;
 	ball2->w = 50;
 	ball2->h = 30;
 	ball2->r = 30;
+	ball2->restitution = 1.0f;
 	ball2->name.Create( "Ground");
 	ball2->type = Type::STATIC;
 
@@ -47,7 +48,7 @@ bool ModuleSceneIntro::Start()
 	App->physics->world.CreateObject(ball2);
 
 
-	/*PhysObject* water = new PhysObject();
+	PhysObject* water = new PhysObject();
 	water->x = 0;
 	water->y = 500;
 	water->shape = Shape::RECTANGLE;
@@ -60,7 +61,7 @@ bool ModuleSceneIntro::Start()
 	water->name.Create("Water");
 
 	App->physics->world.CreateObject(water);
-	App->physics->world.water = water;*/
+	App->physics->world.water = water;
 
 	portal = new Portal();
 
@@ -131,9 +132,9 @@ update_status ModuleSceneIntro::Update()
 			App->physics->world.CreateObject(portal->p2);
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_F) == KEY_DOWN)
 	{
-		ball->cl = 2.0f;
+		ball->cl = 10.0f;
 	}
 
 

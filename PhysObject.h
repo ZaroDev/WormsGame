@@ -67,6 +67,7 @@ public:
 
 	float density = 1.0f;
 
+	float restitution = 1.0f;
 	Shape shape;
 	Type type;
 	SString name;

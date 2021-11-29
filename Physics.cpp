@@ -190,59 +190,59 @@ bool Physics::Update(float dt)
 			{
 				if (c->data != o->data)
 				{
-					if(c->data->type == Type::DYNAMIC)
-					{ 
-						if (Intersects(o->data, c->data))
+					if (Intersects(o->data, c->data))
+					{
+						printf("\ncollision 1: %s 2: %s\n", o->data->name.GetString(), c->data->name.GetString());
+						if (o->data != water && c->data == water)
 						{
-							printf("\ncollision 1: %s 2: %s\n", o->data->name.GetString(), c->data->name.GetString());
-							if (o->data != water && c->data == water)
-							{
-								o->data->isOnWater = true;
-								break;
-							}
-							else if (o->data->object == ObjectType::PORTAL && c->data->object != ObjectType::PORTAL)
-							{
-								portal->Teletransport(o->data, c->data);
-								printf("\nPortal %s, %s", o->data->name.GetString(), c->data->name.GetString());
-								break;
-							}
-							else
-							{
+							o->data->isOnWater = true;
+							break;
+						}
+						else if (o->data->object == ObjectType::PORTAL && c->data->object != ObjectType::PORTAL)
+						{
+							portal->Teletransport(o->data, c->data);
+							printf("\nPortal %s, %s", o->data->name.GetString(), c->data->name.GetString());
+							break;
+						}
+						if (c->data->type == Type::STATIC)
+						{
+							o->data->v.x = 0;
+							o->data->v.y = 0;
+							o->data->a.x = 0;
+							o->data->a.y = 0;
+							o->data->f.x = 0;
+							o->data->f.y = 0;
+							o->data->y = o->data->y - o->data->h / 2;
+							break;
+						}
+						if(c->data->type == Type::DYNAMIC && o->data->type == Type::DYNAMIC)
+						{
 								//2m2/m1+m2
-								float mass1 = (2 * c->data->mass) / (o->data->mass + c->data->mass);
-								float mass2 = (2 * o->data->mass) / (o->data->mass + c->data->mass);
+							float mass1 = (2 * c->data->mass) / (o->data->mass + c->data->mass);
+							float mass2 = (2 * o->data->mass) / (o->data->mass + c->data->mass);
 
-								//dot(v1-v2,  x1-x2) / ||x1-x2||^2
-								Vector2d x1;
-								x1.x = o->data->x;
-								x1.y = o->data->y;
-								Vector2d x2;
-								x2.x = c->data->x;
-								x2.y = c->data->y;
-								float dot1 = Vector2d::CrossProduct(o->data->v - c->data->v, x1 - x2) / powf(Vector2d::Magnitude(x1 - x2), 2.0f);
-								float dot2 = Vector2d::CrossProduct(c->data->v - o->data->v, x2 - x1) / powf(Vector2d::Magnitude(x2 - x1), 2.0f);
-								Vector2d mult1 = (x1 - x2);
-								Vector2d mult2 = (x2 - x1);
+							//dot(v1-v2,  x1-x2) / ||x1-x2||^2
+							Vector2d x1;
+							x1.x = o->data->x;
+							x1.y = o->data->y;
+							Vector2d x2;
+							x2.x = c->data->x;
+							x2.y = c->data->y;
+							float dot1 = Vector2d::CrossProduct(o->data->v - c->data->v, x1 - x2) / powf(Vector2d::Magnitude(x1 - x2), 2.0f);
+							float dot2 = Vector2d::CrossProduct(c->data->v - o->data->v, x2 - x1) / powf(Vector2d::Magnitude(x2 - x1), 2.0f);
+							Vector2d mult1 = (x1 - x2);
+							Vector2d mult2 = (x2 - x1);
 
-								mult1 *= dot1 * mass1;
-								mult2 *= dot2 * mass2;
+							mult1 *= dot1 * mass1;
+							mult2 *= dot2 * mass2;
 
-								o->data->v = o->data->v - (mult1 * -1) / 2;
-								c->data->v = c->data->v - (mult2 * -1) / 2;
+							o->data->v = o->data->v - (mult1 * -1) * c->data->restitution;
+							c->data->v = c->data->v - (mult2 * -1) * o->data->restitution;
 
-								printf("\nExpected Vel x: %f, y %f", o->data->v.x, o->data->v.y);
-							}
+							printf("\nExpected Vel x: %f, y %f", o->data->v.x, o->data->v.y);
 						}
 					}
-					else
-					{
-						//m1-m2 / m1+m2
-						float mass1 = (o->data->mass - c->data->mass) / (o->data->mass + c->data->mass);
-						float mass2 = (c->data->mass - o->data->mass) / (c->data->mass + o->data->mass);
-						//2m2 / m1+m2
-						float masst1 = (2 * c->data->mass) / o->data->mass + c->data->mass;
-						float masst2 = (2 * o->data->mass) / c->data->mass + o->data->mass;
-					}
+
 				}
 				c = c->next;
 			}

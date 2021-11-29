@@ -38,12 +38,16 @@ public:
 	PhysObject(Shape shape_, Type type_, int x_, int y_, float w_, float h_);
 	~PhysObject();
 	
-
+	void SetLimit(Vector2d limit);
 
 	float w = 0.0f;
 	float h = 0.0f;
-	float r = 0.0f;
+	float R = 0.0f;
 
+	float l, ol;
+	float r, oR;
+	float t, ot;
+	float b, ob;
 	// You could also use an array/vector
 	float x = 0.0f;
 	float y = 0.0f;
@@ -77,6 +81,8 @@ public:
 	bool hasEnteredAPortal = false;
 	bool hasLift = false;
 	bool isOnWater = false;
+
+	Vector2d limitSpeed;
 	// Has physics enabled?
 	bool physics_enabled = true;
 	

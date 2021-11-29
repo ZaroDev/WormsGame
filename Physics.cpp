@@ -106,9 +106,9 @@ bool Physics::PreUpdate()
 
 bool Physics::Update(float dt)
 {
-	p2List_item<PhysObject*>* o = objects.getFirst();
+	
 
-	while (o != NULL)
+	for (p2List_item<PhysObject*>* o = objects.getFirst(); o != NULL; o = o->next)
 	{
 		if (o->data->physics_enabled)
 		{
@@ -163,6 +163,12 @@ bool Physics::Update(float dt)
 				// Step #2: 2nd Newton's Law: SUM_Forces = mass * accel --> accel = SUM_Forces / mass
 				o->data->a.x = o->data->f.x / o->data->mass;
 				o->data->a.y = o->data->f.y / o->data->mass;
+
+				o->data->ol = o->data->x - o->data->w / 2;
+				o->data->oR = o->data->x + o->data->w / 2;
+				o->data->ot = o->data->y - o->data->h / 2;
+				o->data->ob = o->data->y + o->data->h / 2;
+
 				printf("\nfx: %f, fy: %f", o->data->f.x, o->data->f.y);
 				// Step #3: Integrate --> from accel to new velocity & new position. 
 				// We will use the 2nd order "Velocity Verlet" method for integration.
@@ -179,14 +185,16 @@ bool Physics::Update(float dt)
 					IntegratorVelocityImplicitEuler(o->data, dt);
 					break;
 				}
-
+				o->data->l = o->data->x - o->data->w / 2;
+				o->data->r = o->data->x + o->data->w / 2;
+				o->data->t = o->data->y - o->data->h / 2;
+				o->data->b = o->data->y + o->data->h / 2;
+				
 			}
 			}
 
 			//Collision Solver
-		p2List_item<PhysObject*>* c = objects.getFirst();
-
-			while (c != NULL)
+			for(p2List_item<PhysObject*>* c = objects.getFirst(); c != NULL; c = c->next)
 			{
 				if (c->data != o->data)
 				{
@@ -206,48 +214,22 @@ bool Physics::Update(float dt)
 						}
 						if (c->data->type == Type::STATIC)
 						{
-							o->data->v.x = 0;
-							o->data->v.y = 0;
-							o->data->a.x = 0;
-							o->data->a.y = 0;
-							o->data->f.x = 0;
-							o->data->f.y = 0;
-							o->data->y = o->data->y - o->data->h / 2;
-							break;
+							if (o->data->t >= c->data->b && o->data->ot < c->data->ob)
+							{
+								o->data->y = o->data->t + o->data->h / 2;
+							}
+							
 						}
 						if(c->data->type == Type::DYNAMIC && o->data->type == Type::DYNAMIC)
 						{
-								//2m2/m1+m2
-							float mass1 = (2 * c->data->mass) / (o->data->mass + c->data->mass);
-							float mass2 = (2 * o->data->mass) / (o->data->mass + c->data->mass);
-
-							//dot(v1-v2,  x1-x2) / ||x1-x2||^2
-							Vector2d x1;
-							x1.x = o->data->x;
-							x1.y = o->data->y;
-							Vector2d x2;
-							x2.x = c->data->x;
-							x2.y = c->data->y;
-							float dot1 = Vector2d::CrossProduct(o->data->v - c->data->v, x1 - x2) / powf(Vector2d::Magnitude(x1 - x2), 2.0f);
-							float dot2 = Vector2d::CrossProduct(c->data->v - o->data->v, x2 - x1) / powf(Vector2d::Magnitude(x2 - x1), 2.0f);
-							Vector2d mult1 = (x1 - x2);
-							Vector2d mult2 = (x2 - x1);
-
-							mult1 *= dot1 * mass1;
-							mult2 *= dot2 * mass2;
-
-							o->data->v = o->data->v - (mult1 * -1) * c->data->restitution;
-							c->data->v = c->data->v - (mult2 * -1) * o->data->restitution;
-
-							printf("\nExpected Vel x: %f, y %f", o->data->v.x, o->data->v.y);
+							ComputeElasticCollision(o->data, c->data);
+							break;
 						}
 					}
 
 				}
-				c = c->next;
 			}
 		}
-		o = o->next;
 	}
 
 
@@ -263,15 +245,12 @@ void Physics::IntegratorVelocityVerlet(PhysObject* obj, float dt)
 	obj->y += obj->v.y * dt + 0.5 * obj->a.y * dt * dt;
 	obj->v.x += obj->a.x * dt;
 	obj->v.y += obj->a.y * dt;
-	if (obj->v.y >= 300 || obj->v.y <= -300)
-	{
-		obj->v.y = 0;
-	}
-	if (obj->v.x >= 300 || obj->v.x <= -300)
-	{
-		obj->v.x = 0;
-	}
-	printf("\nVel x: %f, y: %f", obj->v.x, obj->v.y);
+
+	if (obj->v.x > obj->limitSpeed.x) obj->v.x = obj->limitSpeed.x;
+	if (obj->v.x < -obj->limitSpeed.x) obj->v.x = -obj->limitSpeed.x;
+	if (obj->v.y > obj->limitSpeed.y) obj->v.y = obj->limitSpeed.y;
+	if (obj->v.y < -obj->limitSpeed.y)obj->v.y = -obj->limitSpeed.y;
+
 }
 void Physics::IntegratorVelocitySymplecticEuler(PhysObject* obj, float dt)
 {
@@ -280,14 +259,11 @@ void Physics::IntegratorVelocitySymplecticEuler(PhysObject* obj, float dt)
 	obj->v.y += obj->a.y * dt;
 	obj->x += obj->v.x * dt;
 	obj->y += obj->v.y * dt;
-	if (obj->v.y >= 300 || obj->v.y <= -300)
-	{
-		obj->v.y = 0;
-	}
-	if (obj->v.x >= 300 || obj->v.x <= -300)
-	{
-		obj->v.x = 0;
-	}
+
+	if (obj->v.x > obj->limitSpeed.x) obj->v.x = obj->limitSpeed.x;
+	if (obj->v.x < -obj->limitSpeed.x) obj->v.x = -obj->limitSpeed.x;
+	if (obj->v.y > obj->limitSpeed.y) obj->v.y = obj->limitSpeed.y;
+	if (obj->v.y < -obj->limitSpeed.y)obj->v.y = -obj->limitSpeed.y;
 }
 void Physics::IntegratorVelocityImplicitEuler(PhysObject* obj, float dt)
 {
@@ -295,20 +271,42 @@ void Physics::IntegratorVelocityImplicitEuler(PhysObject* obj, float dt)
 	obj->y += obj->v.y * dt;
 	obj->v.x += obj->a.x * dt;
 	obj->v.y += obj->a.y * dt;
-	if (obj->v.y >= 300 || obj->v.y <= -300)
-	{
-		obj->v.y = 0;
-	}
-	if (obj->v.x >= 300 || obj->v.x <= -300)
-	{
-		obj->v.x = 0;
-	}
+
+	if (obj->v.x > obj->limitSpeed.x) obj->v.x = obj->limitSpeed.x;
+	if (obj->v.x < -obj->limitSpeed.x) obj->v.x = -obj->limitSpeed.x;
+	if (obj->v.y > obj->limitSpeed.y) obj->v.y = obj->limitSpeed.y;
+	if (obj->v.y < -obj->limitSpeed.y)obj->v.y = -obj->limitSpeed.y;
 }
 bool Physics::CleanUp()
 {
 	bool ret = true;
 	objects.clear();
 	return true;
+}
+
+void Physics::ComputeElasticCollision(PhysObject* o, PhysObject* c)
+{
+	//2m2/m1+m2
+	float mass1 = (2 * c->mass) / (o->mass + c->mass);
+	float mass2 = (2 * o->mass) / (o->mass + c->mass);
+
+	//dot(v1-v2,  x1-x2) / ||x1-x2||^2
+	Vector2d x1;
+	x1.x = o->x;
+	x1.y = o->y;
+	Vector2d x2;
+	x2.x = c->x;
+	x2.y = c->y;
+	float dot1 = Vector2d::CrossProduct(o->v - c->v, x1 - x2) / powf(Vector2d::Magnitude(x1 - x2), 2.0f);
+	float dot2 = Vector2d::CrossProduct(c->v - o->v, x2 - x1) / powf(Vector2d::Magnitude(x2 - x1), 2.0f);
+	Vector2d mult1 = (x1 - x2);
+	Vector2d mult2 = (x2 - x1);
+
+	mult1 *= dot1 * mass1;
+	mult2 *= dot2 * mass2;
+
+	o->v = o->v - (mult1 * -1) * c->restitution;
+	c->v = c->v - (mult2 * -1) * o->restitution;
 }
 
 void Physics::CreateObject(PhysObject* obj)
@@ -320,4 +318,3 @@ void Physics::DestroyObject(PhysObject* obj)
 {
 	obj->setPendingToDelete = true;
 }
-

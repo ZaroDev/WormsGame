@@ -27,10 +27,11 @@ bool ModuleSceneIntro::Start()
 	ball->shape = Shape::RECTANGLE;
 	ball->w = 30;
 	ball->h = 30;
-	ball->r = 30;
 	ball->density = .5f;
 	ball->name.Create("Ball");
 	ball->type = Type::DYNAMIC;
+	ball->SetLimit(Vector2d(300.0f, 300.0f));
+
 
 	ball2 = new PhysObject();
 	ball2->x = 300.0f;
@@ -39,7 +40,6 @@ bool ModuleSceneIntro::Start()
 	ball2->shape = Shape::RECTANGLE;
 	ball2->w = 50;
 	ball2->h = 30;
-	ball2->r = 30;
 	ball2->restitution = 1.0f;
 	ball2->name.Create( "Ground");
 	ball2->type = Type::STATIC;
@@ -48,7 +48,7 @@ bool ModuleSceneIntro::Start()
 	App->physics->world.CreateObject(ball2);
 
 
-	PhysObject* water = new PhysObject();
+	/*PhysObject* water = new PhysObject();
 	water->x = 0;
 	water->y = 500;
 	water->shape = Shape::RECTANGLE;
@@ -61,7 +61,7 @@ bool ModuleSceneIntro::Start()
 	water->name.Create("Water");
 
 	App->physics->world.CreateObject(water);
-	App->physics->world.water = water;
+	App->physics->world.water = water;*/
 
 	portal = new Portal();
 
@@ -112,6 +112,8 @@ update_status ModuleSceneIntro::Update()
 	{
 		PhysObject* o = new PhysObject(Shape::RECTANGLE, Type::DYNAMIC, (float)App->input->GetMouseX(), (float)App->input->GetMouseY(), 20, 20);
 		o->name.Create("Box");
+		o->SetLimit(Vector2d(300, 300));
+		o->v.y = -10;
 		App->physics->world.CreateObject(o);
 	}
 

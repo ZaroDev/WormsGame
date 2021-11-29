@@ -23,21 +23,21 @@ bool ModuleSceneIntro::Start()
 	ball = new PhysObject();
 	ball->x = 300.0f;
 	ball->y = 0.0f;
-	ball->mass = 1.0f;
+	ball->mass = 20.0f;
 	ball->shape = Shape::RECTANGLE;
 	ball->w = 30;
 	ball->h = 30;
 	ball->r = 30;
-	ball->density = 1.0f;
+	ball->density = .5f;
 	ball->name.Create("Ball");
 	ball->type = Type::DYNAMIC;
 
 	ball2 = new PhysObject();
 	ball2->x = 300.0f;
-	ball2->y = 300.0f;
+	ball2->y = 750.0f;
 	ball2->mass = 3.0f;
 	ball2->shape = Shape::RECTANGLE;
-	ball2->w = 30;
+	ball2->w = 50;
 	ball2->h = 30;
 	ball2->r = 30;
 	ball2->name.Create( "Ground");

@@ -25,6 +25,8 @@ public:
     Vector2d operator+(const Vector2d&) const;
     Vector2d operator-(const Vector2d&) const;
     Vector2d operator*(const Vector2d&) const;
+    Vector2d operator *= (const float) const;
+    Vector2d operator -= (const Vector2d&) const;
     Vector2d operator/(const Vector2d&) const;
 
     //Check if the Vectors have the same values.

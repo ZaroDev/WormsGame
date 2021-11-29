@@ -49,13 +49,13 @@ public:
 	float y = 0.0f;
 
 	// Velocity
-	Vector2d* v = new Vector2d(0.0f, 0.0f);
+	Vector2d v;
 
 	// Acceleration
-	Vector2d* a = new Vector2d(0.0f, 0.0f);
+	Vector2d a;
 
 	// Force (total) applied to the ball
-	Vector2d* f = new Vector2d(0.0f, 0.0f);
+	Vector2d f;
 
 	// Mass
 	float mass = 1.0f;
@@ -73,6 +73,7 @@ public:
 	ObjectType object = ObjectType::STANDART;
 	PortalType portal = PortalType::NONE;
 	bool setPendingToDelete = false;
+	bool hasEnteredAPortal = false;
 	bool hasLift = false;
 	bool isOnWater = false;
 	// Has physics enabled?

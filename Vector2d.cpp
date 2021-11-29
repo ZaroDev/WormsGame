@@ -28,10 +28,22 @@ Vector2d Vector2d::operator*(const Vector2d& v) const
     return Vector2d(x * v.x, y * v.y);
 }
 
+Vector2d Vector2d::operator*=(const float f) const
+{
+    return Vector2d(x * f, y * f);
+}
+
+Vector2d Vector2d::operator-=(const Vector2d& v) const
+{
+    return Vector2d(x - v.x, y - v.y);
+}
+
 Vector2d Vector2d::operator/(const Vector2d& v) const
 {
     return Vector2d(x / v.x, y / v.y);
 }
+
+
 
 bool Vector2d::operator==(const Vector2d& v) const
 {

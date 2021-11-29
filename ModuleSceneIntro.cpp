@@ -47,7 +47,7 @@ bool ModuleSceneIntro::Start()
 	App->physics->world.CreateObject(ball2);
 
 
-	PhysObject* water = new PhysObject();
+	/*PhysObject* water = new PhysObject();
 	water->x = 0;
 	water->y = 500;
 	water->shape = Shape::RECTANGLE;
@@ -60,7 +60,7 @@ bool ModuleSceneIntro::Start()
 	water->name.Create("Water");
 
 	App->physics->world.CreateObject(water);
-	App->physics->world.water = water;
+	App->physics->world.water = water;*/
 
 	portal = new Portal();
 
@@ -131,7 +131,7 @@ update_status ModuleSceneIntro::Update()
 			App->physics->world.CreateObject(portal->p2);
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
 	{
 		ball->cl = 2.0f;
 	}

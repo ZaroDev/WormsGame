@@ -94,7 +94,7 @@ update_status ModulePhysics::PostUpdate()
 
 				}
 			}
-			if (o->data->object == ObjectType::WATER)
+			else if (o->data->object == ObjectType::WATER)
 			{
 				App->renderer->DrawQuad(rect, 0, 123, 255, 255, false);
 			}

@@ -1,6 +1,7 @@
 #pragma once
 #include "SString.h"
-#pragma once
+#include "Vector2d.h"
+
 enum class Shape
 {
 	NONE = -1,
@@ -48,16 +49,13 @@ public:
 	float y = 0.0f;
 
 	// Velocity
-	float vx = 0.0f;
-	float vy = 0.0f;
+	Vector2d* v = new Vector2d(0.0f, 0.0f);
 
 	// Acceleration
-	float ax = 0.0f;
-	float ay = 0.0f;
+	Vector2d* a = new Vector2d(0.0f, 0.0f);
 
 	// Force (total) applied to the ball
-	float fx = 0.0f;
-	float fy = 0.0f;
+	Vector2d* f = new Vector2d(0.0f, 0.0f);
 
 	// Mass
 	float mass = 1.0f;
@@ -74,8 +72,6 @@ public:
 	SString name;
 	ObjectType object = ObjectType::STANDART;
 	PortalType portal = PortalType::NONE;
-	int portalFrames = 0;
-	bool hasEnteredAPortal = false;
 	bool setPendingToDelete = false;
 	bool hasLift = false;
 	bool isOnWater = false;

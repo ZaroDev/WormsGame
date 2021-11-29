@@ -22,6 +22,9 @@ PhysObject::PhysObject(Shape shape_, Type type_, int x_, int y_, float w_, float
 
 PhysObject::~PhysObject()
 {
+	delete v;
+	delete a;
+	delete f;
 }
 
 

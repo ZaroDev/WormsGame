@@ -80,6 +80,9 @@
     <ClInclude Include="Queue.h">
       <Filter>Header Files\Containers</Filter>
     </ClInclude>
+    <ClInclude Include="Vector2d.h">
+      <Filter>Header Files\Containers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -129,6 +132,9 @@
     </ClCompile>
     <ClCompile Include="Portal.cpp">
       <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector2d.cpp">
+      <Filter>Header Files\Containers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

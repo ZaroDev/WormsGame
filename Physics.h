@@ -31,7 +31,7 @@ public:
 	bool CleanUp();
 
 	void ComputeElasticCollision(PhysObject* o, PhysObject* c);
-
+	void ComputeOverlaping(PhysObject* o, PhysObject* c);
 	void CreateObject(PhysObject* obj);
 	void DestroyObject(PhysObject* obj);
 	void IntegratorVelocityVerlet(PhysObject* obj, float dt);

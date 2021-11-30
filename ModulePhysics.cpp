@@ -100,6 +100,11 @@ update_status ModulePhysics::PostUpdate()
 			}
 			else
 			{
+				App->renderer->DrawLine(o->data->x, o->data->ot, o->data->x, o->data->ob, 255, 69, 0, 255);
+				App->renderer->DrawLine(o->data->ol, o->data->y, o->data->oR, o->data->y, 255, 69, 0, 255);
+				App->renderer->DrawLine(o->data->x, o->data->t, o->data->x, o->data->b, 0, 255, 0, 255);
+				App->renderer->DrawLine(o->data->l, o->data->y, o->data->r, o->data->y, 0, 255, 0, 255);
+
 				App->renderer->DrawQuad(rect, 0, 255, 0, 255, false);
 			}
 		}

@@ -27,6 +27,7 @@ bool ModuleSceneIntro::Start()
 	ball->shape = Shape::RECTANGLE;
 	ball->w = 30;
 	ball->h = 30;
+	ball->restitution = .1f;
 	ball->density = .5f;
 	ball->name.Create("Ball");
 	ball->type = Type::DYNAMIC;
@@ -34,13 +35,13 @@ bool ModuleSceneIntro::Start()
 
 
 	ball2 = new PhysObject();
-	ball2->x = 300.0f;
-	ball2->y = 300.0f;
+	ball2->x = 525.0f;
+	ball2->y = 700.0f;
 	ball2->mass = 1.0f;
 	ball2->shape = Shape::RECTANGLE;
-	ball2->w = 50;
-	ball2->h = 30;
-	ball2->restitution = 1.0f;
+	ball2->w = 1050;
+	ball2->h = 50;
+	ball2->restitution = 0.1f;
 	ball2->name.Create( "Ground");
 	ball2->type = Type::STATIC;
 
@@ -110,10 +111,11 @@ update_status ModuleSceneIntro::Update()
 
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{
-		PhysObject* o = new PhysObject(Shape::RECTANGLE, Type::DYNAMIC, (float)App->input->GetMouseX(), (float)App->input->GetMouseY(), 20, 20);
+		PhysObject* o = new PhysObject(Shape::RECTANGLE, Type::DYNAMIC, (float)App->input->GetMouseX(), (float)App->input->GetMouseY(), 30, 30);
 		o->name.Create("Box");
+		o->v.x = 10;
 		o->SetLimit(Vector2d(300, 300));
-		o->v.y = -10;
+		
 		App->physics->world.CreateObject(o);
 	}
 

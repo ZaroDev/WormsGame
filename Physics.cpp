@@ -17,10 +17,10 @@ bool Intersects(PhysObject* o, PhysObject* c)
 	bool ret = false;
 	if (o->shape == Shape::RECTANGLE && c->shape == Shape::RECTANGLE)
 	{
-		ret = (o->x < c->x + c->w &&
-			o->x + o->w > c->x &&
-			o->y < c->y + c->h &&
-			o->y + o->h > c->y);
+		if (o->b < c->t || o->t > c->b || o->l > c->r || o->r < c->l)
+			ret = false;
+		else
+			ret = true;
 	}
 
 	if (o->shape == Shape::CIRCLE && c->shape == Shape::CIRCLE)
@@ -159,10 +159,11 @@ bool Physics::Update(float dt)
 					o->data->f.y -= bfy;
 					o->data->isOnWater = false;
 				}
-
-				// Step #2: 2nd Newton's Law: SUM_Forces = mass * accel --> accel = SUM_Forces / mass
 				o->data->a.x = o->data->f.x / o->data->mass;
 				o->data->a.y = o->data->f.y / o->data->mass;
+			}
+			}
+				// Step #2: 2nd Newton's Law: SUM_Forces = mass * accel --> accel = SUM_Forces / mass
 
 				o->data->ol = o->data->x - o->data->w / 2;
 				o->data->oR = o->data->x + o->data->w / 2;
@@ -190,8 +191,8 @@ bool Physics::Update(float dt)
 				o->data->t = o->data->y - o->data->h / 2;
 				o->data->b = o->data->y + o->data->h / 2;
 				
-			}
-			}
+			
+			
 
 			//Collision Solver
 			for(p2List_item<PhysObject*>* c = objects.getFirst(); c != NULL; c = c->next)
@@ -212,15 +213,12 @@ bool Physics::Update(float dt)
 							printf("\nPortal %s, %s", o->data->name.GetString(), c->data->name.GetString());
 							break;
 						}
-						if (c->data->type == Type::STATIC)
+						else if (c->data->type == Type::STATIC)
 						{
-							if (o->data->t >= c->data->b && o->data->ot < c->data->ob)
-							{
-								o->data->y = o->data->t + o->data->h / 2;
-							}
-							
+							ComputeOverlaping(o->data, c->data);
+							break;
 						}
-						if(c->data->type == Type::DYNAMIC && o->data->type == Type::DYNAMIC)
+						else if(c->data->type == Type::DYNAMIC && o->data->type == Type::DYNAMIC)
 						{
 							ComputeElasticCollision(o->data, c->data);
 							break;
@@ -307,6 +305,32 @@ void Physics::ComputeElasticCollision(PhysObject* o, PhysObject* c)
 
 	o->v = o->v - (mult1 * -1) * c->restitution;
 	c->v = c->v - (mult2 * -1) * o->restitution;
+}
+
+void Physics::ComputeOverlaping(PhysObject* o, PhysObject* c)
+{
+	if (o->b >= c->t && o->ob < c->ot)
+	{
+		o->y = c->t - (o->h / 2) - 0.1f;
+		o->v.y = c->v.y;
+		o->v.x = o->v.x * ((o->restitution + c->restitution) / 2);
+	}
+	else if (o->t <= c->b && o->ot > c->ob)
+	{
+		o->y = c->b + (o->h / 2) + 0.1f;
+		o->v.y = c->v.y;
+	}
+	else if (o->r >= c->l && o->oR < c->ol)
+	{
+		o->x = c->l - (o->w / 2) - 0.1f;
+		o->v.x = c->v.x;
+
+	}
+	else if (o->l <= c->r && o->ol > c->oR)
+	{
+		o->x = c->r + (o->w / 2) + 0.2f;
+		o->v.x = c->v.x;
+	}
 }
 
 void Physics::CreateObject(PhysObject* obj)

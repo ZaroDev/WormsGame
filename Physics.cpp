@@ -178,7 +178,7 @@ bool Physics::Update(float dt)
 				printf("\nVel x: %f, y: %f", o->data->v.x, o->data->v.y);
 			}
 			}
-			//The old position of the objects gets updated
+			//The old position boundaries updates
 			o->data->ol = o->data->x - o->data->w / 2;
 			o->data->oR = o->data->x + o->data->w / 2;
 			o->data->ot = o->data->y - o->data->h / 2;
@@ -200,7 +200,7 @@ bool Physics::Update(float dt)
 				IntegratorVelocityImplicitEuler(o->data, dt);
 				break;
 			}
-			//The new position gets updated after the integration
+			//The new position boundaries gets updated after the integration
 			o->data->l = o->data->x - o->data->w / 2;
 			o->data->r = o->data->x + o->data->w / 2;
 			o->data->t = o->data->y - o->data->h / 2;
@@ -341,7 +341,7 @@ void Physics::ComputeElasticCollision(PhysObject* o, PhysObject* c)
 	}
 	else if (o->shape == Shape::RECTANGLE && c->shape == Shape::RECTANGLE)
 	{
-
+		//https://www.youtube.com/watch?v=8JJ-4JgR7Dg need to wacht
 	}
 	else if (o->shape == Shape::RECTANGLE && c->shape == Shape::CIRCLE)
 	{

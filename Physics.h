@@ -28,11 +28,16 @@ public:
 	bool Update(float dt);
 
 	bool CleanUp();
-
+	//Elastic Collision Solver
 	void ComputeElasticCollision(PhysObject* o, PhysObject* c);
+	//Ground Collision solver
 	void ComputeOverlaping(PhysObject* o, PhysObject* c);
+
+	//Adding / Deleting objects
 	void CreateObject(PhysObject* obj);
 	void DestroyObject(PhysObject* obj);
+
+	//Integrator scheme's
 	void IntegratorVelocityVerlet(PhysObject* obj, float dt);
 	void IntegratorVelocitySymplecticEuler(PhysObject* obj, float dt);
 	void IntegratorVelocityImplicitEuler(PhysObject* obj, float dt);

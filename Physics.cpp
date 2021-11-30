@@ -25,7 +25,7 @@ bool Intersects(PhysObject* o, PhysObject* c)
 
 	if (o->shape == Shape::CIRCLE && c->shape == Shape::CIRCLE)
 	{
-		if (Distance(o->x, o->y, c->x, c->y) < (o->r + c->r)) ret = true;
+		if (Distance(o->x, o->y, c->x, c->y) < (o->radius + c->radius)) ret = true;
 	}
 
 	if (o->shape == Shape::CIRCLE && c->shape == Shape::RECTANGLE)
@@ -130,15 +130,15 @@ bool Physics::Update(float dt)
 				o->data->f.y += fgy;
 
 				// Compute Aerodynamic Lift & Drag forces
-				float speed =Vector2d::Magnitude( o->data->v - atmosphere.wind);
+				//float speed =Vector2d::Magnitude( o->data->v - atmosphere.wind);
 				//if (o->data->v.x != 0 && !o->data->isOnWater)
 				//{
 				//	float fdrag = 0.5 * atmosphere.density * speed * speed * o->data->surface * o->data->cd;
 				//	float fdx = -fdrag; // Let's assume Drag is aligned with x-axis (in your game, generalize this) Opuesta al vector speed = normalizar speed y multiplicar
 				//	o->data->f.x += fdx;
 				//}
-				//// Let's assume Lift is perpendicular with x-axis (in your game, generalize this)  Perpendicular al drag si la shape tiene lift
 
+				//// Let's assume Lift is perpendicular with x-axis (in your game, generalize this)  Perpendicular al drag si la shape tiene lift
 				//if (o->data->v.y != 0 && !o->data->isOnWater)
 				//{
 				//	float flift = 0.5 * atmosphere.density * speed * speed * o->data->surface * o->data->cl;
@@ -147,20 +147,20 @@ bool Physics::Update(float dt)
 				//}
 
 
-
-				// Other forces
-				// ...
+				//Hydrodinamic Forces
 				if (o->data->isOnWater)
 				{
+
 					//Fd = -b * v;
-					//Fb = p g V;
 					float hDragX = 6 * M_PI * o->data->w / 2 * o->data->v.x;
 					float hDragY = 6 * M_PI * o->data->h / 2 * o->data->v.y;
 					
 
 
+					//Fb = p g V;
 					float bouyancyX =  gravityX * (water->density / o->data->density) * o->data->h * o->data->w;
 					float bouyancyY =  gravityY * (water->density / o->data->density) * o->data->h * o->data->w;
+					//Need to work on it
 					float bfx = (-bouyancyX + hDragX) *(-1);
 					float bfy = (-bouyancyY + hDragY) *(-1);
 					
@@ -168,41 +168,43 @@ bool Physics::Update(float dt)
 					o->data->f.y += bfy;
 					o->data->isOnWater = false;
 				}
+				//Player Input forces (Doesn't work)
 				o->data->f.x += o->data->fp.x;
 				o->data->f.y += o->data->fp.y;
+				// Step #2: 2nd Newton's Law: SUM_Forces = mass * accel --> accel = SUM_Forces / mass
 				o->data->a.x = o->data->f.x / o->data->mass;
 				o->data->a.y = o->data->f.y / o->data->mass;
 				printf("\nAcc x: %f, y: %f", o->data->a.x, o->data->a.y);
 				printf("\nVel x: %f, y: %f", o->data->v.x, o->data->v.y);
 			}
 			}
-				// Step #2: 2nd Newton's Law: SUM_Forces = mass * accel --> accel = SUM_Forces / mass
+			//The old position of the objects gets updated
+			o->data->ol = o->data->x - o->data->w / 2;
+			o->data->oR = o->data->x + o->data->w / 2;
+			o->data->ot = o->data->y - o->data->h / 2;
+			o->data->ob = o->data->y + o->data->h / 2;
 
-				o->data->ol = o->data->x - o->data->w / 2;
-				o->data->oR = o->data->x + o->data->w / 2;
-				o->data->ot = o->data->y - o->data->h / 2;
-				o->data->ob = o->data->y + o->data->h / 2;
-
-				printf("\nfx: %f, fy: %f", o->data->f.x, o->data->f.y);
-				// Step #3: Integrate --> from accel to new velocity & new position. 
-				// We will use the 2nd order "Velocity Verlet" method for integration.
-				// You can also move this code into a subroutine: integrator_velocity_verlet(ball, dt);
-				switch (integrator)
-				{
-				case Integrator::VERLET:
-					IntegratorVelocityVerlet(o->data, dt);
-					break;
-				case  Integrator::SEULER:
-					IntegratorVelocitySymplecticEuler(o->data, dt);
-					break;
-				case  Integrator::IEULER:
-					IntegratorVelocityImplicitEuler(o->data, dt);
-					break;
-				}
-				o->data->l = o->data->x - o->data->w / 2;
-				o->data->r = o->data->x + o->data->w / 2;
-				o->data->t = o->data->y - o->data->h / 2;
-				o->data->b = o->data->y + o->data->h / 2;
+			printf("\nfx: %f, fy: %f", o->data->f.x, o->data->f.y);
+			// Step #3: Integrate --> from accel to new velocity & new position. 
+			// We will use the 2nd order "Velocity Verlet" method for integration.
+			// You can also move this code into a subroutine: integrator_velocity_verlet(ball, dt);
+			switch (integrator)
+			{
+			case Integrator::VERLET:
+				IntegratorVelocityVerlet(o->data, dt);
+				break;
+			case  Integrator::SEULER:
+				IntegratorVelocitySymplecticEuler(o->data, dt);
+				break;
+			case  Integrator::IEULER:
+				IntegratorVelocityImplicitEuler(o->data, dt);
+				break;
+			}
+			//The new position gets updated after the integration
+			o->data->l = o->data->x - o->data->w / 2;
+			o->data->r = o->data->x + o->data->w / 2;
+			o->data->t = o->data->y - o->data->h / 2;
+			o->data->b = o->data->y + o->data->h / 2;
 				
 			
 			
@@ -214,7 +216,9 @@ bool Physics::Update(float dt)
 				{
 					if (Intersects(o->data, c->data))
 					{
-						printf("\ncollision 1: %s 2: %s\n", o->data->name.GetString(), c->data->name.GetString());
+						printf("\ncollision 1: %s 2: %s", o->data->name.GetString(), c->data->name.GetString());
+
+						//Else if statement We don't collide with more that one type per object
 						if (o->data != water && c->data == water)
 						{
 							o->data->isOnWater = true;
@@ -223,7 +227,6 @@ bool Physics::Update(float dt)
 						else if (o->data->object == ObjectType::PORTAL && c->data->object != ObjectType::PORTAL)
 						{
 							portal->Teletransport(o->data, c->data);
-							printf("\nPortal %s, %s", o->data->name.GetString(), c->data->name.GetString());
 							break;
 						}
 						else if (c->data->type == Type::STATIC)
@@ -234,7 +237,6 @@ bool Physics::Update(float dt)
 						else if(c->data->type == Type::DYNAMIC && o->data->type == Type::DYNAMIC)
 						{
 							ComputeElasticCollision(o->data, c->data);
-							
 							break;
 						}
 					}
@@ -253,11 +255,12 @@ bool Physics::Update(float dt)
 // You should modularise all your algorithms into subroutines. Including the ones to compute forces.
 void Physics::IntegratorVelocityVerlet(PhysObject* obj, float dt)
 {
+	//Verlet Integrator
 	obj->x += obj->v.x * dt + 0.5 * obj->a.x * dt * dt;
 	obj->y += obj->v.y * dt + 0.5 * obj->a.y * dt * dt;
 	obj->v.x += obj->a.x * dt;
 	obj->v.y += obj->a.y * dt;
-
+	//Speed limiter
 	if (obj->v.x > obj->limitSpeed.x) obj->v.x = obj->limitSpeed.x;
 	if (obj->v.x < -obj->limitSpeed.x) obj->v.x = -obj->limitSpeed.x;
 	if (obj->v.y > obj->limitSpeed.y) obj->v.y = obj->limitSpeed.y;
@@ -266,12 +269,12 @@ void Physics::IntegratorVelocityVerlet(PhysObject* obj, float dt)
 }
 void Physics::IntegratorVelocitySymplecticEuler(PhysObject* obj, float dt)
 {
-	       // Gravity will always act on the body
+	//Sympletic Euler Integrator
 	obj->v.x += obj->a.x * dt;
 	obj->v.y += obj->a.y * dt;
 	obj->x += obj->v.x * dt;
 	obj->y += obj->v.y * dt;
-
+	//Speed limiter
 	if (obj->v.x > obj->limitSpeed.x) obj->v.x = obj->limitSpeed.x;
 	if (obj->v.x < -obj->limitSpeed.x) obj->v.x = -obj->limitSpeed.x;
 	if (obj->v.y > obj->limitSpeed.y) obj->v.y = obj->limitSpeed.y;
@@ -279,11 +282,12 @@ void Physics::IntegratorVelocitySymplecticEuler(PhysObject* obj, float dt)
 }
 void Physics::IntegratorVelocityImplicitEuler(PhysObject* obj, float dt)
 {
+	//Implicit Euler Integrator
 	obj->x += obj->v.x * dt;
 	obj->y += obj->v.y * dt;
 	obj->v.x += obj->a.x * dt;
 	obj->v.y += obj->a.y * dt;
-
+	//Speed limiter
 	if (obj->v.x > obj->limitSpeed.x) obj->v.x = obj->limitSpeed.x;
 	if (obj->v.x < -obj->limitSpeed.x) obj->v.x = -obj->limitSpeed.x;
 	if (obj->v.y > obj->limitSpeed.y) obj->v.y = obj->limitSpeed.y;
@@ -298,27 +302,55 @@ bool Physics::CleanUp()
 
 void Physics::ComputeElasticCollision(PhysObject* o, PhysObject* c)
 {
+	//VELOCITY SOLVING
 	//2m2/m1+m2
-	float mass1 = (2 * c->mass) / (o->mass + c->mass);
-	float mass2 = (2 * o->mass) / (o->mass + c->mass);
+	float mass1 = (2.0f * c->mass) / (o->mass + c->mass);
+	float mass2 = (2.0f * o->mass) / (o->mass + c->mass);
 
-	//dot(v1-v2,  x1-x2) / ||x1-x2||^2
+	//dot(v1-v2, x1-x2) / ||x1-x2||^2
 	Vector2d x1;
 	x1.x = o->x;
 	x1.y = o->y;
 	Vector2d x2;
 	x2.x = c->x;
 	x2.y = c->y;
-	float dot1 = Vector2d::CrossProduct(o->v - c->v, x1 - x2) / powf(Vector2d::Magnitude(x1 - x2), 2.0f);
-	float dot2 = Vector2d::CrossProduct(c->v - o->v, x2 - x1) / powf(Vector2d::Magnitude(x2 - x1), 2.0f);
-	Vector2d mult1 = (x1 - x2);
-	Vector2d mult2 = (x2 - x1);
+	Vector2d x1_x2 = (x1 - x2);
+	Vector2d x2_x1 = (x2 - x1);
+	float dot1 = Vector2d::DotProduct(o->v - c->v, x1_x2) / pow(Vector2d::Magnitude(x1_x2), 2);
+	float dot2 = Vector2d::DotProduct(c->v - o->v, x2_x1) / pow(Vector2d::Magnitude(x2_x1), 2);
 
-	mult1 *= dot1 * mass1;
-	mult2 *= dot2 * mass2;
+	// Compute velocities after collision (assume perfectly elastic collision without dampening)
+	o->v = o->v - (x1_x2 * mass1 * dot1);
+	c->v = c->v - (x2_x1 * mass2 * dot2);
 
-	o->v = o->v - (mult1 * -1) * c->restitution;
-	c->v = c->v - (mult2 * -1) * o->restitution;
+	// Apply restitution coefficient (FUYM inelasticity/dampening)
+	o->v = o->v * o->restitution;
+	c->v = c->v * c->restitution;
+
+
+	//POSITION SOLVING TODO
+	if (o->shape == Shape::CIRCLE && c->shape == Shape::CIRCLE)
+	{
+		//https://flatredball.com/documentation/tutorials/math/circle-collision/
+		float angle = atan2f(c->y - o->y, c->x - o->x);
+		float distanceBetweenCircles = sqrtf((c->x - o->x) * (c->x - o->x) + (c->y - o->y) * (c->y - o->y));
+		float sumOfRadius = o->radius + c->radius;
+		float distanceToMove = sumOfRadius - distanceBetweenCircles;
+		c->x += cosf(angle) * distanceToMove;
+		c->y += sinf(angle) * distanceToMove;
+	}
+	else if (o->shape == Shape::RECTANGLE && c->shape == Shape::RECTANGLE)
+	{
+
+	}
+	else if (o->shape == Shape::RECTANGLE && c->shape == Shape::CIRCLE)
+	{
+
+	}
+	else if (o->shape == Shape::CIRCLE && c->shape == Shape::RECTANGLE)
+	{
+
+	}
 }
 
 void Physics::ComputeOverlaping(PhysObject* o, PhysObject* c)
@@ -326,24 +358,27 @@ void Physics::ComputeOverlaping(PhysObject* o, PhysObject* c)
 	if (o->b >= c->t && o->ob < c->ot)
 	{
 		o->y = c->t - (o->h / 2) - 0.1f;
-		o->v.y = c->v.y;
-		o->v.x = o->v.x * o->restitution;
+		o->v.y = -o->v.y * o->restitution;
+		o->v.x = o->v.x * o->friction;
 	}
 	else if (o->t <= c->b && o->ot > c->ob)
 	{
 		o->y = c->b + (o->h / 2) + 0.1f;
-		o->v.y = c->v.y;
+		o->v.y = -o->v.y * o->restitution;
+		o->v.x = o->v.x * o->friction;
 	}
 	else if (o->r >= c->l && o->oR < c->ol)
 	{
 		o->x = c->l - (o->w / 2) - 0.1f;
-		o->v.x = c->v.x;
+		o->v.y = -o->v.y * o->restitution;
+		o->v.x = o->v.x * o->friction;
 
 	}
 	else if (o->l <= c->r && o->ol > c->oR)
 	{
 		o->x = c->r + (o->w / 2) + 0.2f;
-		o->v.x = c->v.x;
+		o->v.y = -o->v.y * o->restitution;
+		o->v.x = o->v.x * o->friction;
 	}
 }
 

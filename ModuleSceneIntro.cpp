@@ -21,30 +21,35 @@ bool ModuleSceneIntro::Start()
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 	ball = new PhysObject();
-	ball->x = 300.0f;
+	ball->x = 400.0f;
 	ball->y = 0.0f;
-	ball->mass = 500.0f;
+	ball->mass = 10.0f;
 	ball->shape = Shape::RECTANGLE;
+	ball->v.x = 0.0f;
 	ball->w = 30;
 	ball->h = 30;
-	ball->restitution = 1.0f;
+	ball->radius = 15;
 	ball->density = 2.0f;
 	ball->name.Create("Ball");
 	ball->type = Type::DYNAMIC;
 	ball->SetLimit(Vector2d(300.0f, 300.0f));
 
 
-	ball2 = new PhysObject();
-	ball2->x = 525.0f;
-	ball2->y = 700.0f;
-	ball2->mass = 1.0f;
-	ball2->shape = Shape::RECTANGLE;
-	ball2->w = 1050;
-	ball2->h = 50;
-	ball2->restitution = 0.1f;
+	/*ball2 = new PhysObject();
+	ball2->x = 200.0f;
+	ball2->y = 0.0f;
+	ball2->v.x = 30.0f;
+	ball2->mass = 10.0f;
+	ball2->shape = Shape::CIRCLE;
+	ball2->w = 30;
+	ball2->h = 30;
+	ball2->radius = 15;
 	ball2->name.Create( "Ground");
-	ball2->type = Type::STATIC;
+	ball2->type = Type::DYNAMIC;
+	ball2->SetLimit(Vector2d(300.0f, 300.0f));*/
 
+	App->physics->world.CreateObject(ball);
+	//App->physics->world.CreateObject(ball2);
 	PhysObject* g = new PhysObject();
 	
 	g->x = 150.0f;
@@ -57,12 +62,10 @@ bool ModuleSceneIntro::Start()
 	g->name.Create("Ground1");
 	g->type = Type::STATIC;
 
-	App->physics->world.CreateObject(ball);
-	App->physics->world.CreateObject(ball2);
 	App->physics->world.CreateObject(g);
 
 
-	PhysObject* water = new PhysObject();
+	/*PhysObject* water = new PhysObject();
 	water->x = 525;
 	water->y = 600;
 	water->shape = Shape::RECTANGLE;
@@ -75,7 +78,7 @@ bool ModuleSceneIntro::Start()
 	water->name.Create("Water");
 
 	App->physics->world.CreateObject(water);
-	App->physics->world.water = water;
+	App->physics->world.water = water;*/
 
 	portal = new Portal();
 
@@ -130,9 +133,9 @@ update_status ModuleSceneIntro::Update()
 		ball->y = App->input->GetMouseY();
 		ball->mass = 500.0f;
 		ball->shape = Shape::RECTANGLE;
+		ball->radius = 15;
 		ball->w = 30;
 		ball->h = 30;
-		ball->restitution = 1.0f;
 		ball->density = 0.1f;
 		ball->name.Create("Ball");
 		ball->type = Type::DYNAMIC;

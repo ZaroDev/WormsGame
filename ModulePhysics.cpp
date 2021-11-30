@@ -58,20 +58,21 @@ update_status ModulePhysics::PostUpdate()
 			{
 				if (o->data->portal == PortalType::ORANGE)
 				{
-					App->renderer->DrawCircle(o->data->x, o->data->y, o->data->r, 255, 69, 0, 255);
+					App->renderer->DrawCircle(o->data->x, o->data->y, o->data->radius, 255, 69, 0, 255);
 				}
 				else if (o->data->portal == PortalType::PURPLE)
 				{
-					App->renderer->DrawCircle(o->data->x, o->data->y, o->data->r, 127, 0, 255, 255);
+					App->renderer->DrawCircle(o->data->x, o->data->y, o->data->radius, 127, 0, 255, 255);
 				}
 			}
 			if (o->data->object == ObjectType::WATER)
 			{
-				App->renderer->DrawCircle(o->data->x, o->data->y, o->data->r, 0, 123, 255, 255);
+				App->renderer->DrawCircle(o->data->x, o->data->y, o->data->radius, 0, 123, 255, 255);
 			}
 			else
 			{
-				App->renderer->DrawCircle(o->data->x, o->data->y, o->data->r, 0, 0, 255, 255);
+				App->renderer->DrawLine(o->data->x, o->data->y, o->data->x + o->data->v.x, o->data->y + o->data->v.y, 255, 0, 0, 255);
+				App->renderer->DrawCircle(o->data->x, o->data->y, o->data->radius, 255, 0, 255, 255);
 
 			}
 

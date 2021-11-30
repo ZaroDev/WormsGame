@@ -42,8 +42,9 @@ public:
 	void AddForce(Vector2d force);
 	float w = 0.0f;
 	float h = 0.0f;
-	float R = 0.0f;
+	float radius = 0.0f;
 
+	//New and old left, rigth, top and bottom coordinates
 	float l, ol;
 	float r, oR;
 	float t, ot;
@@ -60,6 +61,7 @@ public:
 
 	// Force (total) applied to the ball
 	Vector2d f;
+
 	//Player applied force
 	Vector2d fp;
 
@@ -71,9 +73,13 @@ public:
 	float cl = 1.2f; // Lift coefficient
 	float cd = 0.4f; // Drag coefficient
 
+	//Hydrodinamics stuff
 	float density = 1.0f;
 
-	float restitution = 1.0f;
+	
+	float restitution = 0.1f; // Restitution coef
+	float friction = 0.25f; // Friction coef (Wood on wood as reference 0.25)
+
 	Shape shape;
 	Type type;
 	SString name;

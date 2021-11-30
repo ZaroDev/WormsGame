@@ -70,7 +70,7 @@ void ModuleUi::Draw()
 	}
 
 	SString wind;
-	wind.Create("atmosphere density %f wind x %f wind y %f", App->physics->world.atmosphere.density, App->physics->world.atmosphere.windx, App->physics->world.atmosphere.windy);
+	wind.Create("atmosphere density %f wind x %f wind y %f", App->physics->world.atmosphere.density, App->physics->world.atmosphere.wind.x, App->physics->world.atmosphere.wind.y);
 
 	SString timeControll;
 	switch (App->controll)

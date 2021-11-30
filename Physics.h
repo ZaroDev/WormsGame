@@ -7,8 +7,7 @@
 struct Atmosphere
 {
 	float density;
-	float windx;
-	float windy;
+	Vector2d wind;
 };
 enum class Integrator
 {

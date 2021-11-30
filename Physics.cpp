@@ -1,6 +1,6 @@
 #include "Physics.h"
 #include <math.h>
-
+# define M_PI           3.1415
 
 float Distance(int x1, int y1, int x2, int y2)
 {
@@ -117,11 +117,10 @@ bool Physics::Update(float dt)
 			case Type::DYNAMIC:
 			{
 				// Step #0: Reset total acceleration and total accumulated force of the ball (clear old values)
-				o->data->f.x = o->data->f.y = 0.0;
+				o->data->f.x = o->data->f.y = o->data->fp.x = o->data->fp.y = 0.0;
 				o->data->a.x = o->data->a.y = 0.0;
 
 				// Step #1: Compute forces
-
 					// Compute Gravity force
 				float fgx = o->data->mass * gravityX;
 				float fgy = o->data->mass * gravityY; // Let's assume gravity is constant and downwards
@@ -131,21 +130,21 @@ bool Physics::Update(float dt)
 				o->data->f.y += fgy;
 
 				// Compute Aerodynamic Lift & Drag forces
-				float speed = sqrtf(powf((o->data->v.x - atmosphere.windx), 2) + powf(o->data->v.y - atmosphere.windy, 2));
-				if (o->data->v.x != 0)
-				{
-					float fdrag = 0.5 * atmosphere.density * speed * speed * o->data->surface * o->data->cd;
-					float fdx = -fdrag; // Let's assume Drag is aligned with x-axis (in your game, generalize this) Opuesta al vector speed = normalizar speed y multiplicar
-					o->data->f.x += fdx;
-				}
-				// Let's assume Lift is perpendicular with x-axis (in your game, generalize this)  Perpendicular al drag si la shape tiene lift
+				float speed =Vector2d::Magnitude( o->data->v - atmosphere.wind);
+				//if (o->data->v.x != 0 && !o->data->isOnWater)
+				//{
+				//	float fdrag = 0.5 * atmosphere.density * speed * speed * o->data->surface * o->data->cd;
+				//	float fdx = -fdrag; // Let's assume Drag is aligned with x-axis (in your game, generalize this) Opuesta al vector speed = normalizar speed y multiplicar
+				//	o->data->f.x += fdx;
+				//}
+				//// Let's assume Lift is perpendicular with x-axis (in your game, generalize this)  Perpendicular al drag si la shape tiene lift
 
-				if (o->data->v.y != 0)
-				{
-					float flift = 0.5 * atmosphere.density * speed * speed * o->data->surface * o->data->cl;
-					float fdy = -flift;
-					o->data->f.y += fdy;
-				}
+				//if (o->data->v.y != 0 && !o->data->isOnWater)
+				//{
+				//	float flift = 0.5 * atmosphere.density * speed * speed * o->data->surface * o->data->cl;
+				//	float fdy = -flift;
+				//	o->data->f.y += fdy;
+				//}
 
 
 
@@ -153,14 +152,28 @@ bool Physics::Update(float dt)
 				// ...
 				if (o->data->isOnWater)
 				{
-					float bfx = o->data->mass * gravityX * (water->density / o->data->density);
-					float bfy = o->data->mass * gravityY * (water->density / o->data->density);
-					o->data->f.x -= bfx;
-					o->data->f.y -= bfy;
+					//Fd = -b * v;
+					//Fb = p g V;
+					float hDragX = 6 * M_PI * o->data->w / 2 * o->data->v.x;
+					float hDragY = 6 * M_PI * o->data->h / 2 * o->data->v.y;
+					
+
+
+					float bouyancyX =  gravityX * (water->density / o->data->density) * o->data->h * o->data->w;
+					float bouyancyY =  gravityY * (water->density / o->data->density) * o->data->h * o->data->w;
+					float bfx = (-bouyancyX + hDragX) *(-1);
+					float bfy = (-bouyancyY + hDragY) *(-1);
+					
+					o->data->f.x += bfx;
+					o->data->f.y += bfy;
 					o->data->isOnWater = false;
 				}
+				o->data->f.x += o->data->fp.x;
+				o->data->f.y += o->data->fp.y;
 				o->data->a.x = o->data->f.x / o->data->mass;
 				o->data->a.y = o->data->f.y / o->data->mass;
+				printf("\nAcc x: %f, y: %f", o->data->a.x, o->data->a.y);
+				printf("\nVel x: %f, y: %f", o->data->v.x, o->data->v.y);
 			}
 			}
 				// Step #2: 2nd Newton's Law: SUM_Forces = mass * accel --> accel = SUM_Forces / mass
@@ -221,6 +234,7 @@ bool Physics::Update(float dt)
 						else if(c->data->type == Type::DYNAMIC && o->data->type == Type::DYNAMIC)
 						{
 							ComputeElasticCollision(o->data, c->data);
+							
 							break;
 						}
 					}
@@ -313,7 +327,7 @@ void Physics::ComputeOverlaping(PhysObject* o, PhysObject* c)
 	{
 		o->y = c->t - (o->h / 2) - 0.1f;
 		o->v.y = c->v.y;
-		o->v.x = o->v.x * ((o->restitution + c->restitution) / 2);
+		o->v.x = o->v.x * o->restitution;
 	}
 	else if (o->t <= c->b && o->ot > c->ob)
 	{

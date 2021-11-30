@@ -34,5 +34,10 @@ void PhysObject::SetLimit(Vector2d limit)
 	limitSpeed = limit;
 }
 
+void PhysObject::AddForce(Vector2d force)
+{
+	v = v + force;
+}
+
 
 

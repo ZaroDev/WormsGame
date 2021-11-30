@@ -39,7 +39,7 @@ public:
 	~PhysObject();
 	
 	void SetLimit(Vector2d limit);
-
+	void AddForce(Vector2d force);
 	float w = 0.0f;
 	float h = 0.0f;
 	float R = 0.0f;
@@ -60,14 +60,16 @@ public:
 
 	// Force (total) applied to the ball
 	Vector2d f;
+	//Player applied force
+	Vector2d fp;
 
 	// Mass
 	float mass = 1.0f;
 
 	// Aerodynamics stuff
-	float surface = .02f; // Effective wet surface
-	float cl = 0.012f; // Lift coefficient
-	float cd = 0.004f; // Drag coefficient
+	float surface = 2.0f; // Effective wet surface
+	float cl = 1.2f; // Lift coefficient
+	float cd = 0.4f; // Drag coefficient
 
 	float density = 1.0f;
 

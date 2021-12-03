@@ -302,35 +302,33 @@ bool Physics::CleanUp()
 
 void Physics::ComputeElasticCollision(PhysObject* o, PhysObject* c)
 {
-	//VELOCITY SOLVING
-	//2m2/m1+m2
-	float mass1 = (2.0f * c->mass) / (o->mass + c->mass);
-	float mass2 = (2.0f * o->mass) / (o->mass + c->mass);
-
-	//dot(v1-v2, x1-x2) / ||x1-x2||^2
-	Vector2d x1;
-	x1.x = o->x;
-	x1.y = o->y;
-	Vector2d x2;
-	x2.x = c->x;
-	x2.y = c->y;
-	Vector2d x1_x2 = (x1 - x2);
-	Vector2d x2_x1 = (x2 - x1);
-	float dot1 = Vector2d::DotProduct(o->v - c->v, x1_x2) / pow(Vector2d::Magnitude(x1_x2), 2);
-	float dot2 = Vector2d::DotProduct(c->v - o->v, x2_x1) / pow(Vector2d::Magnitude(x2_x1), 2);
-
-	// Compute velocities after collision (assume perfectly elastic collision without dampening)
-	o->v = o->v - (x1_x2 * mass1 * dot1);
-	c->v = c->v - (x2_x1 * mass2 * dot2);
-
-	// Apply restitution coefficient (FUYM inelasticity/dampening)
-	o->v = o->v * o->restitution;
-	c->v = c->v * c->restitution;
-
-
 	//POSITION SOLVING TODO
 	if (o->shape == Shape::CIRCLE && c->shape == Shape::CIRCLE)
 	{
+		//VELOCITY SOLVING
+	//2m2/m1+m2
+		float mass1 = (2.0f * c->mass) / (o->mass + c->mass);
+		float mass2 = (2.0f * o->mass) / (o->mass + c->mass);
+
+		//dot(v1-v2, x1-x2) / ||x1-x2||^2
+		Vector2d x1;
+		x1.x = o->x;
+		x1.y = o->y;
+		Vector2d x2;
+		x2.x = c->x;
+		x2.y = c->y;
+		Vector2d x1_x2 = (x1 - x2);
+		Vector2d x2_x1 = (x2 - x1);
+		float dot1 = Vector2d::DotProduct(o->v - c->v, x1_x2) / pow(Vector2d::Magnitude(x1_x2), 2);
+		float dot2 = Vector2d::DotProduct(c->v - o->v, x2_x1) / pow(Vector2d::Magnitude(x2_x1), 2);
+
+		// Compute velocities after collision (assume perfectly elastic collision without dampening)
+		o->v = o->v - (x1_x2 * mass1 * dot1);
+		c->v = c->v - (x2_x1 * mass2 * dot2);
+
+		// Apply restitution coefficient (FUYM inelasticity/dampening)
+		o->v = o->v * o->restitution;
+		c->v = c->v * c->restitution;
 		//https://flatredball.com/documentation/tutorials/math/circle-collision/
 		float angle = atan2f(c->y - o->y, c->x - o->x);
 		float distanceBetweenCircles = sqrtf((c->x - o->x) * (c->x - o->x) + (c->y - o->y) * (c->y - o->y));
@@ -341,11 +339,11 @@ void Physics::ComputeElasticCollision(PhysObject* o, PhysObject* c)
 	}
 	else if (o->shape == Shape::RECTANGLE && c->shape == Shape::RECTANGLE)
 	{
-		//https://www.youtube.com/watch?v=8JJ-4JgR7Dg need to wacht
+		//https://www.youtube.com/watch?v=8JJ-4JgR7Dg need to watch
 	}
 	else if (o->shape == Shape::RECTANGLE && c->shape == Shape::CIRCLE)
 	{
-
+		//https://www.youtube.com/watch?v=D2a5fHX-Qrs need to watch
 	}
 	else if (o->shape == Shape::CIRCLE && c->shape == Shape::RECTANGLE)
 	{

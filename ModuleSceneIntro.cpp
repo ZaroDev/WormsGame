@@ -24,7 +24,7 @@ bool ModuleSceneIntro::Start()
 	ball->x = 400.0f;
 	ball->y = 0.0f;
 	ball->mass = 10.0f;
-	ball->shape = Shape::RECTANGLE;
+	ball->shape = Shape::CIRCLE;
 	ball->v.x = 0.0f;
 	ball->w = 30;
 	ball->h = 30;
@@ -132,7 +132,7 @@ update_status ModuleSceneIntro::Update()
 		ball->x = App->input->GetMouseX();
 		ball->y = App->input->GetMouseY();
 		ball->mass = 500.0f;
-		ball->shape = Shape::RECTANGLE;
+		ball->shape = Shape::CIRCLE;
 		ball->radius = 15;
 		ball->w = 30;
 		ball->h = 30;

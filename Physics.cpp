@@ -329,7 +329,9 @@ void Physics::ComputeElasticCollision(PhysObject* o, PhysObject* c)
 		// Apply restitution coefficient (FUYM inelasticity/dampening)
 		o->v = o->v * o->restitution;
 		c->v = c->v * c->restitution;
+		
 		//https://flatredball.com/documentation/tutorials/math/circle-collision/
+
 		float angle = atan2f(c->y - o->y, c->x - o->x);
 		float distanceBetweenCircles = sqrtf((c->x - o->x) * (c->x - o->x) + (c->y - o->y) * (c->y - o->y));
 		float sumOfRadius = o->radius + c->radius;

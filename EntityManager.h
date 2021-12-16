@@ -5,6 +5,7 @@
 #include "Module.h"
 #include "p2List.h"
 
+
 class EntityManager : public Module
 {
 public:
@@ -21,12 +22,13 @@ public:
 	//Updates all the entities
 	void UpdateAll(float dt, bool doLogic);
 	//Util functions
-	Entity* CreateEntity(EntityType type_, p2Point<float> position_);
+	Entity* CreateEntity(EntityType type_, float x, float y, Team team = Team::UNKNOWN);
 	void DestroyAllEntities();
 	void DestroyEntity(Entity* entity);
 
 private:
 	p2List<Entity*> entities;
+	int testFont;
 	float accumulatedTime;
 	float updateMsCycle;
 	bool doLogic;

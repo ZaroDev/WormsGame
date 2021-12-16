@@ -5,71 +5,43 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
-    <Filter Include="Header Files\Containers">
-      <UniqueIdentifier>{97c4111e-b102-4ba8-9053-6f07ccbbe3d4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine">
       <UniqueIdentifier>{23b47b7d-5a28-4640-90e0-a795931d6716}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\App">
+      <UniqueIdentifier>{8653755a-4303-46e3-9484-31f9a4fb1fd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Containers">
+      <UniqueIdentifier>{97c4111e-b102-4ba8-9053-6f07ccbbe3d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Modules">
+      <UniqueIdentifier>{6f3c9b57-4877-4ee0-aae8-2685f163205a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Modules\Core">
+      <UniqueIdentifier>{3454672f-0c5f-4426-af06-4770144144ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Modules\Gameplay">
+      <UniqueIdentifier>{4ee3c571-30d9-4d91-be0b-119c0ec91104}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Modules\Gameplay\Scenes">
+      <UniqueIdentifier>{d278de69-d3a6-4ec2-bc5d-d04151765916}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Modules\Gameplay\Entities">
+      <UniqueIdentifier>{668294a6-e2c7-48af-a80e-d359405d567c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Application.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Globals.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Module.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleWindow.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleRender.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleTextures.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleInput.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="p2Point.h">
-      <Filter>Header Files\Containers</Filter>
+      <Filter>Source Files\Containers</Filter>
     </ClInclude>
     <ClInclude Include="p2DynArray.h">
-      <Filter>Header Files\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="ModulePlayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleAudio.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleSceneIntro.h">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files\Containers</Filter>
     </ClInclude>
     <ClInclude Include="p2List.h">
-      <Filter>Header Files\Containers</Filter>
-    </ClInclude>
-    <ClInclude Include="ModulePhysics.h">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files\Containers</Filter>
     </ClInclude>
     <ClInclude Include="Physics.h">
       <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="SString.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleFonts.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ModuleUi.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PhysObject.h">
       <Filter>Engine</Filter>
@@ -78,60 +50,64 @@
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Queue.h">
-      <Filter>Header Files\Containers</Filter>
+      <Filter>Source Files\Containers</Filter>
     </ClInclude>
     <ClInclude Include="Vector2d.h">
-      <Filter>Header Files\Containers</Filter>
+      <Filter>Source Files\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Module.h">
+      <Filter>Source Files\Modules</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h">
+      <Filter>Source Files\App</Filter>
+    </ClInclude>
+    <ClInclude Include="Globals.h">
+      <Filter>Source Files\App</Filter>
+    </ClInclude>
+    <ClInclude Include="SString.h">
+      <Filter>Source Files\Containers</Filter>
     </ClInclude>
     <ClInclude Include="Entity.h">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files\Modules\Gameplay\Entities</Filter>
     </ClInclude>
     <ClInclude Include="EntityManager.h">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files\Modules\Gameplay\Entities</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleAudio.h">
+      <Filter>Source Files\Modules\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleFonts.h">
+      <Filter>Source Files\Modules\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleInput.h">
+      <Filter>Source Files\Modules\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ModulePhysics.h">
+      <Filter>Source Files\Modules\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ModulePlayer.h">
+      <Filter>Source Files\Modules\Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleRender.h">
+      <Filter>Source Files\Modules\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleSceneIntro.h">
+      <Filter>Source Files\Modules\Gameplay\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleTextures.h">
+      <Filter>Source Files\Modules\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleUi.h">
+      <Filter>Source Files\Modules\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleWindow.h">
+      <Filter>Source Files\Modules\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Worm.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleWindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="log.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Application.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleRender.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleTextures.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleInput.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ModulePlayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleAudio.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleSceneIntro.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ModulePhysics.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Physics.cpp">
       <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleFonts.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ModuleUi.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PhysObject.cpp">
       <Filter>Engine</Filter>
@@ -140,9 +116,51 @@
       <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="Vector2d.cpp">
-      <Filter>Header Files\Containers</Filter>
+      <Filter>Source Files\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="Application.cpp">
+      <Filter>Source Files\App</Filter>
+    </ClCompile>
+    <ClCompile Include="log.cpp">
+      <Filter>Source Files\App</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files\App</Filter>
     </ClCompile>
     <ClCompile Include="EntityManager.cpp">
+      <Filter>Source Files\Modules\Gameplay\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleAudio.cpp">
+      <Filter>Source Files\Modules\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleFonts.cpp">
+      <Filter>Source Files\Modules\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleInput.cpp">
+      <Filter>Source Files\Modules\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ModulePhysics.cpp">
+      <Filter>Source Files\Modules\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ModulePlayer.cpp">
+      <Filter>Source Files\Modules\Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleRender.cpp">
+      <Filter>Source Files\Modules\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleSceneIntro.cpp">
+      <Filter>Source Files\Modules\Gameplay\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleTextures.cpp">
+      <Filter>Source Files\Modules\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleUi.cpp">
+      <Filter>Source Files\Modules\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleWindow.cpp">
+      <Filter>Source Files\Modules\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Worm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

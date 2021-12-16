@@ -3,7 +3,7 @@
 #include "ModuleSceneIntro.h"
 #include "SString.h"
 
-
+#include "EntityManager.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -53,10 +53,10 @@ bool ModuleSceneIntro::Start()
 	PhysObject* g = new PhysObject();
 	
 	g->x = 150.0f;
-	g->y = 400.0f;
+	g->y = 750.0f;
 	g->mass = 1.0f;
 	g->shape = Shape::RECTANGLE;
-	g->w = 300;
+	g->w = 5000;
 	g->h = 50;
 	g->restitution = 0.1f;
 	g->name.Create("Ground1");
@@ -79,6 +79,11 @@ bool ModuleSceneIntro::Start()
 
 	App->physics->world.CreateObject(water);
 	App->physics->world.water = water;*/
+
+	App->entman->CreateEntity(EntityType::WORM, 50, 0, Team::RED);
+	App->entman->CreateEntity(EntityType::WORM, 150, 0, Team::RED);
+	App->entman->CreateEntity(EntityType::WORM, 250, 0, Team::RED);
+	App->entman->CreateEntity(EntityType::WORM, 350, 0, Team::RED);
 
 	portal = new Portal();
 
@@ -128,7 +133,6 @@ update_status ModuleSceneIntro::Update()
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{
 		PhysObject* ball = new PhysObject();
-		ball = new PhysObject();
 		ball->x = App->input->GetMouseX();
 		ball->y = App->input->GetMouseY();
 		ball->mass = 1000.0f;

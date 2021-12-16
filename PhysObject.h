@@ -77,7 +77,7 @@ public:
 	float density = 1.0f;
 
 	
-	float restitution = 0.1f; // Restitution coef
+	float restitution = 1.0f; // Restitution coef
 	float friction = 0.25f; // Friction coef (Wood on wood as reference 0.25)
 
 	Shape shape;

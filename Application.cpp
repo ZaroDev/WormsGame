@@ -12,6 +12,7 @@ Application::Application()
 	physics = new ModulePhysics(this);
 	fonts = new ModuleFonts(this);
 	UI = new ModuleUi(this);
+	entman = new EntityManager(this, true);
 
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
@@ -26,6 +27,7 @@ Application::Application()
 	AddModule(audio);
 	AddModule(fonts);
 	AddModule(UI);
+	AddModule(entman);
 	
 	// Scenes
 	AddModule(scene_intro);

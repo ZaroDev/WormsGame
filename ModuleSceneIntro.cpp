@@ -62,7 +62,7 @@ bool ModuleSceneIntro::Start()
 	g->name.Create("Ground1");
 	g->type = Type::STATIC;
 
-	/*App->physics->world.CreateObject(g);*/
+	App->physics->world.CreateObject(g);
 
 
 	/*PhysObject* water = new PhysObject();
@@ -125,18 +125,18 @@ update_status ModuleSceneIntro::Update()
 	if (App->input->GetKey(SDL_SCANCODE_F4))
 		App->controll = FrameTimeControll::CONTROLLDT;
 
-	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{
 		PhysObject* ball = new PhysObject();
 		ball = new PhysObject();
 		ball->x = App->input->GetMouseX();
 		ball->y = App->input->GetMouseY();
-		ball->mass = 500.0f;
-		ball->shape = Shape::CIRCLE;
+		ball->mass = 1000.0f;
+		ball->shape = Shape::RECTANGLE;
 		ball->radius = 15;
 		ball->w = 30;
 		ball->h = 30;
-		ball->density = 0.1f;
+		ball->restitution = 0.5f;
 		ball->name.Create("Ball");
 		ball->type = Type::DYNAMIC;
 		ball->SetLimit(Vector2d(300.0f, 300.0f));

@@ -1,6 +1,6 @@
 #pragma once
 #include "p2DynArray.h"
-
+struct SDL_Rect;
 class Animation
 {
 public:

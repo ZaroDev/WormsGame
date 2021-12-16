@@ -1,3 +1,6 @@
+#ifndef __PHYSICS_H__
+#define __PHYSICS_H__
+
 #include "p2List.h"
 #include "p2Point.h"
 #include "SString.h"
@@ -49,3 +52,4 @@ public:
 private:
 	float gravityX, gravityY;
 };
+#endif

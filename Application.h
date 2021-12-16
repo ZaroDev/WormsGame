@@ -14,6 +14,7 @@
 #include "ModuleSceneIntro.h"
 #include "ModuleFonts.h"
 #include "ModuleUi.h"
+#include "EntityManager.h"
 
 enum class FrameTimeControll
 {
@@ -36,6 +37,7 @@ public:
 	ModulePhysics* physics;
 	ModuleFonts* fonts;
 	ModuleUi* UI;
+	EntityManager* entman;
 
 private:
 

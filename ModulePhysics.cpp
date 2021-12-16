@@ -112,7 +112,7 @@ update_status ModulePhysics::PostUpdate()
 			}
 		}
 
-		printf("\nName: %s, x: %f, y: %f", o->data->name.GetString(), o->data->x, o->data->y);
+		//printf("\nName: %s, x: %f, y: %f", o->data->name.GetString(), o->data->x, o->data->y);
 		if (o->data->y >= 800)
 		{
 			App->physics->world.DestroyObject(o->data);

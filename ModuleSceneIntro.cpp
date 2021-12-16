@@ -20,7 +20,7 @@ bool ModuleSceneIntro::Start()
 	bool ret = true;
 
 	App->renderer->camera.x = App->renderer->camera.y = 0;
-	ball = new PhysObject();
+	/*ball = new PhysObject();
 	ball->x = 400.0f;
 	ball->y = 0.0f;
 	ball->mass = 10.0f;
@@ -32,7 +32,7 @@ bool ModuleSceneIntro::Start()
 	ball->density = 2.0f;
 	ball->name.Create("Ball");
 	ball->type = Type::DYNAMIC;
-	ball->SetLimit(Vector2d(300.0f, 300.0f));
+	ball->SetLimit(Vector2d(300.0f, 300.0f));*/
 
 
 	/*ball2 = new PhysObject();
@@ -48,7 +48,7 @@ bool ModuleSceneIntro::Start()
 	ball2->type = Type::DYNAMIC;
 	ball2->SetLimit(Vector2d(300.0f, 300.0f));*/
 
-	App->physics->world.CreateObject(ball);
+	/*App->physics->world.CreateObject(ball);*/
 	//App->physics->world.CreateObject(ball2);
 	PhysObject* g = new PhysObject();
 	
@@ -62,7 +62,7 @@ bool ModuleSceneIntro::Start()
 	g->name.Create("Ground1");
 	g->type = Type::STATIC;
 
-	App->physics->world.CreateObject(g);
+	/*App->physics->world.CreateObject(g);*/
 
 
 	/*PhysObject* water = new PhysObject();
@@ -125,7 +125,7 @@ update_status ModuleSceneIntro::Update()
 	if (App->input->GetKey(SDL_SCANCODE_F4))
 		App->controll = FrameTimeControll::CONTROLLDT;
 
-	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
 	{
 		PhysObject* ball = new PhysObject();
 		ball = new PhysObject();

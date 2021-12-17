@@ -29,6 +29,7 @@ public:
 private:
 	p2List<Entity*> entities;
 	int testFont;
+	Application* app_;
 	float accumulatedTime;
 	float updateMsCycle;
 	bool doLogic;

@@ -6,6 +6,8 @@
 #include "ModulePhysics.h"
 #include "Portal.h"
 
+class Entity;
+class Worm;
 class ModuleSceneIntro : public Module
 {
 public:
@@ -21,5 +23,6 @@ public:
 	PhysObject* ball2;
 	Portal* portal;
 
-
+	p2List<Worm*> worms;
+	p2List_item<Worm*>* currentWorm;
 };

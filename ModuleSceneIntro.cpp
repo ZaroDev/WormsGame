@@ -2,7 +2,7 @@
 #include "Application.h"
 #include "ModuleSceneIntro.h"
 #include "SString.h"
-
+#include "Worm.h"
 #include "EntityManager.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
@@ -80,10 +80,13 @@ bool ModuleSceneIntro::Start()
 	App->physics->world.CreateObject(water);
 	App->physics->world.water = water;*/
 
-	App->entman->CreateEntity(EntityType::WORM, 50, 0, Team::RED);
-	App->entman->CreateEntity(EntityType::WORM, 150, 0, Team::RED);
-	App->entman->CreateEntity(EntityType::WORM, 250, 0, Team::RED);
-	App->entman->CreateEntity(EntityType::WORM, 350, 0, Team::RED);
+	worms.add((Worm*)App->entman->CreateEntity(EntityType::WORM, 50, 0, Team::RED));
+	worms.add((Worm*)App->entman->CreateEntity(EntityType::WORM, 150, 0, Team::RED));
+	worms.add((Worm*)App->entman->CreateEntity(EntityType::WORM, 250, 0, Team::BLUE));
+	worms.add((Worm*)App->entman->CreateEntity(EntityType::WORM, 350, 0, Team::RED));
+
+	currentWorm = worms.getFirst();
+	currentWorm->data->Select();
 
 	portal = new Portal();
 
@@ -150,6 +153,27 @@ update_status ModuleSceneIntro::Update()
 
 	string.Create("Current FPS: %f DeltaTime: %f  Expected FPS: %i, DeltaTime: %i", 1000 / App->dt, App->dt, 1000 / App->targetDT, App->targetDT);
 
+
+	if (App->input->GetKey(SDL_SCANCODE_N) == KEY_DOWN)
+	{
+		currentWorm->data->UnSelect();
+		currentWorm = currentWorm->next;
+		if (currentWorm == nullptr)
+			currentWorm = worms.getFirst();
+
+		
+		currentWorm->data->Select();
+	}
+	if (currentWorm != nullptr)
+	{
+		if (currentWorm->data->setPendingToDelete)
+		{
+			worms.del(currentWorm);
+			currentWorm = worms.getFirst();
+		}
+	}
+
+	printf("\nWorms %i", worms.count());
 	if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN)
 	{
 		portal->SetPortal1((float)App->input->GetMouseX(), (float)App->input->GetMouseY(), 10, 10, Shape::RECTANGLE, Type::STATIC, PortalType::ORANGE, "Orange");
@@ -170,18 +194,8 @@ update_status ModuleSceneIntro::Update()
 		ball->cl = 100.0f;
 	}
 
-	if(App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
-	{
-		ball->AddForce(Vector2d(-10.0f, 0.0f));
-	}
-	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
-	{
-		ball->AddForce(Vector2d(+10.0f, 0.0f));
-	}
-	if (App->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN)
-	{
-		ball->AddForce(Vector2d(0.0f, -50.0f));
-	}
+
+
 	App->window->SetTitle(string.GetString());
 
 	return UPDATE_CONTINUE;

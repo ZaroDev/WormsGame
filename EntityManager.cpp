@@ -6,7 +6,7 @@
 #include "ModuleFonts.h"
 
 
-EntityManager::EntityManager(Application* app, bool startEnabled) : Module(app, startEnabled)
+EntityManager::EntityManager(Application* app, bool startEnabled) : Module(app, startEnabled), app_(app)
 {
 	
 }
@@ -28,7 +28,11 @@ update_status EntityManager::PreUpdate()
 {
 	for (p2List_item<Entity*>* ent = entities.getFirst(); ent != NULL; ent = ent->next)
 	{
-		if (ent->data->setPendingToDelete) DestroyEntity(ent->data);
+		if (ent->data->setPendingToDelete)
+		{
+			DestroyEntity(ent->data);
+			break;
+		}
 	}
 
 	return UPDATE_CONTINUE;
@@ -43,9 +47,14 @@ void EntityManager::UpdateAll(float dt, bool doLogic)
 		ent->data->Update(dt);
 		ent->data->Draw();
 		if (ent->data->type == EntityType::WORM)
-		{
+		{	
+			
 			SString tmp("%s %i", ent->data->name.GetString(), ent->data->health);
-			App->fonts->BlitText(ent->data->GetPos().x - 20, ent->data->GetPos().y - 20, testFont, tmp.GetString());
+			if (ent->data->isSelected)
+			{
+				App->fonts->BlitText(ent->data->GetPos().x - 20, ent->data->GetPos().y - 40, testFont, "selected");
+			}
+			App->fonts->BlitText(ent->data->GetPos().x - 20, ent->data->GetPos().y - 25, testFont, tmp.GetString());
 		}
 	}
 	return;
@@ -92,7 +101,7 @@ Entity* EntityManager::CreateEntity(EntityType type, float x, float y, Team team
 	{
 		case EntityType::WORM:
 		{
-			ret = new Worm(pos, team);
+			ret = new Worm(pos, team, app_);
 			App->physics->world.CreateObject(ret->pbody);
 			break;
 		}
@@ -105,11 +114,16 @@ void EntityManager::DestroyEntity(Entity* entity)
 {
 	App->physics->world.DestroyObject(entity->pbody);
 	entities.del(entities.findNode(entity));
+	return;
 }
 void EntityManager::DestroyAllEntities()
 {
+	int i = 0;
 	for (p2List_item<Entity*>* ent = entities.getFirst(); ent != NULL; ent = ent->next)
 	{
-		DestroyEntity(ent->data);
+		App->physics->world.DestroyObject(ent->data->pbody);
+		i++;
 	}
+	entities.clear();
+	printf("\nSuccesfully destroyed %i entities", i);
 }

@@ -29,6 +29,9 @@
     <Filter Include="Source Files\Modules\Gameplay\Entities">
       <UniqueIdentifier>{668294a6-e2c7-48af-a80e-d359405d567c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Modules\Gameplay\Weapons">
+      <UniqueIdentifier>{1d1ab50b-96bf-4f97-9b5f-6ae2d51dd461}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="p2Point.h">
@@ -106,6 +109,13 @@
     <ClInclude Include="Worm.h">
       <Filter>Source Files\Modules\Gameplay\Entities</Filter>
     </ClInclude>
+    <ClInclude Include="Weapon.h">
+      <Filter>Source Files\Modules\Gameplay\Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="HandGun.h">
+      <Filter>Source Files\Modules\Gameplay\Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="AirStrike.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Physics.cpp">
@@ -164,6 +174,12 @@
     </ClCompile>
     <ClCompile Include="Worm.cpp">
       <Filter>Source Files\Modules\Gameplay\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="HandGun.cpp">
+      <Filter>Source Files\Modules\Gameplay\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="AirStrike.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

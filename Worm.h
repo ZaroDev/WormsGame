@@ -1,6 +1,9 @@
 
 #include "Entity.h"
 #include "Animation.h"
+#include "HandGun.h"
+#include "p2List.h"
+#include "AirStrike.h"
 
 class Worm : public Entity
 {
@@ -25,5 +28,7 @@ private:
 	Animation walkAnim;
 	Animation jumpAnim;
 	Animation atackAnim;
+	Animation deadAnim;
+	Animation talkAnim;
 };
 

@@ -137,7 +137,7 @@ bool ModuleSceneIntro::Start()
 
 	currentWormBlue = wormsBlue.getFirst();
 	currentWormBlue->data->Select();
-
+	currentWormRed = wormsRed.getFirst();
 	blueTurn = true;
 	redTurn = false;
 	turnTimer = 1800;
@@ -185,6 +185,7 @@ bool ModuleSceneIntro::CleanUp()
 
 void ModuleSceneIntro::UpdateChoose()
 {
+	
 	if (redTurn)
 	{
 
@@ -252,6 +253,11 @@ update_status ModuleSceneIntro::Update()
 {
 	SString string;
 	string.Create("Current FPS: %f DeltaTime: %f  Expected FPS: %i, DeltaTime: %i", 1000 / App->dt, App->dt, 1000 / App->targetDT, App->targetDT);
+	weaponBlue = currentWormBlue->data->currentWeapon->data->name.GetString();
+	ammoBlue = currentWormBlue->data->currentWeapon->data->ammo;
+	weaponRed = currentWormRed->data->currentWeapon->data->name.GetString();
+	ammoRed = currentWormRed->data->currentWeapon->data->ammo;
+
 	if (App->physics->debug)
 	{
 		if (App->input->GetKey(SDL_SCANCODE_4))

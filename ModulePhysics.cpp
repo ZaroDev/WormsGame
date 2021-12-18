@@ -44,6 +44,46 @@ update_status ModulePhysics::PostUpdate()
 	world.Update(App->dt / 1000);
 	if(App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
 		debug = !debug;
+	p2List_item<PhysObject*>* w = world.objects.getFirst();
+
+	while (w != NULL)
+	{
+		if (w->data->shape == Shape::RECTANGLE)
+		{
+			SDL_Rect rect = { w->data->x - w->data->w / 2, w->data->y - w->data->h / 2, w->data->w,w->data->h };
+			if (w->data->object == ObjectType::PORTAL)
+			{
+				if (w->data->portal == PortalType::ORANGE)
+				{
+					App->renderer->DrawQuad(rect, 255, 69, 0, 100, true);
+
+				}
+
+				else if (w->data->portal == PortalType::PURPLE)
+				{
+					App->renderer->DrawQuad(rect, 127, 0, 255, 100, true);
+
+				}
+			}
+			else if (w->data->object == ObjectType::WATER)
+			{
+				App->renderer->DrawQuad(rect, 0, 123, 255, 100, true);
+			}
+			else if (w->data->type == Type::STATIC)
+			{
+				App->renderer->DrawQuad(rect, 165, 42, 42, 255, true);
+			}
+		}
+
+		//printf("\nName: %s, x: %f, y: %f", o->data->name.GetString(), o->data->x, o->data->y);
+		if (w->data->y >= 800)
+		{
+			App->physics->world.DestroyObject(w->data);
+		}
+
+
+		w = w->next;
+	}
 
 	if(!debug)
 		return UPDATE_CONTINUE;

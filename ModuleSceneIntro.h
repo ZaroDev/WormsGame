@@ -8,6 +8,7 @@
 
 class Entity;
 class Worm;
+class Weapon;
 class ModuleSceneIntro : public Module
 {
 public:
@@ -34,7 +35,10 @@ public:
 	p2List<Worm*> wormsBlue;
 	p2List_item<Worm*>* currentWormRed;
 	p2List_item<Worm*>* currentWormBlue;
-
+	SString weaponBlue;
+	int ammoBlue;
+	SString weaponRed;
+	int ammoRed;
 	int turnTimer;
 	bool startTurn;
 	bool redTurn;

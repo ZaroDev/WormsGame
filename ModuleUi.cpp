@@ -3,9 +3,8 @@
 #include "ModulePhysics.h"
 #include "ModuleFonts.h"
 #include "SString.h"
-
 #include "p2Point.h"
-
+#include "p2List.h"
 #include <stdio.h>
 #include <cstdio>
 
@@ -37,8 +36,13 @@ update_status ModuleUi::Update()
 {
 	if (App->physics->debug)
 		Draw();
+	SString weaponBlue("blue %s %i", App->scene_intro->weaponBlue.GetString(), App->scene_intro->ammoBlue);
+	SString weaponRed("red %s %i", App->scene_intro->weaponRed.GetString(), App->scene_intro->ammoRed);
+
 	SString time("time left %i", App->scene_intro->turnTimer / 60);
-	App->fonts->BlitText(800, 0, font, time.GetString());
+	App->fonts->BlitText(900, 0, testFont, time.GetString());
+	App->fonts->BlitText(10, 725, testFont, weaponRed.GetString());
+	App->fonts->BlitText(850, 725, testFont, weaponBlue.GetString());
 	return update_status::UPDATE_CONTINUE;
 }
 

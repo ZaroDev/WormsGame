@@ -2,6 +2,8 @@
 #include "p2Point.h"
 #include "Animation.h"
 #include "SString.h"
+#include "HandGun.h"
+#include "p2List.h"
 
 enum class EntityType
 {
@@ -18,6 +20,7 @@ class Application;
 struct SDL_Texture;
 class PhysObject;
 class EntityManager;
+class Weapon;
 class Entity
 {
 public:
@@ -41,4 +44,6 @@ public:
 	Team team;
 	SString name;
 	int health;
+	p2List_item<Weapon*>* currentWeapon;
+	p2List<Weapon*> guns;
 };

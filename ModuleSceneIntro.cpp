@@ -253,10 +253,17 @@ update_status ModuleSceneIntro::Update()
 {
 	SString string;
 	string.Create("Current FPS: %f DeltaTime: %f  Expected FPS: %i, DeltaTime: %i", 1000 / App->dt, App->dt, 1000 / App->targetDT, App->targetDT);
-	weaponBlue = currentWormBlue->data->currentWeapon->data->name.GetString();
-	ammoBlue = currentWormBlue->data->currentWeapon->data->ammo;
-	weaponRed = currentWormRed->data->currentWeapon->data->name.GetString();
-	ammoRed = currentWormRed->data->currentWeapon->data->ammo;
+	if (currentWormBlue != nullptr)
+	{
+		weaponBlue = currentWormBlue->data->currentWeapon->data->name.GetString();
+		ammoBlue = currentWormBlue->data->currentWeapon->data->ammo;
+
+	}
+	if (currentWormRed != nullptr)
+	{
+		weaponRed = currentWormRed->data->currentWeapon->data->name.GetString();
+		ammoRed = currentWormRed->data->currentWeapon->data->ammo;
+	}
 
 	if (App->physics->debug)
 	{

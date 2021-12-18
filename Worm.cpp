@@ -20,6 +20,7 @@ Worm::Worm(p2Point<float> position_, Team team_, Application* app_) : Entity(Ent
 	pbody->w = 20;
 	health = 100;
 	pbody->restitution = 0.1f;
+	pbody->friction = 0.1f;
 	pbody->SetLimit(Vector2d(300.0f, 300.0f));
 	isSelected = false;
 

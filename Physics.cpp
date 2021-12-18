@@ -193,18 +193,22 @@ bool Physics::Update(float dt)
 						if (o->data != water && c->data == water)
 						{
 							ApplyBouyance(c->data, o->data);
+							break;
 						}
 						else if (o->data->object == ObjectType::PORTAL && c->data->object != ObjectType::PORTAL)
 						{
 							portal->Teletransport(o->data, c->data);
+							break;
 						}
-						else if(o->data->type == Type::DYNAMIC && c->data->type == Type::DYNAMIC)
+						else if(o->data->type == Type::DYNAMIC)
 						{
+							if (c->data->type == Type::STATIC)
+							{
+								ComputeOverlaping(o->data, c->data);
+								break;
+							}
 							ComputeCollision(o->data, c->data);
-						}
-						else if (o->data->type == Type::DYNAMIC && c->data->type == Type::STATIC)
-						{
-							ComputeOverlaping(o->data, c->data);
+							break;
 						}
 					}
 
@@ -340,15 +344,16 @@ void Physics::ComputeCollision(PhysObject* o, PhysObject* c)
 		// Reposition object
 		if (colWidth < colHeight) {
 			// Reposition by X-axis
-			if (diff.x > 0) {
-				o->x += colWidth;
+			if (o->r >= c->l && o->oR < c->ol)
+			{
+				o->x = c->l - (o->w / 2) - 0.1f;
+				o->v.x = o->v.x * o->friction;
 			}
-			else {
-				o->x -= colWidth;
+			else if (o->l <= c->r && o->ol > c->oR)
+			{
+				o->x = c->r + (o->w / 2) + 0.1f;
+				o->v.x = o->v.x * o->friction;
 			}
-
-			o->v.x = -o->v.x * o->friction;
-			c->v.x = -c->v.x * c->friction;
 		}
 		else {
 			// Reposition by Y-axis
@@ -360,7 +365,6 @@ void Physics::ComputeCollision(PhysObject* o, PhysObject* c)
 			}
 
 			o->v.y = -o->v.y * o->restitution;
-			c->v.y = -c->v.y * c->restitution;
 		}
 		return;
 	}
@@ -424,14 +428,12 @@ void Physics::ComputeOverlaping(PhysObject* o, PhysObject* c)
 		else if (o->r >= c->l && o->oR < c->ol)
 		{
 			o->x = c->l - (o->w / 2) - 0.1f;
-			o->v.y = -o->v.y * o->restitution;
 			o->v.x = o->v.x * o->friction;
 
 		}
 		else if (o->l <= c->r && o->ol > c->oR)
 		{
 			o->x = c->r + (o->w / 2) + 0.1f;
-			o->v.y = -o->v.y * o->restitution;
 			o->v.x = o->v.x * o->friction;
 		}
 		return;

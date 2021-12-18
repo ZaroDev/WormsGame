@@ -27,13 +27,13 @@ Application::Application()
 	AddModule(audio);
 	AddModule(fonts);
 	AddModule(UI);
-	AddModule(entman);
 	
 	// Scenes
 	AddModule(scene_intro);
 	
 	// Player
 	AddModule(player);
+	AddModule(entman);
 }
 
 Application::~Application()

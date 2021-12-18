@@ -23,7 +23,7 @@ Worm::Worm(p2Point<float> position_, Team team_, Application* app_) : Entity(Ent
 	pbody->SetLimit(Vector2d(300.0f, 300.0f));
 	isSelected = false;
 
-	sprites = app_->textures->Load("Assets/Worms/sprites.png");
+	
 
 	// SETING ANIMATIONS
 	currentAnim = &jumpAnim;
@@ -72,10 +72,10 @@ void Worm::Update(float dt)
 	currentAnim->Update();
 }
 
-void Worm::Draw()
+void Worm::Draw(SDL_Texture* tex)
 {
 
-	app_->renderer->Blit(sprite, position.x, position.y, &currentAnim->GetCurrentFrame());
+	app_->renderer->Blit(tex, position.x - pbody->w, position.y - pbody->h, &currentAnim->GetCurrentFrame());
 }
 
 void Worm::Select()

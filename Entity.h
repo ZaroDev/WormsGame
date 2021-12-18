@@ -25,7 +25,7 @@ public:
 	Entity(EntityType type_, p2Point<float> position_, Team team_, Application* app) : type(type_), position(position_), team(team_), app_(app){}
 
 	virtual void Update(float dt){}
-	virtual void Draw(){}
+	virtual void Draw(SDL_Texture* tex){}
 
 	p2Point<float> GetPos() { return position; }
 

@@ -27,6 +27,7 @@ public:
 	void DestroyEntity(Entity* entity);
 
 private:
+	SDL_Texture* wormsSprite;
 	p2List<Entity*> entities;
 	int testFont;
 	Application* app_;

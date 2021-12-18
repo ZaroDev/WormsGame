@@ -21,6 +21,7 @@ bool EntityManager::Start()
 {
 	char lookupTable[] = { "! @,_./0123456789$;< ?abcdefghijklmnopqrstuvwxyz" };
 	testFont = App->fonts->Load("Assets/Fonts/rtype_font3.png", lookupTable, 2);
+	wormsSprite = App->textures->Load("Assets/Worms/sprites.png");
 	return true;
 }
 
@@ -45,10 +46,10 @@ void EntityManager::UpdateAll(float dt, bool doLogic)
 	for (p2List_item<Entity*>* ent = entities.getFirst(); ent != NULL; ent = ent->next)
 	{
 		ent->data->Update(dt);
-		ent->data->Draw();
+		
 		if (ent->data->type == EntityType::WORM)
 		{	
-			
+			ent->data->Draw(wormsSprite);
 			SString tmp("%s %i", ent->data->name.GetString(), ent->data->health);
 			if (ent->data->isSelected)
 			{

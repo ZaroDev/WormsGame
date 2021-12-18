@@ -9,7 +9,7 @@ public:
 	~Worm();
 
 	void Update(float dt);
-	void Draw();
+	void Draw(SDL_Texture* tex);
 
 
 	void Select();
@@ -18,7 +18,7 @@ public:
 private:
 	bool isGrounded;
 
-	SDL_Texture* sprites;
+
 	Animation* currentAnim;
 
 	Animation idleAnim;

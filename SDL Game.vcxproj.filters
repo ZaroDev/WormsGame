@@ -103,7 +103,9 @@
     <ClInclude Include="ModuleWindow.h">
       <Filter>Source Files\Modules\Core</Filter>
     </ClInclude>
-    <ClInclude Include="Worm.h" />
+    <ClInclude Include="Worm.h">
+      <Filter>Source Files\Modules\Gameplay\Entities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Physics.cpp">
@@ -161,7 +163,7 @@
       <Filter>Source Files\Modules\Core</Filter>
     </ClCompile>
     <ClCompile Include="Worm.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Modules\Gameplay\Entities</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

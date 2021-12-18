@@ -88,7 +88,7 @@ bool ModuleRender::CleanUp()
 }
 
 // Blit to screen
-bool ModuleRender::Blit(SDL_Texture* texture, int x, int y, SDL_Rect* section, float speed, double angle, int pivot_x, int pivot_y )
+bool ModuleRender::Blit(SDL_Texture* texture, int x, int y,const SDL_Rect* section, float speed, double angle, int pivot_x, int pivot_y )
 {
 	bool ret = true;
 	SDL_Rect rect;
@@ -126,6 +126,7 @@ bool ModuleRender::Blit(SDL_Texture* texture, int x, int y, SDL_Rect* section, f
 
 	return ret;
 }
+
 
 bool ModuleRender::DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool filled, bool use_camera)
 {

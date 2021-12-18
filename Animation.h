@@ -1,10 +1,8 @@
 #ifndef __ANIMATION_H__
 #define __ANIMATION_H__
 
-#pragma once
-
 #include "SDL/include/SDL_rect.h"
-#define MAX_FRAMES 20
+#define MAX_FRAMES 50
 
 class Animation
 {
@@ -32,7 +30,6 @@ public:
 	void Reset()
 	{
 		currentFrame = 0;
-		loopCount = 0;
 	}
 
 	bool HasFinished()

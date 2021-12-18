@@ -48,7 +48,10 @@ void Worm::Update(float dt)
 {
 	position.x = pbody->x;
 	position.y = pbody->y;
-	if (isSelected)
+
+	if (app_->scene_intro->turnStarted) canMove = true;
+	else canMove = false;
+	if (isSelected && canMove)
 	{
 		if (app_->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 		{

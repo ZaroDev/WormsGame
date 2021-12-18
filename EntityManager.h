@@ -30,6 +30,8 @@ private:
 	SDL_Texture* wormsSprite;
 	p2List<Entity*> entities;
 	int testFont;
+	int redTeamFont;
+	int blueTeamFont;
 	Application* app_;
 	float accumulatedTime;
 	float updateMsCycle;

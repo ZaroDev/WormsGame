@@ -1,4 +1,5 @@
 #include "Physics.h"
+#include <iostream>
 #include <math.h>
 # define M_PI           3.1415
 
@@ -149,27 +150,7 @@ bool Physics::Update(float dt)
 				}
 
 
-				//Hydrodinamic Forces
-				if (o->data->isOnWater)
-				{
-
-					//Fd = -b * v;
-					float hDragX = 6 * M_PI * o->data->w / 2 * o->data->v.x;
-					float hDragY = 6 * M_PI * o->data->h / 2 * o->data->v.y;
-					
-
-
-					//Fb = p g V;
-					float bouyancyX =  gravityX * (water->density / o->data->density) * o->data->h * o->data->w;
-					float bouyancyY =  gravityY * (water->density / o->data->density) * o->data->h * o->data->w;
-					//Need to work on it
-					float bfx = (-bouyancyX + hDragX) *(-1);
-					float bfy = (-bouyancyY + hDragY) *(-1);
-					
-					o->data->f.x += bfx;
-					o->data->f.y += bfy;
-					o->data->isOnWater = false;
-				}
+				
 				//Player Input forces (Doesn't work)
 				o->data->f.x += o->data->fp.x;
 				o->data->f.y += o->data->fp.y;
@@ -224,7 +205,7 @@ bool Physics::Update(float dt)
 						//Else if statement We don't collide with more that one type per object
 						if (o->data != water && c->data == water)
 						{
-							o->data->isOnWater = true;
+							ApplyBouyance(c->data, o->data);
 						}
 						else if (o->data->object == ObjectType::PORTAL && c->data->object != ObjectType::PORTAL)
 						{
@@ -448,4 +429,17 @@ void Physics::CreateObject(PhysObject* obj)
 void Physics::DestroyObject(PhysObject* obj)
 {
 	obj->setPendingToDelete = true;
+}
+
+void Physics::ApplyBouyance(PhysObject* a, PhysObject* b)
+{
+	float volume;
+	if (a->y <= b->y)
+		volume = b->h * b->w;
+	else
+		volume = (float)abs((a->y - b->y) - b->h) * b->w;
+
+	float tmpForce = b->f.y + (b->mass * gravityY - (water->density)*volume * gravityY);
+	b->f.y = tmpForce;
+	b->v.y *= DAMPEN;
 }

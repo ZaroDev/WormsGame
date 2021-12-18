@@ -21,6 +21,8 @@ bool EntityManager::Start()
 {
 	char lookupTable[] = { "! @,_./0123456789$;< ?abcdefghijklmnopqrstuvwxyz" };
 	testFont = App->fonts->Load("Assets/Fonts/rtype_font3.png", lookupTable, 2);
+	redTeamFont = App->fonts->Load("Assets/Fonts/rtype_font2.png", lookupTable, 2);
+	blueTeamFont = App->fonts->Load("Assets/Fonts/rtype_font.png", lookupTable, 2);
 	wormsSprite = App->textures->Load("Assets/Worms/sprites.png");
 	return true;
 }
@@ -51,11 +53,16 @@ void EntityManager::UpdateAll(float dt, bool doLogic)
 		{	
 			ent->data->Draw(wormsSprite);
 			SString tmp("%s %i", ent->data->name.GetString(), ent->data->health);
+			int font = 0;
+			if (ent->data->team == Team::RED)
+				font = redTeamFont;
+			else if (ent->data->team == Team::BLUE)
+				font = blueTeamFont;
 			if (ent->data->isSelected)
 			{
-				App->fonts->BlitText(ent->data->GetPos().x - 20, ent->data->GetPos().y - 40, testFont, "selected");
+				App->fonts->BlitText(ent->data->GetPos().x - 20, ent->data->GetPos().y - 40, font, "selected");
 			}
-			App->fonts->BlitText(ent->data->GetPos().x - 20, ent->data->GetPos().y - 25, testFont, tmp.GetString());
+			App->fonts->BlitText(ent->data->GetPos().x - 20, ent->data->GetPos().y - 25, font, tmp.GetString());
 		}
 	}
 	return;

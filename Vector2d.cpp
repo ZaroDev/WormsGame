@@ -137,3 +137,9 @@ Vector2d Vector2d::GetIntersect(const Vector2d& aa, const Vector2d& ab, const Ve
 
     return Vector2d(pX / denominator, pY / denominator);
 }
+
+void Vector2d::SetToZero()
+{
+    this->x = 0;
+    this->y = 0;
+}

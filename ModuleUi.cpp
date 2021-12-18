@@ -25,7 +25,10 @@ ModuleUi::~ModuleUi()
 bool ModuleUi::Start() {
 
 	char lookupTable[] = { "! @,_./0123456789$;< ?abcdefghijklmnopqrstuvwxyz" };
+	char lookUpTable2[] = { "abcdefghijklmnopqrstuvwxyz0123456789!.?   " };
 	testFont = App->fonts->Load("Assets/Fonts/rtype_font3.png", lookupTable, 2);
+	font = App->fonts->Load("Assets/Fonts/font.png", lookUpTable2, 7);
+	
 
 	return true;
 }
@@ -34,8 +37,8 @@ update_status ModuleUi::Update()
 {
 	if (App->physics->debug)
 		Draw();
-
-
+	SString time("time left %i", App->scene_intro->turnTimer / 60);
+	App->fonts->BlitText(800, 0, font, time.GetString());
 	return update_status::UPDATE_CONTINUE;
 }
 
@@ -54,7 +57,7 @@ bool ModuleUi::CleanUp()
 void ModuleUi::Draw()
 {
 	SString fps;
-	fps.Create("current fps %f deltatime %f ms expected fps %i deltatime %i ms", 1000 / App->dt, App->dt, 1000 / App->targetDT, App->targetDT);
+	fps.Create("current fps %.2f deltatime %.2f ms expected fps %i deltatime %i ms", 1000 / App->dt, App->dt, 1000 / App->targetDT, App->targetDT);
 	SString integrator;
 	switch (App->physics->world.integrator)
 	{
@@ -70,7 +73,7 @@ void ModuleUi::Draw()
 	}
 
 	SString wind;
-	wind.Create("atmosphere density %f wind x %f wind y %f", App->physics->world.atmosphere.density, App->physics->world.atmosphere.wind.x, App->physics->world.atmosphere.wind.y);
+	wind.Create("atmosphere density %.2f wind x %.2f wind y %.2f", App->physics->world.atmosphere.density, App->physics->world.atmosphere.wind.x, App->physics->world.atmosphere.wind.y);
 
 	SString timeControll;
 	switch (App->controll)
@@ -88,6 +91,7 @@ void ModuleUi::Draw()
 	App->fonts->BlitText(0, 30, testFont, integrator.GetString());
 	App->fonts->BlitText(0, 50, testFont, wind.GetString());
 	App->fonts->BlitText(0, 70, testFont, timeControll.GetString());
+
 }
 
 

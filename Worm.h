@@ -17,7 +17,7 @@ public:
 
 private:
 	bool isGrounded;
-
+	bool canMove;
 
 	Animation* currentAnim;
 

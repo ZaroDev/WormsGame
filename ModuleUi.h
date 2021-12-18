@@ -24,7 +24,7 @@ public:
 
 private:
 	int testFont;
-	
+	int font;
 };
 
 #endif // !__UI_H__

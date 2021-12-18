@@ -26,7 +26,6 @@ Application::Application()
 	AddModule(input);
 	AddModule(audio);
 	AddModule(fonts);
-	AddModule(UI);
 	
 	// Scenes
 	AddModule(scene_intro);
@@ -34,6 +33,7 @@ Application::Application()
 	// Player
 	AddModule(player);
 	AddModule(entman);
+	AddModule(UI);
 }
 
 Application::~Application()

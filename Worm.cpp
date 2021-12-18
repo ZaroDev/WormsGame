@@ -16,7 +16,7 @@ Worm::Worm(p2Point<float> position_, Team team_, Application* app_) : Entity(Ent
 	pbody->y = position.y;
 	pbody->type = Type::DYNAMIC;
 	pbody->shape = Shape::RECTANGLE;
-	pbody->h = 20;
+	pbody->h = 30;
 	pbody->w = 20;
 	health = 100;
 	pbody->restitution = 0.1f;

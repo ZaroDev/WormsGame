@@ -115,7 +115,9 @@
     <ClInclude Include="HandGun.h">
       <Filter>Source Files\Modules\Gameplay\Weapons</Filter>
     </ClInclude>
-    <ClInclude Include="AirStrike.h" />
+    <ClInclude Include="AirStrike.h">
+      <Filter>Source Files\Modules\Gameplay\Weapons</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Physics.cpp">
@@ -179,7 +181,7 @@
       <Filter>Source Files\Modules\Gameplay\Weapons</Filter>
     </ClCompile>
     <ClCompile Include="AirStrike.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Modules\Gameplay\Weapons</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

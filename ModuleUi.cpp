@@ -46,6 +46,11 @@ update_status ModuleUi::Update()
 	return update_status::UPDATE_CONTINUE;
 }
 
+update_status ModuleUi::PostUpdate()
+{
+	return UPDATE_CONTINUE;
+}
+
 
 
 

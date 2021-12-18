@@ -49,20 +49,7 @@ bool Intersects(PhysObject* o, PhysObject* c)
 
 	if (o->shape == Shape::RECTANGLE && c->shape == Shape::CIRCLE)
 	{
-		p2Point<float> circleDistance;
-		circleDistance.x = fabsf(c->x - o->x);
-		circleDistance.y = fabsf(c->y - o->y);
-
-		if (circleDistance.x > (o->w / 2 + c->r)) { return false; }
-		if (circleDistance.y > (o->h / 2 + c->r)) { return false; }
-
-		if (circleDistance.x <= (o->w / 2)) { return true; }
-		if (circleDistance.y <= (o->h / 2)) { return true; }
-
-		float cornerDistance_sq = powf((circleDistance.x - o->w / 2), 2) +
-			powf((circleDistance.y - o->h / 2), 2);
-
-		return (cornerDistance_sq <= (powf(c->r, 2)));
+		return Intersects(c, o);
 	}
 
 
@@ -213,7 +200,7 @@ bool Physics::Update(float dt)
 						}
 						else
 						{
-							ComputeElasticCollision(o->data, c->data);
+							ComputeCollision(o->data, c->data);
 						}
 					}
 
@@ -276,7 +263,7 @@ bool Physics::CleanUp()
 	return true;
 }
 
-void Physics::ComputeElasticCollision(PhysObject* o, PhysObject* c)
+void Physics::ComputeCollision(PhysObject* o, PhysObject* c)
 {
 	//POSITION SOLVING TODO
 	if (o->shape == Shape::CIRCLE && c->shape == Shape::CIRCLE)
@@ -332,92 +319,120 @@ void Physics::ComputeElasticCollision(PhysObject* o, PhysObject* c)
 		else if (c->type == Type::DYNAMIC && o->type == Type::DYNAMIC)
 		{
 			//VELOCITY SOLVING
-			//2m2/m1+m2
-			float mass1 = (2.0f * c->mass) / (o->mass + c->mass);
-			float mass2 = (2.0f * o->mass) / (o->mass + c->mass);
-
-			//dot(v1-v2, x1-x2) / ||x1-x2||^2
-			Vector2d x1;
-			x1.x = o->x;
-			x1.y = o->y;
-			Vector2d x2;
-			x2.x = c->x;
-			x2.y = c->y;
-			Vector2d x1_x2 = (x1 - x2);
-			Vector2d x2_x1 = (x2 - x1);
-			float dot1 = Vector2d::DotProduct(o->v - c->v, x1_x2) / pow(Vector2d::Magnitude(x1_x2), 2);
-			float dot2 = Vector2d::DotProduct(c->v - o->v, x2_x1) / pow(Vector2d::Magnitude(x2_x1), 2);
-
-			// Compute velocities after collision (assume perfectly elastic collision without dampening)
-			o->v = o->v - (x1_x2 * mass1 * dot1);
-			c->v = c->v - (x2_x1 * mass2 * dot2);
-
-			// Apply restitution coefficient (FUYM inelasticity/dampening)
-			o->v = o->v * o->restitution;
-			c->v = c->v * c->restitution;
-
-
-			//Position solving
 			if (o->b >= c->t && o->ob < c->ot)
 			{
 				o->y = c->t - (o->h / 2) - 0.1f;
-				c->y = o->b + (c->h / 2) + 0.1f;
+				o->v.y = -o->v.y * o->restitution;
+				o->v.x = o->v.x * o->friction;
 			}
 			else if (o->t <= c->b && o->ot > c->ob)
 			{
 				o->y = c->b + (o->h / 2) + 0.1f;
-				c->y = o->t - (c->h / 2) - 0.1f;
+				o->v.y = -o->v.y * o->restitution;
+				o->v.x = o->v.x * o->friction;
 			}
 			else if (o->r >= c->l && o->oR < c->ol)
 			{
 				o->x = c->l - (o->w / 2) - 0.1f;
-				c->x = o->r + (c->w / 2) + 0.1f;
+				o->v.y = -o->v.y * o->restitution;
+				o->v.x = o->v.x * o->friction;
 
 			}
 			else if (o->l <= c->r && o->ol > c->oR)
 			{
-				o->x = c->r + (o->w / 2) + 0.1f;
-				c->x = o->l - (c->w / 2) - 0.1f;
+				o->x = c->r + (o->w / 2) + 0.2f;
+				o->v.y = -o->v.y * o->restitution;
+				o->v.x = o->v.x * o->friction;
 			}
 			return;
 		}
 	}
 	else if (o->shape == Shape::RECTANGLE && c->shape == Shape::CIRCLE)
 	{
-		//https://www.youtube.com/watch?v=D2a5fHX-Qrs need to watch
+		float mass1 = (2.0f * c->mass) / (o->mass + c->mass);
+		float mass2 = (2.0f * o->mass) / (o->mass + c->mass);
+
+		//dot(v1-v2, x1-x2) / ||x1-x2||^2
+		Vector2d x1;
+		x1.x = o->x;
+		x1.y = o->y;
+		Vector2d x2;
+		x2.x = c->x;
+		x2.y = c->y;
+		Vector2d x1_x2 = (x1 - x2);
+		Vector2d x2_x1 = (x2 - x1);
+		float dot1 = Vector2d::DotProduct(o->v - c->v, x1_x2) / pow(Vector2d::Magnitude(x1_x2), 2);
+		float dot2 = Vector2d::DotProduct(c->v - o->v, x2_x1) / pow(Vector2d::Magnitude(x2_x1), 2);
+
+		// Compute velocities after collision (assume perfectly elastic collision without dampening)
+	
+		c->v = c->v - (x2_x1 * mass2 * dot2);
+
+		// Apply restitution coefficient (FUYM inelasticity/dampening)
+		o->v = o->v * o->restitution;
+		c->v = c->v * c->restitution;
+
+		//https://flatredball.com/documentation/tutorials/math/circle-collision/
+
+		//Position solving
+		float angle = atan2f(c->y - o->y, c->x - o->x);
+		float distanceBetweenCircles = sqrtf((c->x - o->x) * (c->x - o->x) + (c->y - o->y) * (c->y - o->y));
+		float sumOfRadius = o->radius + c->radius;
+		float distanceToMove = sumOfRadius - distanceBetweenCircles;
+		c->x += cosf(angle) * distanceToMove;
+		c->y += sinf(angle) * distanceToMove;
 	}
 	else if (o->shape == Shape::CIRCLE && c->shape == Shape::RECTANGLE)
 	{
-
+		ComputeCollision(c, o);
 	}
 }
 
 void Physics::ComputeOverlaping(PhysObject* o, PhysObject* c)
 {
-	if (o->b >= c->t && o->ob < c->ot)
+	if (o->shape == Shape::RECTANGLE && c->shape == Shape::RECTANGLE)
 	{
-		o->y = c->t - (o->h / 2) - 0.1f;
-		o->v.y = -o->v.y * o->restitution;
-		o->v.x = o->v.x * o->friction;
-	}
-	else if (o->t <= c->b && o->ot > c->ob)
-	{
-		o->y = c->b + (o->h / 2) + 0.1f;
-		o->v.y = -o->v.y * o->restitution;
-		o->v.x = o->v.x * o->friction;
-	}
-	else if (o->r >= c->l && o->oR < c->ol)
-	{
-		o->x = c->l - (o->w / 2) - 0.1f;
-		o->v.y = -o->v.y * o->restitution;
-		o->v.x = o->v.x * o->friction;
+		if (o->b >= c->t && o->ob < c->ot)
+		{
+			o->y = c->t - (o->h / 2) - 0.1f;
+			o->v.y = -o->v.y * o->restitution;
+			o->v.x = o->v.x * o->friction;
+		}
+		else if (o->t <= c->b && o->ot > c->ob)
+		{
+			o->y = c->b + (o->h / 2) + 0.1f;
+			o->v.y = -o->v.y * o->restitution;
+			o->v.x = o->v.x * o->friction;
+		}
+		else if (o->r >= c->l && o->oR < c->ol)
+		{
+			o->x = c->l - (o->w / 2) - 0.1f;
+			o->v.y = -o->v.y * o->restitution;
+			o->v.x = o->v.x * o->friction;
 
+		}
+		else if (o->l <= c->r && o->ol > c->oR)
+		{
+			o->x = c->r + (o->w / 2) + 0.2f;
+			o->v.y = -o->v.y * o->restitution;
+			o->v.x = o->v.x * o->friction;
+		}
+		return;
 	}
-	else if (o->l <= c->r && o->ol > c->oR)
+	else if (o->shape == Shape::RECTANGLE && c->shape == Shape::CIRCLE)
 	{
-		o->x = c->r + (o->w / 2) + 0.2f;
-		o->v.y = -o->v.y * o->restitution;
-		o->v.x = o->v.x * o->friction;
+		float angle = atan2f(c->y - o->y, c->x - o->x);
+		float distanceBetweenCircles = sqrtf((c->x - o->x) * (c->x - o->x) + (c->y - o->y) * (c->y - o->y));
+		float sumOfRadius = o->radius + c->radius;
+		float distanceToMove = sumOfRadius - distanceBetweenCircles;
+		c->x += cosf(angle) * distanceToMove;
+		c->y += sinf(angle) * distanceToMove;
+		return;
+	}
+	else if (o->shape == Shape::CIRCLE && c->shape == Shape::RECTANGLE)
+	{
+		ComputeOverlaping(c, o);
+		return;
 	}
 }
 

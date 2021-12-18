@@ -30,5 +30,6 @@ private:
 	Animation atackAnim;
 	Animation deadAnim;
 	Animation talkAnim;
+
 };
 

@@ -321,13 +321,19 @@ update_status ModuleSceneIntro::Update()
 		if (turnTimer <= 0)
 			EndTurn();
 	}
-	if (App->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN && App->physics->debug)
 		EndTurn();
-
-
-
-
-
+	
+	if (currentWormBlue->data->endTurn)
+	{
+		EndTurn();
+		currentWormBlue->data->endTurn = false;
+	}
+	if (currentWormRed->data->endTurn)
+	{
+		EndTurn();
+		currentWormRed->data->endTurn = false;
+	}
 
 
 	printf("\nRed turn %s", redTurn ? "true" : "false");

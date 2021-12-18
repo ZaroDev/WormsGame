@@ -44,6 +44,7 @@ public:
 	Team team;
 	SString name;
 	int health;
+	bool endTurn = false;
 	p2List_item<Weapon*>* currentWeapon;
 	p2List<Weapon*> guns;
 };

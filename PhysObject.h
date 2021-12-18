@@ -13,6 +13,8 @@ enum class ObjectType
 	STANDART = -1,
 	PORTAL,
 	PLANT,
+	BOMB,
+	BULLET,
 	SENSOR,
 	WATER
 };

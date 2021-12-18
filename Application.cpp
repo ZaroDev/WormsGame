@@ -20,7 +20,6 @@ Application::Application()
 
 	// Main Modules
 	AddModule(window);
-	AddModule(physics);
 	AddModule(renderer);
 	AddModule(textures);
 	AddModule(input);
@@ -29,6 +28,7 @@ Application::Application()
 	
 	// Scenes
 	AddModule(scene_intro);
+	AddModule(physics);
 	
 	// Player
 	AddModule(player);

@@ -32,7 +32,7 @@ public:
 
 	bool CleanUp();
 	//Elastic Collision Solver
-	void ComputeElasticCollision(PhysObject* o, PhysObject* c);
+	void ComputeCollision(PhysObject* o, PhysObject* c);
 	//Ground Collision solver
 	void ComputeOverlaping(PhysObject* o, PhysObject* c);
 

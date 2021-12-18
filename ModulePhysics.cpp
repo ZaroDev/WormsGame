@@ -36,13 +36,10 @@ update_status ModulePhysics::PreUpdate()
 	return UPDATE_CONTINUE;
 }
 
-// 
-update_status ModulePhysics::PostUpdate()
+update_status ModulePhysics::Update()
 {
-	// TODO 5: On space bar press, create a circle on mouse position
-	// - You need to transform the position / radius
 	world.Update(App->dt / 1000);
-	if(App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
 		debug = !debug;
 	p2List_item<PhysObject*>* w = world.objects.getFirst();
 
@@ -85,7 +82,7 @@ update_status ModulePhysics::PostUpdate()
 		w = w->next;
 	}
 
-	if(!debug)
+	if (!debug)
 		return UPDATE_CONTINUE;
 
 	p2List_item<PhysObject*>* o = world.objects.getFirst();
@@ -145,7 +142,7 @@ update_status ModulePhysics::PostUpdate()
 				App->renderer->DrawLine(o->data->x, o->data->t, o->data->x, o->data->b, 0, 255, 0, 255);
 				App->renderer->DrawLine(o->data->l, o->data->y, o->data->r, o->data->y, 0, 255, 0, 255);*/
 				App->renderer->DrawLine(o->data->x, o->data->y, o->data->x + o->data->v.x, o->data->y + o->data->v.y, 255, 0, 0, 255);
-				
+
 
 
 				App->renderer->DrawQuad(rect, 0, 255, 0, 255, false);
@@ -161,6 +158,13 @@ update_status ModulePhysics::PostUpdate()
 
 		o = o->next;
 	}
+
+	return UPDATE_CONTINUE;
+}
+
+// 
+update_status ModulePhysics::PostUpdate()
+{
 	
 
 	return UPDATE_CONTINUE;

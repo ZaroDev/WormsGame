@@ -90,7 +90,7 @@ bool ModuleSceneIntro::Start()
 
 	portal = new Portal();
 
-	background = App->textures->Load("Game/Assets/Scene/back.png");
+	background = App->textures->Load("Assets/Scene/back.png");
 
 	return ret;
 }

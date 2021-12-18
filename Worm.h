@@ -25,7 +25,6 @@ private:
 	Animation* currentAnim;
 
 	Animation idleAnim;
-	Animation walkAnim;
 	Animation jumpAnim;
 	Animation atackAnim;
 	Animation deadAnim;

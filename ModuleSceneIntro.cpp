@@ -150,6 +150,31 @@ bool ModuleSceneIntro::Start()
 	return ret;
 }
 
+update_status ModuleSceneIntro::PreUpdate()
+{
+	for (p2List_item<Worm*>* w = wormsBlue.getFirst(); w != nullptr; w = w->next)
+	{
+		if (w->data->setPendingToDelete)
+
+		{
+			wormsBlue.del(w);
+			break;
+		}
+	}
+	for (p2List_item<Worm*>* w = wormsRed.getFirst(); w != nullptr; w = w->next)
+	{
+		if (w->data->setPendingToDelete)
+
+		{
+			wormsRed.del(w);
+			break;
+		}
+	}
+
+
+	return UPDATE_CONTINUE;
+}
+
 // Load assets
 bool ModuleSceneIntro::CleanUp()
 {
@@ -169,17 +194,7 @@ void ModuleSceneIntro::UpdateChoose()
 			currentWormRed = currentWormRed->next;
 			if (currentWormRed == nullptr)
 				currentWormRed = wormsRed.getFirst();
-
-
 			currentWormRed->data->Select();
-		}
-		if (currentWormRed != nullptr)
-		{
-			if (currentWormRed->data->setPendingToDelete)
-			{
-				wormsRed.del(currentWormRed);
-				currentWormRed = wormsRed.getFirst();
-			}
 		}
 	}
 	if (blueTurn)
@@ -191,17 +206,7 @@ void ModuleSceneIntro::UpdateChoose()
 			currentWormBlue = currentWormBlue->next;
 			if (currentWormBlue == nullptr)
 				currentWormBlue = wormsBlue.getFirst();
-
-
 			currentWormBlue->data->Select();
-		}
-		if (currentWormBlue != nullptr)
-		{
-			if (currentWormBlue->data->setPendingToDelete)
-			{
-				wormsBlue.del(currentWormBlue);
-				currentWormBlue = wormsBlue.getFirst();
-			}
 		}
 	}
 }

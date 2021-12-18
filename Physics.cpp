@@ -198,9 +198,13 @@ bool Physics::Update(float dt)
 						{
 							portal->Teletransport(o->data, c->data);
 						}
-						else
+						else if(o->data->type == Type::DYNAMIC && c->data->type == Type::DYNAMIC)
 						{
 							ComputeCollision(o->data, c->data);
+						}
+						else if (o->data->type == Type::DYNAMIC && c->data->type == Type::STATIC)
+						{
+							ComputeOverlaping(o->data, c->data);
 						}
 					}
 
@@ -306,81 +310,94 @@ void Physics::ComputeCollision(PhysObject* o, PhysObject* c)
 	}
 	else if (o->shape == Shape::RECTANGLE && c->shape == Shape::RECTANGLE)
 	{
-		if (o->type == Type::DYNAMIC && c->type == Type::STATIC)
-		{
-			ComputeOverlaping(o, c);
-			return;
-		}
-		else if (c->type == Type::DYNAMIC && o->type == Type::STATIC)
-		{
-			ComputeOverlaping(c, o);
-			return;
-		}
-		else if (c->type == Type::DYNAMIC && o->type == Type::DYNAMIC)
-		{
-			//VELOCITY SOLVING
-			if (o->b >= c->t && o->ob < c->ot)
-			{
-				o->y = c->t - (o->h / 2) - 0.1f;
-				o->v.y = -o->v.y * o->restitution;
-				o->v.x = o->v.x * o->friction;
-			}
-			else if (o->t <= c->b && o->ot > c->ob)
-			{
-				o->y = c->b + (o->h / 2) + 0.1f;
-				o->v.y = -o->v.y * o->restitution;
-				o->v.x = o->v.x * o->friction;
-			}
-			else if (o->r >= c->l && o->oR < c->ol)
-			{
-				o->x = c->l - (o->w / 2) - 0.1f;
-				o->v.y = -o->v.y * o->restitution;
-				o->v.x = o->v.x * o->friction;
 
-			}
-			else if (o->l <= c->r && o->ol > c->oR)
-			{
-				o->x = c->r + (o->w / 2) + 0.2f;
-				o->v.y = -o->v.y * o->restitution;
-				o->v.x = o->v.x * o->friction;
-			}
-			return;
+		//VELOCITY SOLVING
+		Vector2d posA;
+		posA.x = o->x;
+		posA.y = o->y;
+		Vector2d posB;
+		posB.x = c->x;
+		posB.y = c->y;
+		//-- Collision resolve
+		Vector2d diff = posB - posA;
+		int colWidth, colHeight;
+
+		// Calculate collision box
+		if (diff.x > 0) {
+			colWidth = o->w - diff.x;
 		}
+		else {
+			colWidth = c->w + diff.x;
+		}
+
+		if (diff.y > 0) {
+			colHeight = o->h - diff.y;
+		}
+		else {
+			colHeight = c->h + diff.y;
+		}
+
+		// Reposition object
+		if (colWidth < colHeight) {
+			// Reposition by X-axis
+			if (diff.x > 0) {
+				o->x += colWidth;
+			}
+			else {
+				o->x -= colWidth;
+			}
+
+			o->v.x = -o->v.x * o->friction;
+			c->v.x = -c->v.x * c->friction;
+		}
+		else {
+			// Reposition by Y-axis
+			if (diff.y > 0) {
+				o->y -= colHeight;
+			}
+			else {
+				o->y += colHeight;
+			}
+
+			o->v.y = -o->v.y * o->restitution;
+			c->v.y = -c->v.y * c->restitution;
+		}
+		return;
 	}
 	else if (o->shape == Shape::RECTANGLE && c->shape == Shape::CIRCLE)
 	{
-		float mass1 = (2.0f * c->mass) / (o->mass + c->mass);
-		float mass2 = (2.0f * o->mass) / (o->mass + c->mass);
+		//float mass1 = (2.0f * c->mass) / (o->mass + c->mass);
+		//float mass2 = (2.0f * o->mass) / (o->mass + c->mass);
 
-		//dot(v1-v2, x1-x2) / ||x1-x2||^2
-		Vector2d x1;
-		x1.x = o->x;
-		x1.y = o->y;
-		Vector2d x2;
-		x2.x = c->x;
-		x2.y = c->y;
-		Vector2d x1_x2 = (x1 - x2);
-		Vector2d x2_x1 = (x2 - x1);
-		float dot1 = Vector2d::DotProduct(o->v - c->v, x1_x2) / pow(Vector2d::Magnitude(x1_x2), 2);
-		float dot2 = Vector2d::DotProduct(c->v - o->v, x2_x1) / pow(Vector2d::Magnitude(x2_x1), 2);
+		////dot(v1-v2, x1-x2) / ||x1-x2||^2
+		//Vector2d x1;
+		//x1.x = o->x;
+		//x1.y = o->y;
+		//Vector2d x2;
+		//x2.x = c->x;
+		//x2.y = c->y;
+		//Vector2d x1_x2 = (x1 - x2);
+		//Vector2d x2_x1 = (x2 - x1);
+		//float dot1 = Vector2d::DotProduct(o->v - c->v, x1_x2) / pow(Vector2d::Magnitude(x1_x2), 2);
+		//float dot2 = Vector2d::DotProduct(c->v - o->v, x2_x1) / pow(Vector2d::Magnitude(x2_x1), 2);
 
-		// Compute velocities after collision (assume perfectly elastic collision without dampening)
+		//// Compute velocities after collision (assume perfectly elastic collision without dampening)
 	
-		c->v = c->v - (x2_x1 * mass2 * dot2);
+		//c->v = c->v - (x2_x1 * mass2 * dot2);
 
-		// Apply restitution coefficient (FUYM inelasticity/dampening)
-		o->v = o->v * o->restitution;
-		c->v = c->v * c->restitution;
+		//// Apply restitution coefficient (FUYM inelasticity/dampening)
+		//o->v = o->v * o->restitution;
+		//c->v = c->v * c->restitution;
 
-		//https://flatredball.com/documentation/tutorials/math/circle-collision/
+		////https://flatredball.com/documentation/tutorials/math/circle-collision/
 
-		//Position solving
-		float angle = atan2f(c->y - o->y, c->x - o->x);
-		float distanceBetweenCircles = sqrtf((c->x - o->x) * (c->x - o->x) + (c->y - o->y) * (c->y - o->y));
-		float sumOfRadius = o->radius + c->radius;
-		float distanceToMove = sumOfRadius - distanceBetweenCircles;
-		c->x += cosf(angle) * distanceToMove;
-		c->y += sinf(angle) * distanceToMove;
+		////Position solving
+		//float angle = atan2f(c->y - o->y, c->x - o->x);
+		//float distanceBetweenCircles = sqrtf((c->x - o->x) * (c->x - o->x) + (c->y - o->y) * (c->y - o->y));
+		//float sumOfRadius = o->radius + c->radius;
+		//float distanceToMove = sumOfRadius - distanceBetweenCircles;
+		//c->x += cosf(angle) * distanceToMove;
+		//c->y += sinf(angle) * distanceToMove;
 	}
 	else if (o->shape == Shape::CIRCLE && c->shape == Shape::RECTANGLE)
 	{
@@ -413,7 +430,7 @@ void Physics::ComputeOverlaping(PhysObject* o, PhysObject* c)
 		}
 		else if (o->l <= c->r && o->ol > c->oR)
 		{
-			o->x = c->r + (o->w / 2) + 0.2f;
+			o->x = c->r + (o->w / 2) + 0.1f;
 			o->v.y = -o->v.y * o->restitution;
 			o->v.x = o->v.x * o->friction;
 		}

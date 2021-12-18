@@ -146,6 +146,7 @@ update_status ModuleSceneIntro::Update()
 		ball->w = 30;
 		ball->h = 30;
 		ball->restitution = 0.5f;
+		ball->friction = 0.5f;
 		ball->name.Create("Ball");
 		ball->type = Type::DYNAMIC;
 		ball->SetLimit(Vector2d(300.0f, 300.0f));
@@ -154,6 +155,8 @@ update_status ModuleSceneIntro::Update()
 	}
 
 	string.Create("Current FPS: %f DeltaTime: %f  Expected FPS: %i, DeltaTime: %i", 1000 / App->dt, App->dt, 1000 / App->targetDT, App->targetDT);
+
+
 
 
 	if (App->input->GetKey(SDL_SCANCODE_N) == KEY_DOWN)

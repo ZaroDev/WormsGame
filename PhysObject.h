@@ -50,8 +50,8 @@ public:
 	float t, ot;
 	float b, ob;
 	// You could also use an array/vector
-	float x = 0.0f;
-	float y = 0.0f;
+	float x, oX = 0.0f;
+	float y, oY = 0.0f;
 
 	// Velocity
 	Vector2d v;

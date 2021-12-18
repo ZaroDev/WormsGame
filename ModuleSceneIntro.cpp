@@ -90,6 +90,8 @@ bool ModuleSceneIntro::Start()
 
 	portal = new Portal();
 
+	background = App->textures->Load("Game/Assets/Scene/back.png");
+
 	return ret;
 }
 
@@ -194,6 +196,9 @@ update_status ModuleSceneIntro::Update()
 		ball->cl = 100.0f;
 	}
 
+	
+
+	App->renderer->Blit(background, 0, 0);
 
 
 	App->window->SetTitle(string.GetString());

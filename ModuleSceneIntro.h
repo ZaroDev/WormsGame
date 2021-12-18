@@ -25,4 +25,8 @@ public:
 
 	p2List<Worm*> worms;
 	p2List_item<Worm*>* currentWorm;
+
+private:
+	SDL_Texture* background;
+	SDL_Texture* floor;
 };

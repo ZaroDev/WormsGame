@@ -3,10 +3,7 @@
 #include "Animation.h"
 #include "Globals.h"
 #include "p2Point.h"
-
-
-
-
+#include "Animation.h"
 
 class ModulePlayer : public Module
 {
@@ -18,5 +15,7 @@ public:
 	update_status Update();
 	bool CleanUp();
 
-public:
+private:
+	Animation idle, walk, death, weapon;
+	Animation* currentAnimation;
 };

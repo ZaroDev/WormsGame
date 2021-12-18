@@ -1,7 +1,11 @@
 #include "Worm.h"
+#include "Application.h"
 #include "ModulePhysics.h"
 #include "Application.h"
 #include "ModuleInput.h"
+#include "Animation.h"
+#include "ModuleRender.h"
+#include "ModuleTextures.h"
 
 Worm::Worm(p2Point<float> position_, Team team_, Application* app_) : Entity(EntityType::WORM, position_, team_, app_)
 {
@@ -18,11 +22,27 @@ Worm::Worm(p2Point<float> position_, Team team_, Application* app_) : Entity(Ent
 	pbody->restitution = 0.1f;
 	pbody->SetLimit(Vector2d(300.0f, 300.0f));
 	isSelected = false;
+
+	sprites = app_->textures->Load("Assets/Worms/spirtes.png");
+
+	// SETING ANIMATIONS
+	currentAnim = &jumpAnim;
+
+	for (int i = 0; i < 36;i++)
+		jumpAnim.PushBack({ 108,i * 60,54,64 });
+
+	jumpAnim.PushBack({});
+	jumpAnim.loop = true;
+	jumpAnim.mustFlip = false;
+	jumpAnim.speed = 0.1f;
+	
 }
 
 Worm::~Worm()
 {
 }
+
+
 
 void Worm::Update(float dt)
 {
@@ -48,10 +68,15 @@ void Worm::Update(float dt)
 	{
 		setPendingToDelete = true;
 	}
+
+	currentAnim->Update();
 }
 
 void Worm::Draw()
 {
+	SDL_Rect rec = currentAnim->GetCurrentFrame();
+	app_->renderer->Blit(sprites, position.x, position.y, &rec);
+
 }
 
 void Worm::Select()

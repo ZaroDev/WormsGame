@@ -1,5 +1,6 @@
 
 #include "Entity.h"
+#include "Animation.h"
 
 class Worm : public Entity
 {
@@ -17,9 +18,12 @@ public:
 private:
 	bool isGrounded;
 
+	SDL_Texture* sprites;
 	Animation* currentAnim;
 
 	Animation idleAnim;
 	Animation walkAnim;
+	Animation jumpAnim;
+	Animation atackAnim;
 };
 

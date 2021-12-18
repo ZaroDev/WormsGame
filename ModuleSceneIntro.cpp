@@ -57,7 +57,7 @@ bool ModuleSceneIntro::Start()
 	g3->y = 250.0f;
 	g3->mass = 1.0f;
 	g3->shape = Shape::RECTANGLE;
-	g3->w = 200;
+	g3->w = 210;
 	g3->h = 50;
 	g3->restitution = 0.1f;
 	g3->name.Create("Ground2");

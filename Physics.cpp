@@ -51,9 +51,6 @@ bool Intersects(PhysObject* o, PhysObject* c)
 	{
 		return Intersects(c, o);
 	}
-
-
-
 	return ret;
 }
 
@@ -211,7 +208,6 @@ bool Physics::Update(float dt)
 							break;
 						}
 					}
-
 				}
 			}
 		}
@@ -342,17 +338,18 @@ void Physics::ComputeCollision(PhysObject* o, PhysObject* c)
 		}
 
 		// Reposition object
-		if (colWidth < colHeight) {
+		if (colWidth < colHeight)
+		{
 			// Reposition by X-axis
 			if (o->r >= c->l && o->oR < c->ol)
 			{
 				o->x = c->l - (o->w / 2) - 0.1f;
-				o->v.x = o->v.x * o->friction;
+				o->v.x = -o->v.x * o->friction;
 			}
 			else if (o->l <= c->r && o->ol > c->oR)
 			{
 				o->x = c->r + (o->w / 2) + 0.1f;
-				o->v.x = o->v.x * o->friction;
+				o->v.x = -o->v.x * o->friction;
 			}
 		}
 		else {
@@ -363,9 +360,9 @@ void Physics::ComputeCollision(PhysObject* o, PhysObject* c)
 			else {
 				o->y += colHeight;
 			}
-
-			o->v.y = -o->v.y * o->restitution;
 		}
+		o->v.y = -o->v.y * o->restitution;
+	
 		return;
 	}
 	else if (o->shape == Shape::RECTANGLE && c->shape == Shape::CIRCLE)
@@ -418,39 +415,52 @@ void Physics::ComputeOverlaping(PhysObject* o, PhysObject* c)
 			o->y = c->t - (o->h / 2) - 0.1f;
 			o->v.y = -o->v.y * o->restitution;
 			o->v.x = o->v.x * o->friction;
+			return;
 		}
 		else if (o->t <= c->b && o->ot > c->ob)
 		{
 			o->y = c->b + (o->h / 2) + 0.1f;
 			o->v.y = -o->v.y * o->restitution;
 			o->v.x = o->v.x * o->friction;
+			return;
 		}
 		else if (o->r >= c->l && o->oR < c->ol)
 		{
 			o->x = c->l - (o->w / 2) - 0.1f;
 			o->v.x = o->v.x * o->friction;
-
+			return;
 		}
 		else if (o->l <= c->r && o->ol > c->oR)
 		{
 			o->x = c->r + (o->w / 2) + 0.1f;
 			o->v.x = o->v.x * o->friction;
+			return;
 		}
 		return;
 	}
 	else if (o->shape == Shape::RECTANGLE && c->shape == Shape::CIRCLE)
 	{
-		float angle = atan2f(c->y - o->y, c->x - o->x);
-		float distanceBetweenCircles = sqrtf((c->x - o->x) * (c->x - o->x) + (c->y - o->y) * (c->y - o->y));
+		float angle = atan2f(o->y - c->y, c->x - o->x);
+		float distanceBetweenCircles = sqrtf((o->x - c->x) * (o->x - c->x) + (o->y - c->y) * (o->y - c->y));
 		float sumOfRadius = o->radius + c->radius;
 		float distanceToMove = sumOfRadius - distanceBetweenCircles;
-		c->x += cosf(angle) * distanceToMove;
-		c->y += sinf(angle) * distanceToMove;
+		o->x += cosf(angle) * distanceToMove;
+		o->y += sinf(angle) * distanceToMove;
 		return;
 	}
 	else if (o->shape == Shape::CIRCLE && c->shape == Shape::RECTANGLE)
 	{
 		ComputeOverlaping(c, o);
+		return;
+	}
+	else if (o->shape == Shape::CIRCLE && c->shape == Shape::CIRCLE)
+	{
+		float angle = atan2f(o->y - c->y, c->x - o->x);
+		float distanceBetweenCircles = sqrtf((o->x - c->x) * (o->x - c->x) + (o->y - c->y) * (o->y - c->y));
+		float sumOfRadius = o->radius + c->radius;
+		float distanceToMove = sumOfRadius - distanceBetweenCircles;
+		o->x += cosf(angle) * distanceToMove;
+		o->y += sinf(angle) * distanceToMove;
 		return;
 	}
 }

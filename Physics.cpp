@@ -343,12 +343,12 @@ void Physics::ComputeCollision(PhysObject* o, PhysObject* c)
 			// Reposition by X-axis
 			if (o->r >= c->l && o->oR < c->ol)
 			{
-				o->x = c->l - (o->w / 2) - 0.1f;
+				o->x = c->l - (o->w / 2) - 0.2f;
 				o->v.x = -o->v.x * o->friction;
 			}
 			else if (o->l <= c->r && o->ol > c->oR)
 			{
-				o->x = c->r + (o->w / 2) + 0.1f;
+				o->x = c->r + (o->w / 2) + 0.2f;
 				o->v.x = -o->v.x * o->friction;
 			}
 		}
@@ -412,27 +412,27 @@ void Physics::ComputeOverlaping(PhysObject* o, PhysObject* c)
 	{
 		if (o->b >= c->t && o->ob < c->ot)
 		{
-			o->y = c->t - (o->h / 2) - 0.1f;
+			o->y = c->t - (o->h / 2) - 0.2f;
 			o->v.y = -o->v.y * o->restitution;
 			o->v.x = o->v.x * o->friction;
 			return;
 		}
 		else if (o->t <= c->b && o->ot > c->ob)
 		{
-			o->y = c->b + (o->h / 2) + 0.1f;
+			o->y = c->b + (o->h / 2) + 0.2f;
 			o->v.y = -o->v.y * o->restitution;
 			o->v.x = o->v.x * o->friction;
 			return;
 		}
 		else if (o->r >= c->l && o->oR < c->ol)
 		{
-			o->x = c->l - (o->w / 2) - 0.1f;
+			o->x = c->l - (o->w / 2) - 0.2f;
 			o->v.x = o->v.x * o->friction;
 			return;
 		}
 		else if (o->l <= c->r && o->ol > c->oR)
 		{
-			o->x = c->r + (o->w / 2) + 0.1f;
+			o->x = c->r + (o->w / 2) + 0.2f;
 			o->v.x = o->v.x * o->friction;
 			return;
 		}

@@ -145,6 +145,7 @@ void Worm::Update(float dt)
 			if (currentWeapon == nullptr)
 				currentWeapon = guns.getFirst();
 		}
+		printf("\n %f", position.y);
 	}
 	else
 	{

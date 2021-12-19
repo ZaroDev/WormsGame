@@ -113,6 +113,14 @@ void EntityManager::OnCollision(PhysObject* bodyA, PhysObject* bodyB)
 			bodyB->entity->health -= 30;
 		}
 	}
+	if (bodyA->object == ObjectType::GRENADE && bodyA->entity != bodyB->entity)
+	{
+		bodyA->setPendingToDelete = true;
+		if (bodyB->entity != nullptr)
+		{
+			bodyB->entity->health -= 60;
+		}
+	}
 }
 
 

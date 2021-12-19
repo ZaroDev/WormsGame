@@ -17,7 +17,8 @@ enum class ObjectType
 	BOMB,
 	BULLET,
 	SENSOR,
-	WATER
+	WATER,
+	GRENADE
 };
 enum class PortalType
 {

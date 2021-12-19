@@ -66,6 +66,14 @@ update_status ModulePhysics::Update()
 			{
 				App->renderer->DrawQuad(rect, 0, 123, 255, 100, true);
 			}
+			else if (w->data->object == ObjectType::BULLET)
+			{
+				App->renderer->DrawQuad(rect, 192, 192, 192, 255, true);
+			}
+			else if (w->data->object == ObjectType::GRENADE)
+			{
+				App->renderer->DrawQuad(rect, 75, 83, 32, 255, true);
+			}
 			else if (w->data->type == Type::STATIC)
 			{
 				App->renderer->DrawQuad(rect, 165, 42, 42, 255, true);

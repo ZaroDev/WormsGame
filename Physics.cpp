@@ -205,7 +205,8 @@ bool Physics::Update(float dt)
 								break;
 							}
 						}
-						else if (c->data->object == ObjectType::BOMB || c->data->object == ObjectType::BULLET || c->data->object == ObjectType::SENSOR)
+						else if (c->data->object == ObjectType::BOMB || c->data->object == ObjectType::BULLET
+							|| c->data->object == ObjectType::SENSOR || c->data->object == ObjectType::GRENADE)
 						{
 							if (c->data->listener != nullptr)
 							{

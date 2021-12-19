@@ -32,8 +32,8 @@ void Granade::Use(Vector2d position)
 
 		float dx = v.x / dist;
 		float dy = v.y / dist;
-		dx *= 250;
-		dy *= 250;
+		dx *= 1000;
+		dy *= 1000;
 
 		PhysObject* bullet = new PhysObject();
 		bullet->x = position.x;
@@ -46,12 +46,12 @@ void Granade::Use(Vector2d position)
 		bullet->v.y = dy;
 		bullet->listener = listener;
 		bullet->entity = ent;
-		bullet->cd = 1.0f;
-		bullet->cl = 0.0f;
 		bullet->restitution = 0.1f;
+		bullet->cl = 0.0f;
+		bullet->cd = 0.5f;
 		bullet->name.Create("Ground2");
 		bullet->type = Type::DYNAMIC;
-		bullet->object = ObjectType::BULLET;
+		bullet->object = ObjectType::GRENADE;
 		bullet->SetLimit(Vector2d(300.0f, 300.0f));
 		app->physics->world.CreateObject(bullet);
 	}

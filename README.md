@@ -1,4 +1,8 @@
 # Worms: Wish Edition
+<p align="center">
+<img src="https://github.com/ZaroDev/WormsGame/blob/main/Game/Assets/screens/wormsintroscreen.png">
+</p> 
+
 ## Objective
 Each team has to kill all the other team worms in order to win
 ## YOU NEED ATLEAST 2 PEOPLE TO PLAY THE GAME

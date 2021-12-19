@@ -17,5 +17,6 @@ public:
 	Application* app;
 	Module* listener;
 	Entity* ent;
+	int SFX;
 };
 

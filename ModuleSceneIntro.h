@@ -40,6 +40,7 @@ public:
 	bool redTurn;
 	bool blueTurn;
 	bool turnStarted;
+	int music;
 	enum Winner
 	{
 		NONE = -1,

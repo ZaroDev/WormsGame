@@ -3,11 +3,13 @@
 #include "Application.h"
 #include "ModulePhysics.h"
 #include "Physics.h"
+#include "ModuleAudio.h"
 AirStrike::AirStrike(Application* app_, Module* listener_, Entity* ent_) : Weapon(app_, listener_, ent_)
 {
 	name.Create("airstrike");
 	ammo = 1;
 	id = 1;
+	SFX = app->audio->LoadFx("Assets/SFX/Airstrike.wav");
 }
 
 AirStrike::~AirStrike()
@@ -41,6 +43,6 @@ void AirStrike::Use(Vector2d position)
 		bomb->SetLimit(Vector2d(300.0f, 300.0f));
 		app->physics->world.CreateObject(bomb);
 
-
+		app->audio->PlayFx(SFX);
 	}
 }

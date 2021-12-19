@@ -7,6 +7,7 @@
 #include "ModuleRender.h"
 #include "ModuleTextures.h"
 #include "Granade.h"
+#include "ModuleAudio.h"
 Worm::Worm(Vector2d position_, Team team_, Application* app_, Module* listener_) : Entity(EntityType::WORM, position_, team_, app_, listener_)
 {
 	name.Create("worm");
@@ -72,6 +73,11 @@ Worm::Worm(Vector2d position_, Team team_, Application* app_, Module* listener_)
 	talkAnim.pingpong = true;
 
 	laser = false;
+
+	walkSFX = app_->audio->LoadFx("Assets/SFX/Walk-Expand.wav");
+	deadSFX = app_->audio->LoadFx("Assets/SFX/COUGH5.WAV");
+	jumpSFX = app_->audio->LoadFx("Assets/SFX/WORMSPRING.WAV");
+	changeSFX = app_->audio->LoadFx("Assets/SFX/SHOTGUNRELOAD.WAV");
 }
 
 Worm::~Worm()
@@ -95,11 +101,13 @@ void Worm::Update(float dt)
 			{
 				pbody->AddForce(Vector2d(-10.0f, 0.0f));
 				currentAnim->mustFlip = false;
+				app_->audio->PlayFx(walkSFX);
 			}
 			if (app_->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
 			{
 				pbody->AddForce(Vector2d(+10.0f, 0.0f));
 				currentAnim->mustFlip = true;
+				app_->audio->PlayFx(walkSFX);
 			}
 			if (app_->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN && isGrounded)
 			{
@@ -110,6 +118,7 @@ void Worm::Update(float dt)
 					jumpAnim.mustFlip = currentAnim->mustFlip;
 					currentAnim = &jumpAnim;
 				}
+				app_->audio->PlayFx(jumpSFX);
 				isGrounded = false;
 			}
 			if (app_->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
@@ -144,6 +153,7 @@ void Worm::Update(float dt)
 			currentWeapon = currentWeapon->next;
 			if (currentWeapon == nullptr)
 				currentWeapon = guns.getFirst();
+			app_->audio->PlayFx(changeSFX);
 		}
 		printf("\n %f", position.y);
 	}
@@ -156,6 +166,7 @@ void Worm::Update(float dt)
 
 	if (health <= 0)
 	{
+		app_->audio->PlayFx(deadSFX);
 		if (currentAnim != &deadAnim)
 		{
 			deadAnim.mustFlip = !currentAnim->mustFlip;

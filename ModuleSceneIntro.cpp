@@ -4,6 +4,7 @@
 #include "SString.h"
 #include "Worm.h"
 #include "EntityManager.h"
+#include "ModuleAudio.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -127,7 +128,7 @@ bool ModuleSceneIntro::Start()
 	blueTurn = true;
 	redTurn = false;
 	turnTimer = 1800;
-
+	App->audio->PlayMusic("Assets/Music/EndingMusic.ogg");
 	portal = new Portal();
 	winner = NONE;
 	background = App->textures->Load("Assets/Scene/back.png");

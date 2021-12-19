@@ -7,5 +7,6 @@ public:
 	~HandGun();
 
 	void Use(Vector2d position);
+
 };
 

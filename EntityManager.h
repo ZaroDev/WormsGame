@@ -36,6 +36,6 @@ private:
 	float accumulatedTime;
 	float updateMsCycle;
 	bool doLogic;
-
+	int ExSFX;
 };
 #endif

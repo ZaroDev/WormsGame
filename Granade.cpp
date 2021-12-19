@@ -3,11 +3,13 @@
 #include "Application.h"
 #include "ModulePhysics.h"
 #include "Physics.h"
+#include "ModuleAudio.h"
 Granade::Granade(Application* app_, Module* listener_, Entity* ent_) : Weapon(app_, listener_, ent_)
 {
 	id = 3;
 	name.Create("granade");
 	ammo = 3;
+	SFX = app->audio->LoadFx("Assets/SFX/MineArm.wav");
 }
 
 Granade::~Granade()
@@ -54,5 +56,6 @@ void Granade::Use(Vector2d position)
 		bullet->object = ObjectType::GRENADE;
 		bullet->SetLimit(Vector2d(300.0f, 300.0f));
 		app->physics->world.CreateObject(bullet);
+		app->audio->PlayFx(SFX);
 	}
 }

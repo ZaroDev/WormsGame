@@ -4,6 +4,7 @@
 #include "Worm.h"
 
 #include "ModuleFonts.h"
+#include "ModuleAudio.h"
 
 
 EntityManager::EntityManager(Application* app, bool startEnabled) : Module(app, startEnabled), app_(app)
@@ -24,6 +25,7 @@ bool EntityManager::Start()
 	redTeamFont = App->fonts->Load("Assets/Fonts/rtype_font2.png", lookupTable, 2);
 	blueTeamFont = App->fonts->Load("Assets/Fonts/rtype_font.png", lookupTable, 2);
 	wormsSprite = App->textures->Load("Assets/Worms/sprites.png");
+	ExSFX = App->audio->LoadFx("Assets/SFX/Explosion1.wav");
 	return true;
 }
 
@@ -104,6 +106,7 @@ void EntityManager::OnCollision(PhysObject* bodyA, PhysObject* bodyB)
 		{
 			bodyB->entity->health -= 50;
 		}
+		App->audio->PlayFx(ExSFX);
 	}
 	if (bodyA->object == ObjectType::BULLET && bodyA->entity != bodyB->entity)
 	{
@@ -112,6 +115,7 @@ void EntityManager::OnCollision(PhysObject* bodyA, PhysObject* bodyB)
 		{
 			bodyB->entity->health -= 30;
 		}
+		App->audio->PlayFx(ExSFX);
 	}
 	if (bodyA->object == ObjectType::GRENADE && bodyA->entity != bodyB->entity)
 	{
@@ -120,6 +124,7 @@ void EntityManager::OnCollision(PhysObject* bodyA, PhysObject* bodyB)
 		{
 			bodyB->entity->health -= 60;
 		}
+		App->audio->PlayFx(ExSFX);
 	}
 }
 

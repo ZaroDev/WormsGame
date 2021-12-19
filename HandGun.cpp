@@ -3,11 +3,13 @@
 #include "Application.h"
 #include "ModulePhysics.h"
 #include "Physics.h"
+#include "ModuleAudio.h"
 HandGun::HandGun(Application* app_, Module* listener_, Entity* ent_) : Weapon(app_, listener_, ent_)
 {
 	ammo = 10;
 	name.Create("handgun");
 	id = 0;
+	SFX = app->audio->LoadFx("Assets/SFX/RICOCHET.WAV");
 }
 
 HandGun::~HandGun()
@@ -54,5 +56,6 @@ void HandGun::Use(Vector2d position)
 		bullet->object = ObjectType::BULLET;
 		bullet->SetLimit(Vector2d(300.0f, 300.0f));
 		app->physics->world.CreateObject(bullet);
+		app->audio->PlayFx(SFX);
 	}
 }

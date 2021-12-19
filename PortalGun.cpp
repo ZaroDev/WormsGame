@@ -2,12 +2,13 @@
 #include "Application.h"
 #include "ModuleInput.h"
 #include "ModuleSceneIntro.h"
-
+#include "ModuleAudio.h"
 PortalGun::PortalGun(Application* app_, Module* listener_, Entity* ent_) : Weapon(app_, listener_, ent_)
 {
 	ammo = 2;
 	id = 2;
 	name.Create("portalgun");
+	SFX = app->audio->LoadFx("Assets/SFX/Teleport.wav");
 }
 
 PortalGun::~PortalGun()
@@ -30,5 +31,6 @@ void PortalGun::Use(Vector2d position)
 		if (!app->scene_intro->portal->active2)
 			app->physics->world.CreateObject(app->scene_intro->portal->p2);
 	}
+	app->audio->PlayFx(SFX);
 	ammo--;
 }

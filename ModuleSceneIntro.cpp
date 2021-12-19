@@ -128,7 +128,7 @@ bool ModuleSceneIntro::Start()
 	blueTurn = true;
 	redTurn = false;
 	turnTimer = 1800;
-	App->audio->PlayMusic("Assets/Music/EndingMusic.ogg");
+	//App->audio->PlayMusic("Assets/Music/EndingMusic.ogg");
 	portal = new Portal();
 	winner = NONE;
 	background = App->textures->Load("Assets/Scene/back.png");

@@ -143,3 +143,12 @@ void Vector2d::SetToZero()
     this->x = 0;
     this->y = 0;
 }
+
+void Vector2d::Normalize(float value)
+{
+    float length = sqrt(this->x * this->x + this->y * this->y);
+
+    // normalize vector
+    this->x = value * this->x / length;
+    this->y = value * this->y / length;
+}

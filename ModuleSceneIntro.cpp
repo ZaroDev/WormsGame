@@ -143,8 +143,6 @@ bool ModuleSceneIntro::Start()
 	turnTimer = 1800;
 
 	portal = new Portal();
-	portalBlue = new Portal();
-	portalRed = new Portal();
 
 	background = App->textures->Load("Assets/Scene/back.png");
 	return ret;
@@ -155,18 +153,18 @@ update_status ModuleSceneIntro::PreUpdate()
 	for (p2List_item<Worm*>* w = wormsBlue.getFirst(); w != nullptr; w = w->next)
 	{
 		if (w->data->setPendingToDelete)
-
 		{
 			wormsBlue.del(w);
+			currentWormBlue = wormsBlue.getFirst();
 			break;
 		}
 	}
 	for (p2List_item<Worm*>* w = wormsRed.getFirst(); w != nullptr; w = w->next)
 	{
 		if (w->data->setPendingToDelete)
-
 		{
 			wormsRed.del(w);
+			currentWormRed = wormsRed.getFirst();
 			break;
 		}
 	}
@@ -185,10 +183,8 @@ bool ModuleSceneIntro::CleanUp()
 
 void ModuleSceneIntro::UpdateChoose()
 {
-	
 	if (redTurn)
 	{
-
 		if (App->input->GetKey(SDL_SCANCODE_N) == KEY_DOWN)
 		{
 			currentWormRed->data->UnSelect();
@@ -200,7 +196,6 @@ void ModuleSceneIntro::UpdateChoose()
 	}
 	if (blueTurn)
 	{
-
 		if (App->input->GetKey(SDL_SCANCODE_N) == KEY_DOWN)
 		{
 			currentWormBlue->data->UnSelect();
@@ -251,6 +246,7 @@ void ModuleSceneIntro::EndTurn()
 // Update: draw background
 update_status ModuleSceneIntro::Update()
 {
+
 	SString string;
 	string.Create("Current FPS: %f DeltaTime: %f  Expected FPS: %i, DeltaTime: %i", 1000 / App->dt, App->dt, 1000 / App->targetDT, App->targetDT);
 	if (currentWormBlue != nullptr)
@@ -264,7 +260,7 @@ update_status ModuleSceneIntro::Update()
 		weaponRed = currentWormRed->data->currentWeapon->data->name.GetString();
 		ammoRed = currentWormRed->data->currentWeapon->data->ammo;
 	}
-
+	
 	if (App->physics->debug)
 	{
 		if (App->input->GetKey(SDL_SCANCODE_4))
@@ -295,25 +291,6 @@ update_status ModuleSceneIntro::Update()
 			App->controll = FrameTimeControll::CONTROLLDT;
 
 	}
-
-	//if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
-	//{
-	//	PhysObject* ball = new PhysObject();
-	//	ball->x = App->input->GetMouseX();
-	//	ball->y = App->input->GetMouseY();
-	//	ball->mass = 1000.0f;
-	//	ball->shape = Shape::RECTANGLE;
-	//	ball->radius = 15;
-	//	ball->w = 30;
-	//	ball->h = 30;
-	//	ball->restitution = 0.5f;
-	//	ball->friction = 0.5f;
-	//	ball->name.Create("Ball");
-	//	ball->type = Type::DYNAMIC;
-	//	ball->SetLimit(Vector2d(300.0f, 300.0f));
-	//	
-	//	App->physics->world.CreateObject(ball);
-	//}
 	if (!turnStarted)
 	{
 		UpdateChoose();
@@ -346,23 +323,6 @@ update_status ModuleSceneIntro::Update()
 	printf("\nRed turn %s", redTurn ? "true" : "false");
 	printf("\nBlue turn %s", blueTurn ? "true" : "false");
 	printf("\nWorms Red %i", wormsRed.count());
-	if (App->input->GetKey(SDL_SCANCODE_X) == KEY_DOWN)
-	{
-		portal->SetPortal1((float)App->input->GetMouseX(), (float)App->input->GetMouseY(), 10, 10, Shape::RECTANGLE, Type::STATIC, PortalType::ORANGE, "Orange");
-		if(!portal->active1)
-			App->physics->world.CreateObject(portal->p1);
-
-		App->physics->world.portal = portal;
-	}
-	if (App->input->GetKey(SDL_SCANCODE_C) == KEY_DOWN)
-	{
-		portal->SetPortal2((float)App->input->GetMouseX(), (float)App->input->GetMouseY(), 10, 10, Shape::RECTANGLE, Type::STATIC, PortalType::PURPLE, "Purple");
-		if (!portal->active2)
-			App->physics->world.CreateObject(portal->p2);
-	}
-
-	
-
 
 
 	App->renderer->Blit(background, 0, 0);

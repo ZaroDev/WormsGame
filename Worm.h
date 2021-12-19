@@ -4,11 +4,12 @@
 #include "HandGun.h"
 #include "p2List.h"
 #include "AirStrike.h"
+#include "PortalGun.h"
 
 class Worm : public Entity
 {
 public:
-	Worm(p2Point<float> position_, Team team_, Application* app_);
+	Worm(Vector2d, Team team_, Application* app_, Module* listener_);
 	~Worm();
 
 	void Update(float dt);
@@ -23,7 +24,7 @@ private:
 	bool canMove;
 
 	Animation* currentAnim;
-
+	bool laser;
 	Animation idleAnim;
 	Animation jumpAnim;
 	Animation atackAnim;

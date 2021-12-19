@@ -6,8 +6,8 @@
 #include "Animation.h"
 #include "ModuleRender.h"
 #include "ModuleTextures.h"
-
-Worm::Worm(p2Point<float> position_, Team team_, Application* app_) : Entity(EntityType::WORM, position_, team_, app_)
+#include "Granade.h"
+Worm::Worm(Vector2d position_, Team team_, Application* app_, Module* listener_) : Entity(EntityType::WORM, position_, team_, app_, listener_)
 {
 	name.Create("worm");
 	pbody = new PhysObject();
@@ -19,15 +19,20 @@ Worm::Worm(p2Point<float> position_, Team team_, Application* app_) : Entity(Ent
 	pbody->h = 30;
 	pbody->w = 20;
 	health = 100;
+	pbody->entity = this;
 	pbody->restitution = 0.1f;
 	pbody->friction = 0.5f;
 	pbody->SetLimit(Vector2d(300.0f, 300.0f));
 	isSelected = false;
 
-	HandGun* gun = new HandGun();
+	HandGun* gun = new HandGun(app_, listener, this);
 	guns.add(gun);
-	AirStrike* air = new AirStrike();
+	AirStrike* air = new AirStrike(app_, listener, this);
 	guns.add(air);
+	PortalGun* pgun = new PortalGun(app_, listener, this);
+	guns.add(pgun);
+	Granade* granade = new Granade(app_, listener, this);
+	guns.add(granade);
 	// SETING ANIMATIONS
 	currentAnim = &idleAnim;
 	currentWeapon = guns.getFirst();
@@ -65,6 +70,8 @@ Worm::Worm(p2Point<float> position_, Team team_, Application* app_) : Entity(Ent
 	talkAnim.mustFlip = false;
 	talkAnim.speed = 0.07f;
 	talkAnim.pingpong = true;
+
+	laser = false;
 }
 
 Worm::~Worm()
@@ -106,38 +113,24 @@ void Worm::Update(float dt)
 			}
 			if (app_->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 			{
-				currentWeapon->data->Use();
-				//endTurn = true;
+				currentWeapon->data->Use(position);
+				endTurn = true;
 			}
+		
 		}
-
-		if (team == Team::BLUE)
+		printf("\n pos: %f, %f, m: %i, %i", position.x, position.y, app_->input->GetMouseX(), app_->input->GetMouseY());
+		if (currentWeapon->data->id == 0) //Id 0 means handgun
 		{
-			if (app_->scene_intro->weaponBlue.GetString() == "HandGun")
-			{
-				atackAnim.mustFlip = currentAnim->mustFlip;
-				currentAnim = &atackAnim;
-			}
-
-			if (app_->scene_intro->weaponBlue.GetString() == "AirStrike")
-			{
-				talkAnim.mustFlip = currentAnim->mustFlip;
-				currentAnim = &talkAnim;
-			}
+			atackAnim.mustFlip = currentAnim->mustFlip;
+			currentAnim = &atackAnim;
+			laser = true;
 		}
-		if (team == Team::RED)
-		{
-			if (app_->scene_intro->weaponRed.GetString() == "HandGun")
-			{
-				atackAnim.mustFlip = currentAnim->mustFlip;
-				currentAnim = &atackAnim;
-			}
+		else laser = false;
 
-			if (app_->scene_intro->weaponRed.GetString() == "AirStrike")
-			{
-				talkAnim.mustFlip = currentAnim->mustFlip;
-				currentAnim = &talkAnim;
-			}
+		if (currentWeapon->data->id == 1) //Id 1 means airstrike
+		{
+			talkAnim.mustFlip = currentAnim->mustFlip;
+			currentAnim = &talkAnim;
 		}
 
 		if (currentAnim == &jumpAnim && isGrounded == true) {
@@ -152,6 +145,12 @@ void Worm::Update(float dt)
 				currentWeapon = guns.getFirst();
 		}
 	}
+	else
+	{
+		currentAnim = &idleAnim;
+		laser = false;
+	}
+
 
 	if (health <= 0)
 	{
@@ -160,7 +159,7 @@ void Worm::Update(float dt)
 			deadAnim.mustFlip = !currentAnim->mustFlip;
 			currentAnim = &deadAnim;
 		}
-		else if (deadAnim.HasFinished()==true)
+		if (deadAnim.HasFinished())
 		{
 			setPendingToDelete = true;
 		}
@@ -175,7 +174,19 @@ void Worm::Update(float dt)
 
 void Worm::Draw(SDL_Texture* tex)
 {
+	/*
+	if (laser)
+	{
+		Vector2d m;
+		m.x = app_->input->GetMouseX() - position.x;
+		m.y = app_->input->GetMouseY() - position.y;
+		Vector2d ray;
+		ray.x = position.x + 100;
+		ray.y = position.y + 100;
+		ray = ray * cos(m.x);
 
+		app_->renderer->DrawLine(position.x, position.y, ray.x, ray.y, 255, 0, 0, 255);
+	}*/
 	app_->renderer->Blit(tex, position.x - pbody->w / 2, position.y - pbody->h / 2, &currentAnim->GetCurrentFrame(), 1.0f, 0, 0, 0, currentAnim->mustFlip);
 }
 

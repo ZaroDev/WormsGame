@@ -1,29 +1,29 @@
-#include "HandGun.h"
+#include "Granade.h"
 #include "ModuleInput.h"
 #include "Application.h"
 #include "ModulePhysics.h"
 #include "Physics.h"
-HandGun::HandGun(Application* app_, Module* listener_, Entity* ent_) : Weapon(app_, listener_, ent_)
+Granade::Granade(Application* app_, Module* listener_, Entity* ent_) : Weapon(app_, listener_, ent_)
 {
-	ammo = 10;
-	name.Create("handgun");
-	id = 0;
+	id = 3;
+	name.Create("granade");
+	ammo = 3;
 }
 
-HandGun::~HandGun()
+Granade::~Granade()
 {
 }
 
-void HandGun::Use(Vector2d position)
+void Granade::Use(Vector2d position)
 {
-	if(ammo > 0)
+	if (ammo > 0)
 	{
 		ammo--;
 		//TODO shot
 		Vector2d m;
 		m.x = app->input->GetMouseX();
 		m.y = app->input->GetMouseY();
-		
+
 		Vector2d v;
 		v.x = m.x - position.x;
 		v.y = m.y - position.y;
@@ -32,13 +32,13 @@ void HandGun::Use(Vector2d position)
 
 		float dx = v.x / dist;
 		float dy = v.y / dist;
-		dx *= 1000;
-		dy *= 1000;
+		dx *= 250;
+		dy *= 250;
 
 		PhysObject* bullet = new PhysObject();
 		bullet->x = position.x;
 		bullet->y = position.y;
-		bullet->mass = 100.0f;
+		bullet->mass = 500.0f;
 		bullet->shape = Shape::RECTANGLE;
 		bullet->w = 10;
 		bullet->h = 10;
@@ -46,9 +46,9 @@ void HandGun::Use(Vector2d position)
 		bullet->v.y = dy;
 		bullet->listener = listener;
 		bullet->entity = ent;
-		bullet->restitution = 0.1f;
+		bullet->cd = 1.0f;
 		bullet->cl = 0.0f;
-		bullet->cd = 0.1f;
+		bullet->restitution = 0.1f;
 		bullet->name.Create("Ground2");
 		bullet->type = Type::DYNAMIC;
 		bullet->object = ObjectType::BULLET;

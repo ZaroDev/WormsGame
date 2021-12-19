@@ -118,6 +118,12 @@
     <ClInclude Include="AirStrike.h">
       <Filter>Source Files\Modules\Gameplay\Weapons</Filter>
     </ClInclude>
+    <ClInclude Include="PortalGun.h">
+      <Filter>Source Files\Modules\Gameplay\Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="Granade.h">
+      <Filter>Source Files\Modules\Gameplay\Weapons</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Physics.cpp">
@@ -181,6 +187,12 @@
       <Filter>Source Files\Modules\Gameplay\Weapons</Filter>
     </ClCompile>
     <ClCompile Include="AirStrike.cpp">
+      <Filter>Source Files\Modules\Gameplay\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="PortalGun.cpp">
+      <Filter>Source Files\Modules\Gameplay\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="Granade.cpp">
       <Filter>Source Files\Modules\Gameplay\Weapons</Filter>
     </ClCompile>
   </ItemGroup>

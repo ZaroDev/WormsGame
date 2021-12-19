@@ -74,6 +74,7 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="Globals.h" />
+    <ClInclude Include="Granade.h" />
     <ClInclude Include="HandGun.h" />
     <ClInclude Include="ModuleFonts.h" />
     <ClInclude Include="ModulePhysics.h" />
@@ -92,6 +93,7 @@
     <ClInclude Include="Physics.h" />
     <ClInclude Include="PhysObject.h" />
     <ClInclude Include="Portal.h" />
+    <ClInclude Include="PortalGun.h" />
     <ClInclude Include="Queue.h" />
     <ClInclude Include="Vector2d.h" />
     <ClInclude Include="SString.h" />
@@ -102,6 +104,7 @@
     <ClCompile Include="AirStrike.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="EntityManager.cpp" />
+    <ClCompile Include="Granade.cpp" />
     <ClCompile Include="HandGun.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -118,6 +121,7 @@
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="PhysObject.cpp" />
     <ClCompile Include="Portal.cpp" />
+    <ClCompile Include="PortalGun.cpp" />
     <ClCompile Include="Vector2d.cpp" />
     <ClCompile Include="Worm.cpp" />
   </ItemGroup>

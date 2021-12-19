@@ -22,6 +22,8 @@ PhysObject::PhysObject(Shape shape_, Type type_, int x_, int y_, float w_, float
 	{
 		r = w / 2;
 	}
+	limitSpeed.x = 300;
+	limitSpeed.y = 300;
 
 }
 

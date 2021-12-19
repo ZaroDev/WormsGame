@@ -66,6 +66,8 @@ public:
     static Vector2d GetIntersect(const Vector2d&, const Vector2d&, const Vector2d&, const Vector2d&);
     //Sets the vector to 0
     void SetToZero();
+
+    void Normalize(float value);
 };
 
 #endif

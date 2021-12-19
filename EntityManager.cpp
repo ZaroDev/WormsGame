@@ -96,20 +96,37 @@ bool EntityManager::CleanUp()
 
 void EntityManager::OnCollision(PhysObject* bodyA, PhysObject* bodyB)
 {
+	if (bodyA->object == ObjectType::BOMB && bodyB->object != ObjectType::PORTAL)
+	{
+		printf("\nBomb collision");
+		bodyA->setPendingToDelete = true;
+		if (bodyB->entity != nullptr)
+		{
+			bodyB->entity->health -= 50;
+		}
+	}
+	if (bodyA->object == ObjectType::BULLET && bodyA->entity != bodyB->entity)
+	{
+		bodyA->setPendingToDelete = true;
+		if (bodyB->entity != nullptr)
+		{
+			bodyB->entity->health -= 30;
+		}
+	}
 }
 
 
 Entity* EntityManager::CreateEntity(EntityType type, float x, float y, Team team)
 {
 	Entity* ret = nullptr;
-	p2Point<float> pos;
+	Vector2d pos;
 	pos.x = x;
 	pos.y = y;
 	switch (type)
 	{
 		case EntityType::WORM:
 		{
-			ret = new Worm(pos, team, app_);
+			ret = new Worm(pos, team, app_, this);
 			App->physics->world.CreateObject(ret->pbody);
 			break;
 		}

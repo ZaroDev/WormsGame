@@ -3,8 +3,8 @@
 class AirStrike :public Weapon
 {
 public:
-	AirStrike();
+	AirStrike(Application* app_, Module* listener_, Entity* ent_);
 	~AirStrike();
-	void Use();
+	void Use(Vector2d position);
 };
 

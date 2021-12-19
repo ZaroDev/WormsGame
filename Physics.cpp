@@ -1,7 +1,7 @@
 #include "Physics.h"
 #include <iostream>
 #include <math.h>
-# define M_PI           3.1415
+#define M_PI           3.1415
 
 float Distance(int x1, int y1, int x2, int y2)
 {
@@ -121,7 +121,7 @@ bool Physics::Update(float dt)
 				if (o->data->v.x != 0 && !o->data->isOnWater)
 				{
 					float fdrag = 0.5 * atmosphere.density * speed * speed * o->data->surface * o->data->cd;
-					float fdx = -fdrag; // Let's assume Drag is aligned with x-axis (in your game, generalize this) Opuesta al vector speed = normalizar speed y multiplicar
+					float fdx = fdrag != 0 ? -1*fdrag : 0; // Let's assume Drag is aligned with x-axis (in your game, generalize this) Opuesta al vector speed = normalizar speed y multiplicar
 					o->data->f.x += fdx;
 				}
 
@@ -129,7 +129,7 @@ bool Physics::Update(float dt)
 				if (o->data->v.y != 0 && !o->data->isOnWater)
 				{
 					float flift = 0.5 * atmosphere.density * speed * speed * o->data->surface * o->data->cl;
-					float fdy = -flift;
+					float fdy = flift != 0 ? -1 * flift : 0;
 					o->data->f.y += fdy;
 				}
 
@@ -196,6 +196,22 @@ bool Physics::Update(float dt)
 						{
 							portal->Teletransport(o->data, c->data);
 							break;
+						}
+						else if (o->data->object == ObjectType::BOMB || o->data->object == ObjectType::BULLET || o->data->object == ObjectType::SENSOR)
+						{
+							if (o->data->listener != nullptr)
+							{
+								o->data->listener->OnCollision(o->data, c->data);
+								break;
+							}
+						}
+						else if (c->data->object == ObjectType::BOMB || c->data->object == ObjectType::BULLET || c->data->object == ObjectType::SENSOR)
+						{
+							if (c->data->listener != nullptr)
+							{
+								c->data->listener->OnCollision(c->data, o->data);
+								break;
+							}
 						}
 						else if(o->data->type == Type::DYNAMIC)
 						{
@@ -340,17 +356,14 @@ void Physics::ComputeCollision(PhysObject* o, PhysObject* c)
 		// Reposition object
 		if (colWidth < colHeight)
 		{
-			// Reposition by X-axis
-			if (o->r >= c->l && o->oR < c->ol)
-			{
-				o->x = c->l - (o->w / 2) - 0.2f;
-				o->v.x = -o->v.x * o->friction;
+			if (diff.x > 0) {
+				o->x += colWidth;
 			}
-			else if (o->l <= c->r && o->ol > c->oR)
-			{
-				o->x = c->r + (o->w / 2) + 0.2f;
-				o->v.x = -o->v.x * o->friction;
+			else {
+				o->x -= colWidth;
 			}
+
+			o->v.x = -o->v.x;
 		}
 		else {
 			// Reposition by Y-axis

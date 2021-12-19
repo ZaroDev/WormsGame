@@ -1,7 +1,8 @@
 #pragma once
 #include "SString.h"
 #include "Vector2d.h"
-
+#include "Module.h"
+#include "Entity.h"
 enum class Shape
 {
 	NONE = -1,
@@ -81,7 +82,8 @@ public:
 	
 	float restitution = 1.0f; // Restitution coef
 	float friction = 0.25f; // Friction coef (Wood on wood as reference 0.25)
-
+	Module* listener;
+	Entity* entity;
 	Shape shape;
 	Type type;
 	SString name;

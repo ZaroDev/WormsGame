@@ -3,9 +3,9 @@
 class HandGun :public Weapon
 {
 public:
-	HandGun();
+	HandGun(Application* app_, Module* listener_, Entity* ent_);
 	~HandGun();
 
-	void Use();
+	void Use(Vector2d position);
 };
 

@@ -24,10 +24,6 @@ public:
 	void StartTurn();
 	void EndTurn();
 public:
-	PhysObject* ball;
-	PhysObject* ball2;
-	Portal* portalRed;
-	Portal* portalBlue;
 	//Current portal
 	Portal* portal;
 

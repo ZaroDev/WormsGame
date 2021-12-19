@@ -5,7 +5,13 @@
 #include "Globals.h"
 #include "ModulePhysics.h"
 #include "Portal.h"
-
+enum Winner
+{
+	NONE = -1,
+	RED,
+	BLUE,
+	DRAW
+};
 class Entity;
 class Worm;
 class Weapon;
@@ -41,13 +47,7 @@ public:
 	bool blueTurn;
 	bool turnStarted;
 	int music;
-	enum Winner
-	{
-		NONE = -1,
-		RED,
-		BLUE,
-		DRAW
-	};
+
 	Winner winner;
 private:
 

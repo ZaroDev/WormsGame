@@ -124,6 +124,15 @@
     <ClInclude Include="Granade.h">
       <Filter>Source Files\Modules\Gameplay\Weapons</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleFadeToBlack.h">
+      <Filter>Source Files\Modules\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleSceneStart.h">
+      <Filter>Source Files\Modules\Gameplay\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="ModuleSceneEnd.h">
+      <Filter>Source Files\Modules\Gameplay\Scenes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Physics.cpp">
@@ -195,8 +204,14 @@
     <ClCompile Include="Granade.cpp">
       <Filter>Source Files\Modules\Gameplay\Weapons</Filter>
     </ClCompile>
-    <ClCompile Include="introscreen.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="ModuleFadeToBlack.cpp">
+      <Filter>Source Files\Modules\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleSceneStart.cpp">
+      <Filter>Source Files\Modules\Gameplay\Scenes</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleSceneEnd.cpp">
+      <Filter>Source Files\Modules\Gameplay\Scenes</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

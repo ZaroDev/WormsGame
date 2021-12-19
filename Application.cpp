@@ -8,12 +8,14 @@ Application::Application()
 	input = new ModuleInput(this);
 	audio = new ModuleAudio(this, true);
 	player = new ModulePlayer(this);
-	scene_intro = new ModuleSceneIntro(this);
-	physics = new ModulePhysics(this);
+	scene_intro = new ModuleSceneIntro(this, false);
+	scene_start = new ModuleSceneStart(this, true);
+	scene_end = new ModuleSceneEnd(this, false);
+	physics = new ModulePhysics(this, true);
 	fonts = new ModuleFonts(this);
-	UI = new ModuleUi(this);
+	UI = new ModuleUi(this, false);
 	entman = new EntityManager(this, true);
-
+	fadeToBlack = new ModuleFadeToBlack(this, true);
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order
@@ -27,6 +29,9 @@ Application::Application()
 	AddModule(fonts);
 	
 	// Scenes
+	AddModule(fadeToBlack);
+	AddModule(scene_start);
+	AddModule(scene_end);
 	AddModule(scene_intro);
 	AddModule(physics);
 	

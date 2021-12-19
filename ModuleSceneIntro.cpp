@@ -20,6 +20,8 @@ bool ModuleSceneIntro::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 
+	App->UI->Enable();
+
 	App->renderer->camera.x = App->renderer->camera.y = 0;
 
 	PhysObject* g = new PhysObject();
@@ -130,7 +132,7 @@ bool ModuleSceneIntro::Start()
 	turnTimer = 1800;
 	//App->audio->PlayMusic("Assets/Music/EndingMusic.ogg");
 	portal = new Portal();
-	winner = NONE;
+	winner = Winner::NONE;
 	background = App->textures->Load("Assets/Scene/back.png");
 	return ret;
 }
@@ -170,6 +172,9 @@ bool ModuleSceneIntro::CleanUp()
 	currentWormRed = nullptr;
 	App->textures->Unload(background);
 	App->textures->Unload(floor);
+	App->physics->CleanUp();
+	App->entman->CleanUp();
+	App->UI->Disable();
 	return true;
 }
 
@@ -215,21 +220,28 @@ void ModuleSceneIntro::EndTurn()
 		redTurn = false;
 		blueTurn = true;
 		turnStarted = false;
-		currentWormBlue = wormsBlue.getFirst();
-		currentWormBlue->data->Select();
+		if (wormsBlue.count() > 0)
+		{
+			currentWormBlue = wormsBlue.getFirst();
+			currentWormBlue->data->Select();
 
-		currentWormRed->data->UnSelect();
+			currentWormRed->data->UnSelect();
+		}
 		return;
 	}
 	if (blueTurn)
 	{
+
 		redTurn = true;
 		blueTurn = false;
 		turnStarted = false;
-		currentWormRed = wormsRed.getFirst();
-		currentWormRed->data->Select();
+		if (wormsRed.count() > 0)
+		{
+			currentWormRed = wormsRed.getFirst();
+			currentWormRed->data->Select();
 
-		currentWormBlue->data->UnSelect();
+			currentWormBlue->data->UnSelect();
+		}
 		return;
 	}
 	
@@ -281,6 +293,28 @@ update_status ModuleSceneIntro::Update()
 			App->controll = FrameTimeControll::FIXEDDTTM;
 		if (App->input->GetKey(SDL_SCANCODE_F4))
 			App->controll = FrameTimeControll::CONTROLLDT;
+		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_DOWN)
+			App->physics->world.atmosphere.wind.x -= 0.5f;
+		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_DOWN)
+			App->physics->world.atmosphere.wind.x += 0.5f;
+		if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_DOWN)
+			App->physics->world.atmosphere.wind.y += 0.5f;
+		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_DOWN)
+			App->physics->world.atmosphere.wind.y -= 0.5f;
+		if (App->input->GetKey(SDL_SCANCODE_B) == KEY_DOWN)
+		{
+			for (p2List_item<Worm*>* w = wormsBlue.getFirst(); w != nullptr; w = w->next)
+			{
+				w->data->setPendingToDelete = true;
+			}
+		}
+		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
+		{
+			for (p2List_item<Worm*>* w = wormsRed.getFirst(); w != nullptr; w = w->next)
+			{
+				w->data->setPendingToDelete = true;
+			}
+		}
 
 	}
 	if (!turnStarted)
@@ -299,18 +333,22 @@ update_status ModuleSceneIntro::Update()
 	}
 	if (App->input->GetKey(SDL_SCANCODE_M) == KEY_DOWN && App->physics->debug)
 		EndTurn();
-	
-	if (currentWormBlue->data->endTurn)
+	if (currentWormBlue != nullptr)
 	{
-		EndTurn();
-		currentWormBlue->data->endTurn = false;
+		if (currentWormBlue->data->endTurn)
+		{
+			EndTurn();
+			currentWormBlue->data->endTurn = false;
+		}
 	}
-	if (currentWormRed->data->endTurn)
+	if (currentWormRed != nullptr)
 	{
-		EndTurn();
-		currentWormRed->data->endTurn = false;
+		if (currentWormRed->data->endTurn)
+		{
+			EndTurn();
+			currentWormRed->data->endTurn = false;
+		}
 	}
-
 
 	printf("\nRed turn %s", redTurn ? "true" : "false");
 	printf("\nBlue turn %s", blueTurn ? "true" : "false");
@@ -321,12 +359,16 @@ update_status ModuleSceneIntro::Update()
 
 	App->window->SetTitle(string.GetString());
 
-	if (wormsBlue.count() == 0 && wormsRed.count() > 0)
-		winner == RED;
-	else if (wormsRed.count() == 0 && wormsBlue.count() > 0)
-		winner == BLUE;
-	else if (wormsRed.count() == 0 && wormsBlue.count() == 0)
-		winner == DRAW;
+
+
+	if (wormsBlue.count() <= 0 && wormsRed.count() > 0) winner = Winner::RED;
+	if (wormsRed.count() <= 0 && wormsBlue.count() > 0) winner = Winner::BLUE;
+	else if (wormsRed.count() == 0 && wormsBlue.count() == 0) winner = Winner::DRAW;
+
+	if (winner != NONE)
+	{
+		App->fadeToBlack->FadeToBlack(this, (Module*)App->scene_end);
+	}
 
 	return UPDATE_CONTINUE;
 }

@@ -2,6 +2,7 @@
 #include "Module.h"
 #include "Globals.h"
 #include "SDL\include\SDL.h"
+#include "p2List.h"
 
 class ModuleTextures : public Module
 {

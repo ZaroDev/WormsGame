@@ -25,6 +25,8 @@ public:
 private:
 	int testFont;
 	int font;
+	int bFont;
+	int rFont;
 };
 
 #endif // !__UI_H__

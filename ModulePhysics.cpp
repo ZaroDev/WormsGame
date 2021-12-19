@@ -19,7 +19,7 @@ ModulePhysics::~ModulePhysics()
 bool ModulePhysics::Start()
 {
 	LOG("Creating Physics 2D environment");
-
+	debug = false;
 	world.Start(Integrator::VERLET, 0.0f, 100.0f);
 	world.atmosphere.density = 1.0f;
 	world.atmosphere.wind = Vector2d(0.0f, 0.0f);
@@ -41,6 +41,8 @@ update_status ModulePhysics::Update()
 	world.Update(App->dt / 1000);
 	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
 		debug = !debug;
+
+
 	p2List_item<PhysObject*>* w = world.objects.getFirst();
 
 	while (w != NULL)
@@ -185,6 +187,7 @@ bool ModulePhysics::CleanUp()
 	LOG("Destroying physics world");
 
 	// Delete the whole physics world!
+	world.CleanUp();
 
 	return true;
 }

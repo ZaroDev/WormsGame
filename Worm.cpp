@@ -97,34 +97,37 @@ void Worm::Update(float dt)
 	{
 		if (canMove)
 		{
-			if (app_->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+			if (isGrounded)
 			{
-				pbody->AddForce(Vector2d(-10.0f, 0.0f));
-				currentAnim->mustFlip = false;
-				app_->audio->PlayFx(walkSFX);
-			}
-			if (app_->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
-			{
-				pbody->AddForce(Vector2d(+10.0f, 0.0f));
-				currentAnim->mustFlip = true;
-				app_->audio->PlayFx(walkSFX);
-			}
-			if (app_->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN && isGrounded)
-			{
-				pbody->AddForce(Vector2d(0.0f, -100.0f));
-
-				if (currentAnim == &idleAnim)
+				if (app_->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 				{
-					jumpAnim.mustFlip = currentAnim->mustFlip;
-					currentAnim = &jumpAnim;
+					pbody->AddForce(Vector2d(-10.0f, 0.0f));
+					currentAnim->mustFlip = false;
+					app_->audio->PlayFx(walkSFX);
 				}
-				app_->audio->PlayFx(jumpSFX);
-				isGrounded = false;
-			}
-			if (app_->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
-			{
-				currentWeapon->data->Use(position);
-				endTurn = true;
+				if (app_->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
+				{
+					pbody->AddForce(Vector2d(+10.0f, 0.0f));
+					currentAnim->mustFlip = true;
+					app_->audio->PlayFx(walkSFX);
+				}
+				if (app_->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN)
+				{
+					pbody->AddForce(Vector2d(0.0f, -100.0f));
+
+					if (currentAnim == &idleAnim)
+					{
+						jumpAnim.mustFlip = currentAnim->mustFlip;
+						currentAnim = &jumpAnim;
+					}
+
+					isGrounded = false;
+				}
+				if (app_->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
+				{
+					currentWeapon->data->Use(position);
+					endTurn = true;
+				}
 			}
 		
 		}

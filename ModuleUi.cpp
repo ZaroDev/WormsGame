@@ -27,7 +27,8 @@ bool ModuleUi::Start() {
 	char lookUpTable2[] = { "abcdefghijklmnopqrstuvwxyz0123456789!.?   " };
 	testFont = App->fonts->Load("Assets/Fonts/rtype_font3.png", lookupTable, 2);
 	font = App->fonts->Load("Assets/Fonts/font.png", lookUpTable2, 7);
-	
+	rFont = App->fonts->Load("Assets/Fonts/rtype_font2.png", lookupTable, 2);
+	bFont = App->fonts->Load("Assets/Fonts/rtype_font.png", lookupTable, 2);
 
 	return true;
 }
@@ -41,8 +42,10 @@ update_status ModuleUi::Update()
 
 	SString time("time left %i", App->scene_intro->turnTimer / 60);
 	App->fonts->BlitText(900, 0, testFont, time.GetString());
-	App->fonts->BlitText(10, 725, testFont, weaponRed.GetString());
-	App->fonts->BlitText(850, 725, testFont, weaponBlue.GetString());
+	App->fonts->BlitText(10, 725, rFont, weaponRed.GetString());
+	App->fonts->BlitText(850, 725, bFont, weaponBlue.GetString());
+	if (App->scene_intro->blueTurn) App->fonts->BlitText(500, 0, bFont, "blue turn");
+	if (App->scene_intro->redTurn) App->fonts->BlitText(500, 0, rFont, "red turn");
 	return update_status::UPDATE_CONTINUE;
 }
 
@@ -58,7 +61,10 @@ update_status ModuleUi::PostUpdate()
 
 bool ModuleUi::CleanUp()
 {
-
+	App->fonts->UnLoad(testFont);
+	App->fonts->UnLoad(bFont);
+	App->fonts->UnLoad(rFont);
+	App->fonts->UnLoad(font);
 
 	return true;
 }

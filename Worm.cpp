@@ -158,6 +158,8 @@ void Worm::Update(float dt)
 				currentWeapon = guns.getFirst();
 			app_->audio->PlayFx(changeSFX);
 		}
+		if (currentAnim == &talkAnim && app_->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
+			currentAnim->Update();
 		printf("\n %f", position.y);
 	}
 	else
@@ -185,7 +187,8 @@ void Worm::Update(float dt)
 	{
 		setPendingToDelete = true;
 	}
-	currentAnim->Update();
+
+	if (currentAnim!=&talkAnim)	currentAnim->Update();
 }
 
 void Worm::Draw(SDL_Texture* tex)

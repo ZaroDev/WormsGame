@@ -33,8 +33,8 @@ void AirStrike::Use(Vector2d position)
 		bomb->y = 0;
 		bomb->mass = 5000.0f;
 		bomb->shape = Shape::RECTANGLE;
-		bomb->w = 20;
-		bomb->h = 50;
+		bomb->w = 12;
+		bomb->h = 22;
 		bomb->listener = listener;
 		bomb->restitution = 0.1f;
 		bomb->name.Create("Ground2");

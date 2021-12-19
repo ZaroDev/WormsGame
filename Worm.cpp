@@ -58,7 +58,7 @@ Worm::Worm(Vector2d position_, Team team_, Application* app_, Module* listener_)
 	deadAnim.mustFlip = true;
 	deadAnim.speed = 0.07f;
 
-	for (int i = 0; i < 32; i++)
+	for (int i = 20; i < 23; i++)
 		atackAnim.PushBack({ 9 * 54 + (offset * 3),i * 60 + offset,54 - (3*offset+2),64 - offset });
 	atackAnim.loop = true;
 	atackAnim.mustFlip = false;

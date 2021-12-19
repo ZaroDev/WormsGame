@@ -63,6 +63,7 @@ public:
 
 	float dt;
 	FrameTimeControll controll = FrameTimeControll::FIXEDDTTM;
+	int frame = 0;
 
 private:
 

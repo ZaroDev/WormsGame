@@ -58,7 +58,7 @@ Worm::Worm(Vector2d position_, Team team_, Application* app_, Module* listener_)
 	deadAnim.mustFlip = true;
 	deadAnim.speed = 0.07f;
 
-	for (int i = 20; i < 23; i++)
+	for (int i = 20 ; i < 23; i++)
 		atackAnim.PushBack({ 9 * 54 + (offset * 3),i * 60 + offset,54 - (3*offset+2),64 - offset });
 	atackAnim.loop = true;
 	atackAnim.mustFlip = false;
@@ -71,6 +71,13 @@ Worm::Worm(Vector2d position_, Team team_, Application* app_, Module* listener_)
 	talkAnim.mustFlip = false;
 	talkAnim.speed = 0.07f;
 	talkAnim.pingpong = true;
+
+	for (int i = 20; i < 23; i++)
+		portalAnim.PushBack({ 14 * 54 + (offset * 3),i * 60 + offset,54 - (3 * offset + 2),64 - offset });
+	portalAnim.loop = true;
+	portalAnim.mustFlip = false;
+	portalAnim.speed = 0.1f;
+	portalAnim.pingpong = true;
 
 	laser = false;
 
@@ -103,13 +110,13 @@ void Worm::Update(float dt)
 				{
 					pbody->AddForce(Vector2d(-10.0f, 0.0f));
 					currentAnim->mustFlip = false;
-					app_->audio->PlayFx(walkSFX);
+					if (app_->frame % 10 == 0 && isGrounded == true) app_->audio->PlayFx(walkSFX);
 				}
 				if (app_->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
 				{
 					pbody->AddForce(Vector2d(+10.0f, 0.0f));
 					currentAnim->mustFlip = true;
-					app_->audio->PlayFx(walkSFX);
+					if (app_->frame % 10 == 0 && isGrounded == true) app_->audio->PlayFx(walkSFX);
 				}
 				if (app_->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN)
 				{
@@ -146,6 +153,12 @@ void Worm::Update(float dt)
 			currentAnim = &talkAnim;
 		}
 
+		if (currentWeapon->data->id == 2) //Id 2 means portal
+		{
+			portalAnim.mustFlip = currentAnim->mustFlip;
+			currentAnim = &portalAnim;
+		}
+		
 		if (currentAnim == &jumpAnim && isGrounded == true) {
 			idleAnim.mustFlip = currentAnim->mustFlip;
 			currentAnim = &idleAnim;

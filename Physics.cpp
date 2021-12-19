@@ -104,9 +104,9 @@ bool Physics::Update(float dt)
 			case Type::DYNAMIC:
 			{
 				// Step #0: Reset total acceleration and total accumulated force of the ball (clear old values)
+				
 				o->data->f.x = o->data->f.y = o->data->fp.x = o->data->fp.y = 0.0;
 				o->data->a.x = o->data->a.y = 0.0;
-
 				// Step #1: Compute forces
 					// Compute Gravity force
 				float fgx = o->data->mass * gravityX;
@@ -354,16 +354,16 @@ void Physics::ComputeCollision(PhysObject* o, PhysObject* c)
 		}
 
 		// Reposition object
-		if (colWidth < colHeight)
-		{
+		if (colWidth < colHeight) {
+			// Reposition by X-axis
 			if (diff.x > 0) {
-				o->x += colWidth;
-			}
-			else {
 				o->x -= colWidth;
 			}
+			else {
+				o->x += colWidth;
+			}
 
-			o->v.x = -o->v.x;
+			o->v.x = -o->v.x * o->friction;
 		}
 		else {
 			// Reposition by Y-axis
@@ -373,8 +373,8 @@ void Physics::ComputeCollision(PhysObject* o, PhysObject* c)
 			else {
 				o->y += colHeight;
 			}
+			o->v.y = -o->v.y * o->restitution;
 		}
-		o->v.y = -o->v.y * o->restitution;
 	
 		return;
 	}
@@ -428,6 +428,7 @@ void Physics::ComputeOverlaping(PhysObject* o, PhysObject* c)
 			o->y = c->t - (o->h / 2) - 0.2f;
 			o->v.y = -o->v.y * o->restitution;
 			o->v.x = o->v.x * o->friction;
+			o->entity->isGrounded = true;
 			return;
 		}
 		else if (o->t <= c->b && o->ot > c->ob)

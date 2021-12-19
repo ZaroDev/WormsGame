@@ -20,7 +20,7 @@ public:
 	void UnSelect();
 
 private:
-	bool isGrounded;
+
 	bool canMove;
 
 	Animation* currentAnim;

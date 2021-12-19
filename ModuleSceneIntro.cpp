@@ -110,20 +110,6 @@ bool ModuleSceneIntro::Start()
 	g6->type = Type::STATIC;
 
 	App->physics->world.CreateObject(g6);
-	/*PhysObject* water = new PhysObject();
-	water->x = 525;
-	water->y = 600;
-	water->shape = Shape::RECTANGLE;
-	water->w = 1050;
-	water->h = 250;
-	water->density = 1.0f;
-	water->mass = water->w * water->h * water->density;
-	water->object = ObjectType::WATER;
-	water->type = Type::STATIC;
-	water->name.Create("Water");
-
-	App->physics->world.CreateObject(water);
-	App->physics->world.water = water;*/
 
 	wormsRed.add((Worm*)App->entman->CreateEntity(EntityType::WORM, 50, 0, Team::RED));
 	wormsRed.add((Worm*)App->entman->CreateEntity(EntityType::WORM, 150, 0, Team::RED));
@@ -177,7 +163,12 @@ update_status ModuleSceneIntro::PreUpdate()
 bool ModuleSceneIntro::CleanUp()
 {
 	LOG("Unloading Intro scene");
-
+	wormsBlue.clear();
+	wormsRed.clear();
+	currentWormBlue = nullptr;
+	currentWormRed = nullptr;
+	App->textures->Unload(background);
+	App->textures->Unload(floor);
 	return true;
 }
 
@@ -323,11 +314,18 @@ update_status ModuleSceneIntro::Update()
 	printf("\nRed turn %s", redTurn ? "true" : "false");
 	printf("\nBlue turn %s", blueTurn ? "true" : "false");
 	printf("\nWorms Red %i", wormsRed.count());
-
+	printf("\nWorms Blue %i", wormsBlue.count());
 
 	App->renderer->Blit(background, 0, 0);
 
 	App->window->SetTitle(string.GetString());
+
+	if (wormsBlue.count() == 0 && wormsRed.count() > 0)
+		winner == RED;
+	else if (wormsRed.count() == 0 && wormsBlue.count() > 0)
+		winner == BLUE;
+	else if (wormsRed.count() == 0 && wormsBlue.count() == 0)
+		winner == DRAW;
 
 	return UPDATE_CONTINUE;
 }

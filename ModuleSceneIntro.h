@@ -40,6 +40,14 @@ public:
 	bool redTurn;
 	bool blueTurn;
 	bool turnStarted;
+	enum Winner
+	{
+		NONE = -1,
+		RED,
+		BLUE,
+		DRAW
+	};
+	Winner winner;
 private:
 
 	SDL_Texture* background;

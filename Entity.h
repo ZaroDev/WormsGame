@@ -49,4 +49,5 @@ public:
 	Module* listener;
 	p2List_item<Weapon*>* currentWeapon;
 	p2List<Weapon*> guns;
+	bool isGrounded;
 };

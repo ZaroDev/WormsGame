@@ -21,7 +21,7 @@ Worm::Worm(Vector2d position_, Team team_, Application* app_, Module* listener_)
 	health = 100;
 	pbody->entity = this;
 	pbody->restitution = 0.1f;
-	pbody->friction = 0.5f;
+	pbody->friction = 0.1f;
 	pbody->SetLimit(Vector2d(300.0f, 300.0f));
 	isSelected = false;
 
@@ -101,15 +101,16 @@ void Worm::Update(float dt)
 				pbody->AddForce(Vector2d(+10.0f, 0.0f));
 				currentAnim->mustFlip = true;
 			}
-			if (app_->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN)
+			if (app_->input->GetKey(SDL_SCANCODE_W) == KEY_DOWN && isGrounded)
 			{
-				pbody->AddForce(Vector2d(0.0f, -50.0f));
+				pbody->AddForce(Vector2d(0.0f, -100.0f));
 
 				if (currentAnim == &idleAnim)
 				{
 					jumpAnim.mustFlip = currentAnim->mustFlip;
 					currentAnim = &jumpAnim;
 				}
+				isGrounded = false;
 			}
 			if (app_->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 			{
@@ -174,19 +175,6 @@ void Worm::Update(float dt)
 
 void Worm::Draw(SDL_Texture* tex)
 {
-	/*
-	if (laser)
-	{
-		Vector2d m;
-		m.x = app_->input->GetMouseX() - position.x;
-		m.y = app_->input->GetMouseY() - position.y;
-		Vector2d ray;
-		ray.x = position.x + 100;
-		ray.y = position.y + 100;
-		ray = ray * cos(m.x);
-
-		app_->renderer->DrawLine(position.x, position.y, ray.x, ray.y, 255, 0, 0, 255);
-	}*/
 	app_->renderer->Blit(tex, position.x - pbody->w / 2, position.y - pbody->h / 2, &currentAnim->GetCurrentFrame(), 1.0f, 0, 0, 0, currentAnim->mustFlip);
 }
 

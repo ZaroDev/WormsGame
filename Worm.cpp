@@ -53,7 +53,7 @@ Worm::Worm(Vector2d position_, Team team_, Application* app_, Module* listener_)
 	idleAnim.speed = 0.1f;
 
 	for (int i = 0; i < 11; i++)
-		deadAnim.PushBack({ 14 * 54, i * 60 + offset + 5,54 - (2*offset),64 - offset });
+		deadAnim.PushBack({ 15 * 54, i * 60 + offset + 5,54 - (2*offset),64 - offset });
 	deadAnim.loop = false;
 	deadAnim.mustFlip = true;
 	deadAnim.speed = 0.07f;
@@ -78,6 +78,13 @@ Worm::Worm(Vector2d position_, Team team_, Application* app_, Module* listener_)
 	portalAnim.mustFlip = false;
 	portalAnim.speed = 0.1f;
 	portalAnim.pingpong = true;
+
+	for (int i = 20; i < 23; i++)
+		grenadeAnim.PushBack({ 16 * 54 + (offset * 3),i * 60 + offset,54 - (3 * offset + 2),64 - offset });
+	grenadeAnim.loop = true;
+	grenadeAnim.mustFlip = false;
+	grenadeAnim.speed = 0.1f;
+	grenadeAnim.pingpong = true;
 
 	laser = false;
 
@@ -157,6 +164,12 @@ void Worm::Update(float dt)
 		{
 			portalAnim.mustFlip = currentAnim->mustFlip;
 			currentAnim = &portalAnim;
+		}
+
+		if (currentWeapon->data->id == 3) //Id 2 means grenade
+		{
+			grenadeAnim.mustFlip = currentAnim->mustFlip;
+			currentAnim = &grenadeAnim;
 		}
 		
 		if (currentAnim == &jumpAnim && isGrounded == true) {

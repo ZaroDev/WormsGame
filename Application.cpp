@@ -82,6 +82,7 @@ bool Application::Init()
 // Call PreUpdate, Update and PostUpdate on all modules
 update_status Application::Update()
 {
+	frame++;
 	update_status ret = UPDATE_CONTINUE;
 	p2List_item<Module*>* item = list_modules.getFirst();
 

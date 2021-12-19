@@ -30,6 +30,7 @@ private:
 	Animation atackAnim;
 	Animation deadAnim;
 	Animation talkAnim;
+	Animation portalAnim;
 	int walkSFX;
 	int jumpSFX;
 	int deadSFX;

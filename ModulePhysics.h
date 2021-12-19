@@ -25,5 +25,6 @@ public:
 
 	Physics world;
 	bool debug;
+	SDL_Texture* bomb;
 
 };

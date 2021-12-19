@@ -23,6 +23,7 @@ bool ModulePhysics::Start()
 	world.Start(Integrator::VERLET, 0.0f, 100.0f);
 	world.atmosphere.density = 1.0f;
 	world.atmosphere.wind = Vector2d(0.0f, 0.0f);
+	bomb = App->textures->Load("Assets/Worms/bomb.png");
 	return true;
 }
 
@@ -75,6 +76,10 @@ update_status ModulePhysics::Update()
 			else if (w->data->object == ObjectType::GRENADE)
 			{
 				App->renderer->DrawQuad(rect, 75, 83, 32, 255, true);
+			}
+			else if (w->data->object == ObjectType::BOMB)
+			{
+				App->renderer->Blit(bomb, rect.x, rect.y);
 			}
 			else if (w->data->type == Type::STATIC)
 			{

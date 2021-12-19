@@ -40,7 +40,7 @@ public:
 	void CreateObject(PhysObject* obj);
 	void DestroyObject(PhysObject* obj);
 
-	void ApplyBouyance(PhysObject* a, PhysObject* b);
+	void ApplHydrodinamics(PhysObject* a, PhysObject* b);
 
 	//Integrator scheme's
 	void IntegratorVelocityVerlet(PhysObject* obj, float dt);

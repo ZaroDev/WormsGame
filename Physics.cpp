@@ -117,20 +117,19 @@ bool Physics::Update(float dt)
 				o->data->f.y += fgy;
 
 				// Compute Aerodynamic Lift & Drag forces
-				float speed =Vector2d::Magnitude( o->data->v - atmosphere.wind);
-				if (o->data->v.x != 0 && !o->data->isOnWater)
+				if (!o->data->isOnWater && o->data->v.x != 0)
 				{
-					float fdrag = 0.5 * atmosphere.density * speed * speed * o->data->surface * o->data->cd;
-					float fdx = fdrag != 0 ? -1*fdrag : 0; // Let's assume Drag is aligned with x-axis (in your game, generalize this) Opuesta al vector speed = normalizar speed y multiplicar
-					o->data->f.x += fdx;
-				}
-
-				// Let's assume Lift is perpendicular with x-axis (in your game, generalize this)  Perpendicular al drag si la shape tiene lift
-				if (o->data->v.y != 0 && !o->data->isOnWater)
-				{
-					float flift = 0.5 * atmosphere.density * speed * speed * o->data->surface * o->data->cl;
-					float fdy = flift != 0 ? -1 * flift : 0;
-					o->data->f.y += fdy;
+					Vector2d rvel = o->data->v - atmosphere.wind;
+					float speed =Vector2d::Magnitude( o->data->v - atmosphere.wind); // Modulus of the relative velocity
+					float rel_vel_unitary[2] = { rvel.x / speed, rvel.y / speed }; // Unitary vector of relative velocity
+					float fdrag_modulus = 0.5f * atmosphere.density * speed * speed * o->data->surface * o->data->cd; // Drag force (modulus)
+					float fx = -rel_vel_unitary[0] * fdrag_modulus; // Drag is antiparallel to relative velocity
+					o->data->f.x += fx;
+					if (o->data->hasLift)
+					{
+						float fy = -rel_vel_unitary[1] * fdrag_modulus; // Drag is antiparallel to relative velocity
+						o->data->f.y += fy;
+					}
 				}
 
 
@@ -189,7 +188,7 @@ bool Physics::Update(float dt)
 						//Else if statement We don't collide with more that one type per object
 						if (o->data != water && c->data == water)
 						{
-							ApplyBouyance(c->data, o->data);
+							ApplHydrodinamics(c->data, o->data);
 							break;
 						}
 						else if (o->data->object == ObjectType::PORTAL && c->data->object != ObjectType::PORTAL)
@@ -490,8 +489,16 @@ void Physics::DestroyObject(PhysObject* obj)
 	obj->setPendingToDelete = true;
 }
 
-void Physics::ApplyBouyance(PhysObject* a, PhysObject* b)
+void Physics::ApplHydrodinamics(PhysObject* a, PhysObject* b)
 {
+	Vector2d rel_vel = { b->v.x - a->v.x, b->v.y - a->v.y }; // Relative velocity
+	float speed = Vector2d::Magnitude(rel_vel); // Modulus of the relative velocity
+	float rel_vel_unitary[2] = { rel_vel.x / speed, rel_vel.y / speed }; // Unitary vector of relative velocity
+	float fdrag_modulus = b->b * speed; // Drag force (modulus)
+	float fx = -rel_vel_unitary[0] * fdrag_modulus; // Drag is antiparallel to relative velocity
+	float fy = -rel_vel_unitary[1] * fdrag_modulus; // Drag is antiparallel to relative velocity
+	b->f.x += fx;
+	b->f.y += fy;
 	float volume;
 	if (a->y <= b->y)
 		volume = b->h * b->w;
@@ -501,4 +508,5 @@ void Physics::ApplyBouyance(PhysObject* a, PhysObject* b)
 	float tmpForce = b->f.y + (b->mass * gravityY - (water->density)*volume * gravityY);
 	b->f.y = tmpForce;
 	b->v.y *= DAMPEN;
+	b->isOnWater = true;
 }

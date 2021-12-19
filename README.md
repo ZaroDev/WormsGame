@@ -1,4 +1,7 @@
 # Worms: Wish Edition
+## Objective
+Each team has to kill all the other team worms in order to win
+## YOU NEED ATLEAST 2 PEOPLE TO PLAY THE GAME
 ## With it's own custom made physics engine also wish edition
 The engine can calculate the following forces
 - Gravity

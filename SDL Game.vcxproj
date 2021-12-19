@@ -106,6 +106,7 @@
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="Granade.cpp" />
     <ClCompile Include="HandGun.cpp" />
+    <ClCompile Include="introscreen.cpp" />
     <ClCompile Include="log.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ModuleAudio.cpp" />
